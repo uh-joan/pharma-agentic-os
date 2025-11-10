@@ -7,8 +7,24 @@ AI-powered pharmaceutical research system using Claude Code with specialized MCP
 Multi-agent system: data gathering + analytical modeling
 
 **Agents:**
+
+*Data Gathering:*
 - `pharma-search-specialist`: Query → JSON plan → MCP tools → `data_dump/`
+
+*Epidemiological Analysis:*
 - `epidemiology-analyst`: Reads `data_dump/` → prevalence models, segmentation, funnels
+- `market-sizing-analyst`: Reads `data_dump/` → TAM/SAM/SOM market sizing synthesis
+
+*Forecasting Pipeline:*
+- `patient-flow-modeler`: Reads `data_dump/` → eligibility funnels, treatment sequencing, multi-year patient flows
+- `uptake-dynamics-analyst`: Reads `temp/` + `data_dump/` → market share evolution, treated patient projections
+- `pricing-strategy-analyst`: Reads `data_dump/` → IRP modeling, tiered pricing, launch sequencing
+- `revenue-synthesizer`: Reads `temp/` → revenue forecasts, peak sales, NPV-ready streams
+
+*Competitive Intelligence:*
+- `pharma-landscape-competitive-analyst`: Reads `data_dump/` → competitive landscape mapping, pipeline threats
+- `pharma-landscape-opportunity-identifier`: Reads `temp/` → BD opportunities (partnerships, acquisitions, white space)
+- `pharma-landscape-strategy-synthesizer`: Reads `temp/` → strategic planning, action prioritization, scenario analysis
 
 **Workflow:** Query → pharma-search-specialist (gathers data) → epidemiology-analyst (analyzes) → results
 
@@ -168,30 +184,88 @@ data_dump/2025-11-10_183054_fda_baricitinib/
 3. ClinicalTrials.gov → clinical validation
 4. PubChem → tool compounds
 
-### Epidemiological Analysis (using epidemiology-analyst)
+### Epidemiological Analysis (using epidemiology-analyst + patient-flow-modeler)
 1. Data Commons + WHO + CMS → prevalence data gathering
 2. PubMed → severity distribution studies
 3. ClinicalTrials.gov → eligibility criteria patterns
 4. FDA + CMS → contraindication prevalence
-5. Epidemiology-analyst → eligibility funnel modeling
-6. Output: Drug-eligible population estimate with sensitivity analysis
+5. Epidemiology-analyst → prevalence model with demographics
+6. Patient-flow-modeler → eligibility funnel + multi-year patient flows
+7. Output: Treatment-eligible population with 5-10 year projections and sensitivity analysis
+
+### Competitive Landscape Analysis (using pharma-landscape agents)
+1. FDA + ClinicalTrials.gov + SEC + PubMed + OpenTargets → competitive data gathering
+2. pharma-landscape-competitive-analyst → competitive landscape with pipeline threats
+3. pharma-landscape-opportunity-identifier → BD opportunities (partnerships, acquisitions, white space)
+4. pharma-landscape-strategy-synthesizer → strategic plan with positioning and action roadmap
+5. Output: Actionable strategic recommendations with scenario planning and decision triggers
 
 ## Agents
 
-### pharma-search-specialist
+### Data Gathering
+
+#### pharma-search-specialist
 Data gathering coordinator. Input: query → Output: JSON execution plan with MCP tool calls
 
-### epidemiology-analyst
+### Epidemiological Analysis
+
+#### epidemiology-analyst
 Prevalence modeling and market sizing. Input: `data_dump/` → Output: Models, segmentation, eligibility funnels
 
 **Capabilities**: Age-standardization, severity segmentation, biomarker stratification, eligibility funnels, sensitivity analysis, CMS real-world evidence integration
 
+#### market-sizing-analyst
+TAM/SAM/SOM market sizing synthesis. Input: `data_dump/` → Output: Complete market sizing analysis with executive summary, funnel breakdowns, competitive landscape, timeline projections
+
+**Capabilities**: TAM (total prevalence from Data Commons/WHO/PubMed), SAM (eligibility funnels from CMS/FDA/CT.gov), SOM (competitive analysis from SEC/financials), cross-validation, sensitivity analysis, revenue projections. Covers all 12 MCP servers with no data gaps.
+
+### Forecasting Pipeline
+
+Sequential agents for pharmaceutical forecasting (patient flows → uptake → pricing → revenue):
+
+#### patient-flow-modeler
+Treatment-eligible population projections and sequencing. Input: `data_dump/` → Output: Eligibility funnels, multi-year patient flows, sensitivity analysis
+
+**Capabilities**: Eligibility funnel construction (diagnosed → severity-eligible → label-eligible → drug-eligible), treatment line distribution (1L/2L/3L), annual progression modeling, multi-year patient flow projections (5-10 years), scenario analysis (conservative/base/optimistic), tornado sensitivity analysis, treatment sequencing pathways
+
+#### uptake-dynamics-analyst
+Market share evolution and adoption dynamics. Input: `temp/patient_flow_*.md` + `data_dump/` → Output: Year-by-year market share evolution, treated patient projections, sensitivity analysis
+
+**Capabilities**: Bass diffusion modeling, S-curve adoption, competitive displacement attribution, launch sequencing impact, treated patient counts (eligible pool × market share), 5-year projections with low/base/high scenarios
+
+#### pricing-strategy-analyst
+Global pricing optimization and launch sequencing. Input: `data_dump/` → Output: IRP modeling, tiered pricing strategy, launch sequencing timeline, revenue impact comparison
+
+**Capabilities**: IRP spillover risk modeling, 4-tier pricing framework (premium/competitive/value/access), phased launch sequencing (IRP-free first, IRP-sensitive delayed), cumulative 5-year revenue optimization, sensitivity analysis (±20% price variation)
+
+#### revenue-synthesizer
+Pharmaceutical revenue forecasting synthesis. Input: `temp/patient_flow_*.md` + `temp/uptake_dynamics_*.md` + optional `temp/pricing_strategy_*.md` → Output: Multi-year revenue forecast, peak sales, NPV-ready streams
+
+**Capabilities**: Revenue formula (Treated Patients × Annual Cost × Compliance × Net Price %), 5-10 year projections, low/base/high scenarios, tornado sensitivity analysis, risk-adjusted peak sales, geographic breakdown (US/EU5/Japan/RoW), cumulative revenue metrics
+
+### Competitive Intelligence
+
+#### pharma-landscape-competitive-analyst
+Competitive landscape mapping and pipeline threat assessment. Input: `data_dump/` → Output: Competitive analysis with market structure, pipeline threats, differentiation matrix, genetic biomarker intelligence
+
+**Capabilities**: Current market structure (leaders, moats, vulnerabilities), pipeline dynamics (Phase 2/3 segmentation, threat scoring 🔴🟡🟢), differentiation matrix (MOA, efficacy, safety, dosing), genetic biomarker competitive positioning, gaps analysis (white space, crowded segments)
+
+#### pharma-landscape-opportunity-identifier
+BD opportunity screening for partnerships, acquisitions, and white space. Input: `temp/competitive_analysis_*.md` → Output: Prioritized BD opportunities with deal economics and timing triggers
+
+**Capabilities**: Partnership screening (<$1B biotech, Phase 1/2, weak commercialization), acquisition screening (<$500M, Phase 2+, undervaluation signals), white space identification (patient populations, geographic gaps, indication expansion), priority tiering (🔴 0-6mo, 🟡 6-12mo, 🟢 12-24mo), deal economics framework
+
+#### pharma-landscape-strategy-synthesizer
+Strategic planning synthesis from competitive intelligence and BD opportunities. Input: `temp/competitive_analysis_*.md` + `temp/bd_opportunities_*.md` → Output: Strategic plan with positioning, action roadmap, scenario planning
+
+**Capabilities**: Strategic positioning frameworks (offensive/defensive/flanking/guerrilla), action prioritization (immediate/near/medium-term horizons), scenario planning (best/base/worst case), decision triggers (go/no-go criteria), risk mitigation strategies (competitive/regulatory/commercial/execution), success metrics and KPIs
+
 ## Design Principles
 
-1. **Multi-agent**: Data gathering + analytical agents, optimized roles
+1. **Multi-agent**: Data gathering (pharma-search-specialist) + analytical (epidemiology-analyst, patient-flow-modeler, uptake-dynamics-analyst, pricing-strategy-analyst, revenue-synthesizer, market-sizing-analyst, pharma-landscape-competitive-analyst, pharma-landscape-opportunity-identifier, pharma-landscape-strategy-synthesizer)
 2. **Separation**: No MCP execution by analytical agents
 3. **Token optimization**: Conservative limits, pagination, count-first
-4. **Audit trail**: All results → data_dump/
+4. **Audit trail**: All results → data_dump/, analytical outputs → temp/
 5. **Modular**: Easy to add MCP servers and agents
 
 ## Contributing
