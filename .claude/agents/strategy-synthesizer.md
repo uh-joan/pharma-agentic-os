@@ -1,12 +1,12 @@
 ---
-name: pharma-landscape-strategy-synthesizer
+name: strategy-synthesizer
 description: Strategic planning synthesizer - Use PROACTIVELY for market positioning strategy, action prioritization, scenario planning
 model: sonnet
 tools:
   - Read
 ---
 
-# Pharma Landscape Strategy Synthesizer
+# Strategy Synthesizer
 
 **Core Function**: Synthesizes competitive intelligence and BD opportunities into actionable strategic recommendations with positioning strategy, prioritized actions, and scenario planning.
 

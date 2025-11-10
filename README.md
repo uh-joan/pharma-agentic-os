@@ -22,9 +22,14 @@ Multi-agent system: data gathering + analytical modeling
 - `revenue-synthesizer`: Reads `temp/` → revenue forecasts, peak sales, NPV-ready streams
 
 *Competitive Intelligence:*
-- `pharma-landscape-competitive-analyst`: Reads `data_dump/` → competitive landscape mapping, pipeline threats
-- `pharma-landscape-opportunity-identifier`: Reads `temp/` → BD opportunities (partnerships, acquisitions, white space)
-- `pharma-landscape-strategy-synthesizer`: Reads `temp/` → strategic planning, action prioritization, scenario analysis
+- `competitive-analyst`: Reads `data_dump/` → competitive landscape mapping, pipeline threats
+- `opportunity-identifier`: Reads `temp/` → BD opportunities (partnerships, acquisitions, white space)
+- `strategy-synthesizer`: Reads `temp/` → strategic planning, action prioritization, scenario analysis
+
+*Asset Valuation:*
+- `pharma-valuation-comparable-analyst`: Reads `data_dump/` → deal benchmarking, licensing precedents, M&A valuation ranges
+- `pharma-valuation-npv-modeler`: Reads `data_dump/` → risk-adjusted NPV, DCF analysis, sensitivity scenarios
+- `pharma-valuation-structure-optimizer`: Reads `temp/` → upfront/milestone/royalty optimization, risk-sharing frameworks
 
 **Workflow:** Query → pharma-search-specialist (gathers data) → epidemiology-analyst (analyzes) → results
 
@@ -193,11 +198,11 @@ data_dump/2025-11-10_183054_fda_baricitinib/
 6. Patient-flow-modeler → eligibility funnel + multi-year patient flows
 7. Output: Treatment-eligible population with 5-10 year projections and sensitivity analysis
 
-### Competitive Landscape Analysis (using pharma-landscape agents)
+### Competitive Landscape Analysis (using competitive intelligence agents)
 1. FDA + ClinicalTrials.gov + SEC + PubMed + OpenTargets → competitive data gathering
-2. pharma-landscape-competitive-analyst → competitive landscape with pipeline threats
-3. pharma-landscape-opportunity-identifier → BD opportunities (partnerships, acquisitions, white space)
-4. pharma-landscape-strategy-synthesizer → strategic plan with positioning and action roadmap
+2. competitive-analyst → competitive landscape with pipeline threats
+3. opportunity-identifier → BD opportunities (partnerships, acquisitions, white space)
+4. strategy-synthesizer → strategic plan with positioning and action roadmap
 5. Output: Actionable strategic recommendations with scenario planning and decision triggers
 
 ## Agents
@@ -245,24 +250,43 @@ Pharmaceutical revenue forecasting synthesis. Input: `temp/patient_flow_*.md` + 
 
 ### Competitive Intelligence
 
-#### pharma-landscape-competitive-analyst
+#### competitive-analyst
 Competitive landscape mapping and pipeline threat assessment. Input: `data_dump/` → Output: Competitive analysis with market structure, pipeline threats, differentiation matrix, genetic biomarker intelligence
 
 **Capabilities**: Current market structure (leaders, moats, vulnerabilities), pipeline dynamics (Phase 2/3 segmentation, threat scoring 🔴🟡🟢), differentiation matrix (MOA, efficacy, safety, dosing), genetic biomarker competitive positioning, gaps analysis (white space, crowded segments)
 
-#### pharma-landscape-opportunity-identifier
+#### opportunity-identifier
 BD opportunity screening for partnerships, acquisitions, and white space. Input: `temp/competitive_analysis_*.md` → Output: Prioritized BD opportunities with deal economics and timing triggers
 
 **Capabilities**: Partnership screening (<$1B biotech, Phase 1/2, weak commercialization), acquisition screening (<$500M, Phase 2+, undervaluation signals), white space identification (patient populations, geographic gaps, indication expansion), priority tiering (🔴 0-6mo, 🟡 6-12mo, 🟢 12-24mo), deal economics framework
 
-#### pharma-landscape-strategy-synthesizer
+#### strategy-synthesizer
 Strategic planning synthesis from competitive intelligence and BD opportunities. Input: `temp/competitive_analysis_*.md` + `temp/bd_opportunities_*.md` → Output: Strategic plan with positioning, action roadmap, scenario planning
 
 **Capabilities**: Strategic positioning frameworks (offensive/defensive/flanking/guerrilla), action prioritization (immediate/near/medium-term horizons), scenario planning (best/base/worst case), decision triggers (go/no-go criteria), risk mitigation strategies (competitive/regulatory/commercial/execution), success metrics and KPIs
 
+### Asset Valuation
+
+Sequential agents for pharmaceutical asset valuation (comparables → NPV → deal structure):
+
+#### pharma-valuation-comparable-analyst
+Deal benchmarking and licensing precedent analysis. Input: `data_dump/` → Output: Comparable deal analysis with valuation ranges
+
+**Capabilities**: Three-dimensional matching (indication × stage × structure), stage-appropriate valuation multiples (Phase 1-3, approved), upfront/peak sales benchmarks, total deal/peak sales ratios, milestone structure patterns, royalty rate analysis, 25th/50th/75th percentile ranges
+
+#### pharma-valuation-npv-modeler
+Risk-adjusted NPV modeling and DCF analysis. Input: `data_dump/` → Output: NPV analysis with sensitivity scenarios
+
+**Capabilities**: Probability of success (PoS) frameworks by therapeutic area, program-specific adjustments (FDA Breakthrough, orphan drug, novel mechanism), probability-weighted revenue forecasts with patent exclusivity, risk-adjusted development costs, operating cash flow modeling (COGS, SG&A, R&D, tax), phase-appropriate discount rates (10-15%), tornado sensitivity analysis, bull/base/bear scenarios
+
+#### pharma-valuation-structure-optimizer
+Deal structure optimization for licensing transactions. Input: `temp/npv_analysis_*.md` + `temp/deal_comparables_*.md` → Output: Upfront/milestone/royalty allocation recommendations
+
+**Capabilities**: NPV-equivalent structure design (seller-favorable/balanced/buyer-favorable), discount rate sensitivity (buyer vs seller WACC), risk allocation analysis (development/regulatory/commercial/timing), milestone allocation (40-50% development, 50-60% commercial), tiered royalty structures (8-20% by sales tier), comparables benchmarking, win-win value creation, dependency validation
+
 ## Design Principles
 
-1. **Multi-agent**: Data gathering (pharma-search-specialist) + analytical (epidemiology-analyst, patient-flow-modeler, uptake-dynamics-analyst, pricing-strategy-analyst, revenue-synthesizer, market-sizing-analyst, pharma-landscape-competitive-analyst, pharma-landscape-opportunity-identifier, pharma-landscape-strategy-synthesizer)
+1. **Multi-agent**: Data gathering (pharma-search-specialist) + analytical (epidemiology-analyst, patient-flow-modeler, uptake-dynamics-analyst, pricing-strategy-analyst, revenue-synthesizer, market-sizing-analyst, competitive-analyst, opportunity-identifier, strategy-synthesizer, pharma-valuation-comparable-analyst, pharma-valuation-npv-modeler, pharma-valuation-structure-optimizer)
 2. **Separation**: No MCP execution by analytical agents
 3. **Token optimization**: Conservative limits, pagination, count-first
 4. **Audit trail**: All results → data_dump/, analytical outputs → temp/

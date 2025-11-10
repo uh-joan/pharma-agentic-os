@@ -12,9 +12,12 @@
 - `pricing-strategy-analyst`: Reads `data_dump/` → IRP modeling, tiered pricing, launch sequencing
 - `revenue-synthesizer`: Reads `temp/` → revenue forecasts, peak sales, NPV-ready streams
 - `market-sizing-analyst`: Reads `data_dump/` → TAM/SAM/SOM market sizing synthesis
-- `pharma-landscape-competitive-analyst`: Reads `data_dump/` → competitive landscape mapping, pipeline threats
-- `pharma-landscape-opportunity-identifier`: Reads `temp/` → BD opportunities (partnerships, acquisitions, white space)
-- `pharma-landscape-strategy-synthesizer`: Reads `temp/` → strategic planning, action prioritization, scenario analysis
+- `competitive-analyst`: Reads `data_dump/` → competitive landscape mapping, pipeline threats
+- `opportunity-identifier`: Reads `temp/` → BD opportunities (partnerships, acquisitions, white space)
+- `strategy-synthesizer`: Reads `temp/` → strategic planning, action prioritization, scenario analysis
+- `pharma-valuation-comparable-analyst`: Reads `data_dump/` → deal benchmarking, licensing precedents, M&A valuation ranges
+- `pharma-valuation-npv-modeler`: Reads `data_dump/` → risk-adjusted NPV, DCF analysis, sensitivity scenarios
+- `pharma-valuation-structure-optimizer`: Reads `temp/` → upfront/milestone/royalty optimization, risk-sharing frameworks
 
 ## MCP Servers (see .mcp.json)
 
@@ -178,34 +181,64 @@ Template:
 Analyze data_dump/ and synthesize TAM/SAM/SOM market sizing with competitive landscape."
 ```
 
-**pharma-landscape-competitive-analyst** - Competitive landscape mapping and pipeline threat assessment
+**competitive-analyst** - Competitive landscape mapping and pipeline threat assessment
 
 Use for: Market leader analysis, pipeline dynamics, competitive positioning, threat scoring
 
 Template:
 ```
-"You are pharma-landscape-competitive-analyst. Read .claude/agents/pharma-landscape-competitive-analyst.md.
+"You are competitive-analyst. Read .claude/agents/competitive-analyst.md.
 Analyze data_dump/[folder]/ and return competitive landscape analysis with threat assessment."
 ```
 
-**pharma-landscape-opportunity-identifier** - BD opportunity screening
+**opportunity-identifier** - BD opportunity screening
 
 Use for: Partnership targets, acquisition candidates, white space identification
 
 Template:
 ```
-"You are pharma-landscape-opportunity-identifier. Read .claude/agents/pharma-landscape-opportunity-identifier.md.
+"You are opportunity-identifier. Read .claude/agents/opportunity-identifier.md.
 Read temp/competitive_analysis_*.md and return BD opportunity screening."
 ```
 
-**pharma-landscape-strategy-synthesizer** - Strategic planning synthesis
+**strategy-synthesizer** - Strategic planning synthesis
 
 Use for: Market positioning strategy, action prioritization, scenario planning, risk mitigation
 
 Template:
 ```
-"You are pharma-landscape-strategy-synthesizer. Read .claude/agents/pharma-landscape-strategy-synthesizer.md.
+"You are strategy-synthesizer. Read .claude/agents/strategy-synthesizer.md.
 Read temp/competitive_analysis_*.md and temp/bd_opportunities_*.md and return strategic plan."
+```
+
+**pharma-valuation-comparable-analyst** - Deal benchmarking and licensing precedent analysis
+
+Use for: M&A valuation ranges, licensing deal multiples, upfront/milestone/royalty benchmarks
+
+Template:
+```
+"You are pharma-valuation-comparable-analyst. Read .claude/agents/pharma-valuation-comparable-analyst.md.
+Analyze data_dump/[folder]/ and return comparable deal analysis with valuation ranges."
+```
+
+**pharma-valuation-npv-modeler** - Risk-adjusted NPV modeling and DCF analysis
+
+Use for: Probability-weighted revenue forecasts, development cost modeling, sensitivity analysis
+
+Template:
+```
+"You are pharma-valuation-npv-modeler. Read .claude/agents/pharma-valuation-npv-modeler.md.
+Analyze data_dump/[folder]/ and return NPV analysis with sensitivity scenarios."
+```
+
+**pharma-valuation-structure-optimizer** - Deal structure optimization
+
+Use for: Upfront/milestone/royalty allocation, risk-sharing frameworks, NPV-equivalent structure design
+
+Template:
+```
+"You are pharma-valuation-structure-optimizer. Read .claude/agents/pharma-valuation-structure-optimizer.md.
+Read temp/npv_analysis_*.md and temp/deal_comparables_*.md and return deal structure recommendations."
 ```
 
 ### 5. Save Analytical Outputs (If Agents Invoked)
@@ -220,13 +253,16 @@ After analytical agent execution, Claude Code saves outputs to `temp/`:
 - `temp/competitive_analysis_{YYYY-MM-DD}_{HHMMSS}_{indication}.md`
 - `temp/bd_opportunities_{YYYY-MM-DD}_{HHMMSS}_{indication}.md`
 - `temp/strategic_plan_{YYYY-MM-DD}_{HHMMSS}_{indication}.md`
+- `temp/deal_comparables_{YYYY-MM-DD}_{HHMMSS}_{asset}.md`
+- `temp/npv_analysis_{YYYY-MM-DD}_{HHMMSS}_{asset}.md`
+- `temp/deal_structure_{YYYY-MM-DD}_{HHMMSS}_{asset}.md`
 
 **Agent Constraint**: Analytical agents are read-only (tools: [Read]). Claude Code orchestrator handles file persistence.
 
 ## File Structure
 
 **data_dump/**: Raw MCP results (query.json, results.json, summary.md, metadata.json)
-**temp/**: Analytical agent outputs (epidemiology_analysis_*.md, patient_flow_*.md, uptake_dynamics_*.md, pricing_strategy_*.md, revenue_forecast_*.md, market_sizing_*.md, competitive_analysis_*.md, bd_opportunities_*.md, strategic_plan_*.md) - written by Claude Code after agent execution
+**temp/**: Analytical agent outputs (epidemiology_analysis_*.md, patient_flow_*.md, uptake_dynamics_*.md, pricing_strategy_*.md, revenue_forecast_*.md, market_sizing_*.md, competitive_analysis_*.md, bd_opportunities_*.md, strategic_plan_*.md, deal_comparables_*.md, npv_analysis_*.md, deal_structure_*.md) - written by Claude Code after agent execution
 **.claude/.context/mcp-tool-guides/**: Tool documentation (DO NOT MODIFY)
 
 ## Token Efficiency
@@ -241,7 +277,7 @@ After analytical agent execution, Claude Code saves outputs to `temp/`:
 
 ## Design Principles
 
-1. **Multi-agent**: Data gathering (pharma-search-specialist) + analytical (epidemiology-analyst, patient-flow-modeler, uptake-dynamics-analyst, pricing-strategy-analyst, revenue-synthesizer, market-sizing-analyst, pharma-landscape-competitive-analyst, pharma-landscape-opportunity-identifier, pharma-landscape-strategy-synthesizer)
+1. **Multi-agent**: Data gathering (pharma-search-specialist) + analytical (epidemiology-analyst, patient-flow-modeler, uptake-dynamics-analyst, pricing-strategy-analyst, revenue-synthesizer, market-sizing-analyst, competitive-analyst, opportunity-identifier, strategy-synthesizer, pharma-valuation-comparable-analyst, pharma-valuation-npv-modeler, pharma-valuation-structure-optimizer)
 2. **Separation of concerns**: Gathering vs analysis, no MCP execution by analysts
 3. **Read-only analysts**: Analytical agents use only Read tool; Claude Code orchestrator handles file writes to temp/
 4. **Token optimization**: Conservative limits, pagination, count strategies
