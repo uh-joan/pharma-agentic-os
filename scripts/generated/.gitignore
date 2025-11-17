@@ -1,0 +1,5 @@
+# Ignore all generated query scripts
+*.py
+
+# Except keep the .gitignore itself
+!.gitignore
