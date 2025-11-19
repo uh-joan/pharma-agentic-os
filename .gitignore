@@ -4,9 +4,10 @@ data_dump/
 # Node modules (if any MCP servers use local node_modules)
 node_modules/
 
-# Environment variables
+# Environment variables and API keys
 .env
 .env.local
+.mcp.json
 
 # OS files
 .DS_Store
