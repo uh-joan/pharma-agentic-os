@@ -1,0 +1,74 @@
+{
+    "mcpServers": {
+        "ct-gov-mcp": {
+            "command": "node",
+            "args": ["/path/to/ct.gov-mcp-server/dist/index.js"],
+            "env": {}
+        },
+        "nlm-codes-mcp": {
+            "command": "node",
+            "args": ["/path/to/codes-mcp-server/dist/index.js"],
+            "env": {}
+        },
+        "pubmed-mcp": {
+            "command": "node",
+            "args": ["/path/to/pubmed-mcp-server-npm/src/index.js"],
+            "env": {}
+        },
+        "fda-mcp": {
+            "command": "node",
+            "args": ["/path/to/fda-mcp-server/build/index.js"],
+            "env": {
+                "FDA_API_KEY": "YOUR_FDA_API_KEY_HERE"
+            }
+        },
+        "who-mcp-server": {
+            "command": "node",
+            "args": ["/path/to/who-mcp-server/dist/index.js"],
+            "env": {}
+        },
+        "sec-mcp-server": {
+            "command": "node",
+            "args": ["/path/to/sec-mcp-server/dist/index.js"],
+            "env": {}
+        },
+        "healthcare-mcp": {
+            "command": "node",
+            "args": ["/path/to/icd-mcp-server/dist/index.js"],
+            "env": {}
+        },
+        "financials-mcp-server": {
+            "command": "node",
+            "args": ["/path/to/yahoo-finance-mcp-server/src/index.js"],
+            "env": {
+                "FRED_API_KEY": "YOUR_FRED_API_KEY_HERE"
+            }
+        },
+        "datacommons-mcp": {
+            "command": "uvx",
+            "args": ["datacommons-mcp@latest","serve","stdio"
+            ],
+            "env": {
+                "DC_API_KEY": "YOUR_DATACOMMONS_API_KEY_HERE"
+            },
+            "trust": true
+        },
+        "patents-mcp-server": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/patent_mcp_server",
+                "run",
+                "patent-mcp-server"
+                ]
+            },
+        "opentargets-mcp-server": {
+            "command": "node",
+            "args": ["/path/to/opentargets-mcp-server/build/index.js"]
+        },
+        "pubchem-mcp-server": {
+            "command": "node",
+            "args": ["/path/to/pubchem-mcp-server/build/index.js"]
+        }
+    }
+}
