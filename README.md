@@ -156,10 +156,35 @@ python3 -c "from discover_skills import find_skill_by_server; print(find_skill_b
 
 ### Creating New Skills
 
+**Primary Method (Automatic):**
+
+Skills are created automatically by the pharma-search-specialist agent:
+
+```
+User: "Get rheumatoid arthritis trials"
+    ↓
+pharma-search-specialist:
+  - Reads MCP tool guides + code examples
+  - Generates complete Python code (not templates)
+  - Executes code and validates
+  - Returns: summary + working skill + documentation
+    ↓
+Main Claude Code agent:
+  - Saves SKILL.md with rich YAML frontmatter
+  - Saves scripts/function.py with working implementation
+  - Skill immediately ready to use
+```
+
+**Manual Method (Rarely Used):**
+
+For creating empty skill scaffolds manually:
+
 ```bash
-# Initialize new skill in folder structure
+# Creates template files with TODOs (not used by agent system)
 python3 .claude/scripts/init_skill.py get_new_data --server ct_gov_mcp
 ```
+
+**Note**: The agent-generated skills are fully implemented with working code, real metadata, and detailed documentation. The manual `init_skill.py` utility only creates placeholder templates.
 
 ---
 
@@ -432,10 +457,21 @@ User sees: Executive summary + full report link
 
 ### New Skills
 
-Skills are created automatically by pharma-search-specialist agent, but you can also:
+**Recommended**: Simply ask the pharma-search-specialist agent to create the skill:
 
+```
+"Get [therapeutic area] trials from ClinicalTrials.gov"
+"Find FDA approved drugs for [indication]"
+```
+
+The agent will:
+1. Generate working Python code
+2. Execute and validate
+3. Save complete skill with documentation
+4. Skill is immediately reusable
+
+**For manual scaffolding** (creates empty templates only):
 ```bash
-# Initialize new skill manually
 python3 .claude/scripts/init_skill.py get_new_data --server ct_gov_mcp
 ```
 
