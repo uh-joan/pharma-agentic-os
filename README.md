@@ -110,12 +110,14 @@ Report saved: reports/competitive-landscape/YYYY-MM-DD_kras-inhibitor.md
 
 ## Skills Library (v2.0)
 
-**Current Skills** (13 active):
+**Current Skills** (26 active):
 
 ### Clinical Trials (CT.gov)
 - `adc-trials` - Antibody-drug conjugate trials with pagination
 - `braf-inhibitor-trials` - BRAF inhibitor trials
 - `covid19-vaccine-trials-recruiting` - COVID-19 vaccine trials
+- `diabetes-recruiting-trials` - Diabetes recruiting trials
+- `egfr-inhibitor-trials` - EGFR inhibitor trials across all phases
 - `glp1-trials` - GLP-1 trials (1803 trials, full pagination)
 - `kras-inhibitor-trials` - KRAS inhibitor trials
 - `phase2-alzheimers-trials-us` - Phase 2 Alzheimer's trials (US)
@@ -126,8 +128,31 @@ Report saved: reports/competitive-landscape/YYYY-MM-DD_kras-inhibitor.md
 - `braf-inhibitor-fda-drugs` - FDA approved BRAF inhibitors
 - `glp1-diabetes-drugs` - GLP-1 drugs for diabetes
 - `glp1-fda-drugs` - FDA approved GLP-1 drugs (21 drugs, deduplication)
+- `hypertension-fda-drugs` - FDA approved hypertension drugs
 - `kras-inhibitor-fda-drugs` - FDA approved KRAS inhibitors
 - `rheumatoid-arthritis-fda-drugs` - FDA approved RA drugs
+
+### Chemical Properties (PubChem)
+- `anticoagulant-chemical-properties` - Anticoagulant chemical properties
+- `aspirin-properties` - Aspirin chemical and physical properties
+
+### Multi-Server Analysis
+- `cart-therapy-landscape` - CAR-T therapy trials and targets
+- `kras-comprehensive-analysis` - KRAS trials, FDA drugs, and targets
+- `ra-targets-and-trials` - Rheumatoid arthritis targets and trials
+
+### Medical Coding & Statistics
+- `diabetes-icd10-codes` - ICD-10 codes for diabetes
+- `disease-burden-per-capita` - Disease burden per capita analysis
+
+### Literature & Publications
+- `crispr-2024-papers` - CRISPR papers published in 2024
+
+### Healthcare Providers
+- `texas-cardiologists` - Cardiologists in Texas (CMS data)
+
+### Demographics
+- `california-population` - California population statistics
 
 ### Folder Structure (Anthropic Format)
 
@@ -145,7 +170,7 @@ Report saved: reports/competitive-landscape/YYYY-MM-DD_kras-inhibitor.md
 
 ```bash
 # Find all skills
-python3 .claude/scripts/discover_skills.py
+python3 .claude/tools/discover_skills.py
 
 # Find skills by pattern (e.g., pagination)
 python3 -c "from discover_skills import find_skill_by_pattern; print(find_skill_by_pattern('pagination'))"
@@ -181,7 +206,7 @@ For creating empty skill scaffolds manually:
 
 ```bash
 # Creates template files with TODOs (not used by agent system)
-python3 .claude/scripts/init_skill.py get_new_data --server ct_gov_mcp
+python3 .claude/tools/init_skill.py get_new_data --server ct_gov_mcp
 ```
 
 **Note**: The agent-generated skills are fully implemented with working code, real metadata, and detailed documentation. The manual `init_skill.py` utility only creates placeholder templates.
@@ -310,18 +335,27 @@ Agent discovers and reuses patterns from existing skills:
 │   ├── code-examples/                  # Code patterns (7 patterns)
 │   ├── mcp-tool-guides/                # MCP server docs (12 servers)
 │   ├── templates/                      # Report templates
-│   └── planning-archives/              # Historical planning docs
+│   └── test-suites/                    # Agent validation tests
 ├── agents/                             # Agent definitions (2 agents)
 │   ├── pharma-search-specialist.md
 │   └── competitive-landscape-analyst.md
-├── scripts/                            # Utility scripts (11 utilities)
+├── tools/                              # Platform utilities
+│   ├── skill_discovery/                # Index-based skill discovery
+│   │   ├── index_query.py              # Fast index queries
+│   │   ├── health_check.py             # Health verification
+│   │   ├── semantic_matcher.py         # Semantic matching
+│   │   ├── strategy.py                 # Strategy decisions
+│   │   └── index_updater.py            # Index maintenance
+│   ├── verification/                   # Closed-loop verification
+│   │   └── verify_skill.py             # Autonomous skill verification
 │   ├── discover_skills.py
 │   ├── init_skill.py
 │   ├── package_skill.py
-│   └── mcp/                            # MCP infrastructure
-│       ├── client.py                   # MCP client
-│       └── servers/                    # Python function stubs (12 servers)
-└── skills/                             # Skills library (13 skills)
+│   └── parse_skill_metadata.py
+├── mcp/                                # MCP infrastructure
+│   ├── client.py                       # MCP client (JSON-RPC)
+│   └── servers/                        # Python function stubs (12 servers)
+└── skills/                             # Skills library (26 skills)
     ├── index.json                      # Skills discovery index
     ├── README.md
     └── [skill-folders]/                # Anthropic folder structure
@@ -472,7 +506,7 @@ The agent will:
 
 **For manual scaffolding** (creates empty templates only):
 ```bash
-python3 .claude/scripts/init_skill.py get_new_data --server ct_gov_mcp
+python3 .claude/tools/init_skill.py get_new_data --server ct_gov_mcp
 ```
 
 ### New Agents
