@@ -13,7 +13,7 @@ import json
 from pathlib import Path
 
 # Add scripts/mcp to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "mcp"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / ".claude" / "mcp"))
 
 from mcp.servers.fda_mcp import mcp__fda_mcp__fda_info
 

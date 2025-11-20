@@ -66,7 +66,7 @@ for drug in result['drugs']:
 
 ### As standalone script:
 ```bash
-PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/get_braf_inhibitor_fda_drugs.py
+PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/get_braf_inhibitor_fda_drugs.py
 ```
 
 ## Implementation Notes

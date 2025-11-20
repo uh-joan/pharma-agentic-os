@@ -8,7 +8,7 @@
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 11,
+    "folder_skills_count": 14,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -23,8 +23,15 @@
       "has_frontmatter": true,
       "description": "Get GLP-1 clinical trials with full pagination support (1803 trials across 2 pages)",
       "function_signature": "get_glp1_trials() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["pagination", "markdown_parsing", "status_aggregation", "multi_page_data_collection"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "status_aggregation",
+        "multi_page_data_collection"
+      ],
       "category": "clinical-trials",
       "complexity": "medium",
       "deprecated_flat_files": {
@@ -43,8 +50,14 @@
       "has_frontmatter": true,
       "description": "Get FDA approved GLP-1 drugs with deduplication (21 unique drugs)",
       "function_signature": "get_glp1_fda_drugs() -> dict",
-      "servers_used": ["fda_mcp"],
-      "patterns_demonstrated": ["fda_json_parsing", "drug_deduplication", "metadata_extraction"],
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "fda_json_parsing",
+        "drug_deduplication",
+        "metadata_extraction"
+      ],
       "category": "drug-discovery",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -63,8 +76,13 @@
       "has_frontmatter": true,
       "description": "Get KRAS inhibitor clinical trials",
       "function_signature": "get_kras_inhibitor_trials() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["basic_ct_gov_search", "markdown_response_parsing"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "basic_ct_gov_search",
+        "markdown_response_parsing"
+      ],
       "category": "clinical-trials",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -83,8 +101,13 @@
       "has_frontmatter": true,
       "description": "Get FDA approved KRAS inhibitor drugs",
       "function_signature": "get_kras_inhibitor_fda_drugs() -> dict",
-      "servers_used": ["fda_mcp"],
-      "patterns_demonstrated": ["fda_json_parsing", "drug_metadata_extraction"],
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "fda_json_parsing",
+        "drug_metadata_extraction"
+      ],
       "category": "drug-discovery",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -103,8 +126,13 @@
       "has_frontmatter": true,
       "description": "Get GLP-1 drugs specifically for diabetes indication",
       "function_signature": "get_glp1_diabetes_drugs() -> dict",
-      "servers_used": ["fda_mcp"],
-      "patterns_demonstrated": ["fda_json_parsing", "indication_filtering"],
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "fda_json_parsing",
+        "indication_filtering"
+      ],
       "category": "drug-discovery",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -123,8 +151,13 @@
       "has_frontmatter": true,
       "description": "Get recruiting COVID-19 vaccine trials",
       "function_signature": "get_covid19_vaccine_trials_recruiting() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["ct_gov_status_filtering", "vaccine_trial_search"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "ct_gov_status_filtering",
+        "vaccine_trial_search"
+      ],
       "category": "clinical-trials",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -143,8 +176,13 @@
       "has_frontmatter": true,
       "description": "Get Phase 2 Alzheimer's trials in the United States",
       "function_signature": "get_phase2_alzheimers_trials_us() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["ct_gov_phase_filtering", "geographic_filtering"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "ct_gov_phase_filtering",
+        "geographic_filtering"
+      ],
       "category": "clinical-trials",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -163,8 +201,13 @@
       "has_frontmatter": true,
       "description": "Get Phase 3 obesity trials recruiting in the US",
       "function_signature": "get_us_phase3_obesity_recruiting_trials() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["ct_gov_multi_filter", "phase_status_location_filtering"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "ct_gov_multi_filter",
+        "phase_status_location_filtering"
+      ],
       "category": "clinical-trials",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -183,8 +226,14 @@
       "has_frontmatter": true,
       "description": "Get antibody-drug conjugate (ADC) clinical trials with pagination",
       "function_signature": "get_adc_trials() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["pagination", "markdown_parsing", "adc_search"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "adc_search"
+      ],
       "category": "clinical-trials",
       "complexity": "medium",
       "deprecated_flat_files": {
@@ -203,8 +252,13 @@
       "has_frontmatter": true,
       "description": "Get BRAF inhibitor clinical trials",
       "function_signature": "get_braf_inhibitor_trials() -> dict",
-      "servers_used": ["ct_gov_mcp"],
-      "patterns_demonstrated": ["basic_ct_gov_search", "markdown_response_parsing"],
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "basic_ct_gov_search",
+        "markdown_response_parsing"
+      ],
       "category": "clinical-trials",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -223,8 +277,13 @@
       "has_frontmatter": true,
       "description": "Get FDA approved BRAF inhibitor drugs",
       "function_signature": "get_braf_inhibitor_fda_drugs() -> dict",
-      "servers_used": ["fda_mcp"],
-      "patterns_demonstrated": ["fda_json_parsing", "drug_metadata_extraction"],
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "fda_json_parsing",
+        "drug_metadata_extraction"
+      ],
       "category": "drug-discovery",
       "complexity": "simple",
       "deprecated_flat_files": {
@@ -233,13 +292,76 @@
         "status": "deprecated",
         "removal_date": "2025-12-19"
       }
+    },
+    {
+      "name": "get_egfr_inhibitor_trials",
+      "structure": "folder",
+      "folder": "egfr-inhibitor-trials",
+      "skill_md": "egfr-inhibitor-trials/SKILL.md",
+      "script": "egfr-inhibitor-trials/scripts/get_egfr_inhibitor_trials.py",
+      "has_frontmatter": true,
+      "description": "Get comprehensive EGFR inhibitor clinical trials data across all phases",
+      "function_signature": "get_egfr_inhibitor_trials() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "status_aggregation"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_hypertension_fda_drugs",
+      "structure": "folder",
+      "folder": "hypertension-fda-drugs",
+      "skill_md": "hypertension-fda-drugs/SKILL.md",
+      "script": "hypertension-fda-drugs/scripts/get_hypertension_fda_drugs.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_hypertension_fda_drugs() -> dict",
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "json_parsing",
+        "deduplication",
+        "product_type_aggregation"
+      ],
+      "category": "drug-discovery",
+      "complexity": "simple"
+    },
+    {
+      "name": "get_crispr_2024_papers",
+      "structure": "folder",
+      "folder": "crispr-2024-papers",
+      "skill_md": "crispr-2024-papers/SKILL.md",
+      "script": "crispr-2024-papers/scripts/get_crispr_2024_papers.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_crispr_2024_papers() -> dict",
+      "servers_used": [
+        "pubmed_mcp"
+      ],
+      "patterns_demonstrated": [
+        "json_parsing",
+        "date_filtering",
+        "metadata_extraction"
+      ],
+      "category": "target-validation",
+      "complexity": "simple"
     }
   ],
   "pattern_categories": {
     "pagination": {
       "description": "Patterns for handling large datasets across multiple API pages",
       "best_reference": "get_glp1_trials",
-      "skills": ["get_glp1_trials", "get_adc_trials"]
+      "skills": [
+        "get_glp1_trials",
+        "get_adc_trials"
+      ]
     },
     "ct_gov_queries": {
       "description": "ClinicalTrials.gov search patterns (markdown response)",

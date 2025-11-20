@@ -76,7 +76,7 @@ for drug in result['drugs']:
 
 ### As Standalone
 ```bash
-PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/get_glp1_fda_drugs.py
+PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/get_glp1_fda_drugs.py
 ```
 
 ## Data Source

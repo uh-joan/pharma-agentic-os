@@ -9,7 +9,7 @@ import sys
 import re
 from pathlib import Path
 
-sys.path.insert(0, str(Path.home() / 'code' / 'agentic-os' / 'scripts'))
+sys.path.insert(0, str(Path.home() / 'code' / 'agentic-os' / '.claude'))
 from mcp.servers.ct_gov_mcp import ct_gov_studies
 
 def get_phase2_alzheimers_trials_us():

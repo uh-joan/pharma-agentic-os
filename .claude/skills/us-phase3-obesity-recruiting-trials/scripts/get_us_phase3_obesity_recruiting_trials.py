@@ -1,6 +1,6 @@
 import sys
 import re
-sys.path.insert(0, "scripts")
+sys.path.insert(0, ".claude")
 from mcp.servers.ct_gov_mcp import search
 
 def get_us_phase3_obesity_recruiting_trials():
