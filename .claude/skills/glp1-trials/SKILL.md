@@ -102,7 +102,7 @@ print(f"Currently recruiting: {len(recruiting)} trials")
 
 ### Standalone Execution
 ```bash
-PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/get_glp1_trials.py
+PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/get_glp1_trials.py
 ```
 
 ## Data Source

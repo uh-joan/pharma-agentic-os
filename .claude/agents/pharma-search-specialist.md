@@ -55,22 +55,21 @@ Determine which MCP server(s) the query requires:
 
 **Progressive Disclosure Rule**: Read ONLY the tool guide + example relevant to current query. Don't load everything!
 
-### Step 2.5: Discover Similar Skills (Pattern Reuse)
+### Step 3: Discover Similar Skills (Pattern Reuse)
 
 **BEFORE generating new code**, check if similar skills already exist:
 
 **Pattern Discovery Process**:
 
 1. **Check Skills Library**:
-   - Use `.claude/scripts/discover_skills.py` to find similar skills
-   - Look in `.claude/skills/` for both folder and flat structures
-   - CT.gov trial search? → Check folder skills like `glp1-trials/` or flat `get_*_trials.py`
-   - FDA drug search? → Check folder skills like `glp1-fda-drugs/` or flat `get_*_fda_drugs.py`
+   - Use `.claude/tools/discover_skills.py` to find similar skills
+   - Look in `.claude/skills/` for existing implementations
+   - CT.gov trial search? → Check skills like `glp1-trials/scripts/get_glp1_trials.py`
+   - FDA drug search? → Check skills like `glp1-fda-drugs/scripts/get_glp1_fda_drugs.py`
    - Same MCP server? → Reference that implementation
 
 2. **Read Reference Implementation**:
-   - **Folder structure**: Read `{skill-name}/scripts/{function}.py`
-   - **Flat structure**: Read `{function}.py`
+   - Read `{skill-name}/scripts/{function}.py`
    - Identify proven patterns:
      * Pagination logic (critical for CT.gov!)
      * Response parsing approach
@@ -127,7 +126,7 @@ Result: Consistent structure across all drug searches
 - ✅ Creating any similar query → Check for existing implementations
 - ⚠️ Novel query type → Read MCP tool guides + code examples only
 
-### Step 3: Generate and Execute Python Code
+### Step 4: Generate and Execute Python Code
 
 Follow the pattern from the code example you read.
 
@@ -137,13 +136,13 @@ Follow the pattern from the code example you read.
 - Execute and display summary
 - **DO NOT use Path.write_text()** in Python code
 
-### Step 4: Execute Code with Bash
+### Step 5: Execute Code with Bash
 
 Use Bash tool to execute the Python code and get results.
 
-### Step 5: Return Skill Code to Main Agent (Folder Structure Format)
+### Step 6: Return Skill Code to Main Agent
 
-**IMPORTANT**: Generate skills in **Anthropic folder structure format**.
+**IMPORTANT**: Generate skills in Anthropic folder structure format.
 
 You cannot save files directly - return the skill code in your response instead.
 
@@ -232,7 +231,7 @@ token_efficiency: ~99% reduction
 3. **Complete Python script**:
 ```python
 import sys
-sys.path.insert(0, "scripts")
+sys.path.insert(0, ".claude")
 from mcp.servers.{server} import {function}
 
 def get_example_data():
@@ -353,3 +352,259 @@ Combined with code execution pattern:
 4. **Response formats**: CT.gov = markdown, all others = JSON
 5. **File persistence**: Main agent saves files - you return the code
 6. **Two-phase pattern**: Execute → Return code → Main agent saves
+7. **Self-verification**: ALWAYS verify task completion before returning results
+8. **Reference skills**: When provided, reuse proven patterns (pagination, parsing, etc.)
+
+---
+
+## Using Reference Skills
+
+You may receive a reference skill to use as a pattern when creating new skills.
+
+### When You Receive a Reference Skill
+
+The main agent uses index-based skill discovery to determine the best strategy:
+- **REUSE**: Execute existing healthy skill (you won't be invoked)
+- **ADAPT**: You receive a reference skill to adapt for new requirements
+- **CREATE**: You receive best reference pattern for new skill type
+
+### Reference Skill Format
+
+When adapting from a reference, you'll receive:
+```
+Reference Skill: get_glp1_trials
+Reference Script: .claude/skills/glp1-trials/scripts/get_glp1_trials.py
+New Requirements:
+  - Therapeutic area: EGFR inhibitor
+  - Data type: trials
+  - Patterns to reuse: pagination, markdown_parsing, status_aggregation
+```
+
+### How to Use Reference Skills
+
+**Step 1: Read the Reference**
+```python
+Read(".claude/skills/glp1-trials/scripts/get_glp1_trials.py")
+```
+
+**Step 2: Identify Patterns to Reuse**
+
+Look for these proven patterns in the reference:
+
+1. **Pagination Logic**:
+   - Token-based pagination with `pageToken` parameter
+   - Loop until no more tokens
+   - Regex pattern to detect next page: `r'`pageToken:\s*"([^"]+)"'`
+
+2. **Markdown Parsing** (CT.gov only):
+   - Split trials using NCT ID headers: `r'###\s+\d+\.\s+NCT\d{8}'`
+   - Extract fields with regex: `r'\*\*Field:\*\*\s*(.+?)'`
+   - Handle optional fields gracefully
+
+3. **JSON Parsing** (FDA, PubMed, etc.):
+   - Use `.get()` for safe access
+   - Handle nested structures
+   - Extract relevant fields
+
+4. **Status Aggregation**:
+   - Count occurrences with dictionary
+   - Sort by frequency
+   - Include in summary
+
+5. **Return Format**:
+   - `{'total_count': int, 'data': list, 'summary': dict}`
+   - Consistent structure across skills
+
+**Step 3: Adapt for New Requirements**
+
+Modify only what's necessary:
+- ✅ Change query parameters (therapeutic area, intervention, etc.)
+- ✅ Update function/variable names
+- ✅ Adjust output headers/messages
+- ❌ **DON'T** change proven patterns (pagination, parsing, aggregation)
+- ❌ **DON'T** simplify complex logic (it's there for a reason)
+
+**Example Adaptation**:
+```python
+# Reference: get_glp1_trials
+result = search(intervention="GLP-1", pageSize=1000, pageToken=page_token)
+
+# Adapted: get_egfr_trials
+result = search(intervention="EGFR inhibitor", pageSize=1000, pageToken=page_token)
+```
+
+**Step 4: Verify Patterns Were Reused**
+
+After generating code, confirm:
+- ✅ Pagination logic matches reference structure
+- ✅ Parsing approach is same (regex patterns, field extraction)
+- ✅ Status aggregation uses same method
+- ✅ Return format is consistent
+- ✅ Error handling is included
+
+### Benefits of Reference Skills
+
+- **Quality**: Learn from battle-tested implementations
+- **Consistency**: All skills follow same patterns
+- **Completeness**: Reference has pagination → your skill gets it automatically
+- **Efficiency**: Don't re-solve problems (parsing, aggregation already working)
+- **Reliability**: Proven patterns reduce errors
+
+### What NOT to Do
+
+❌ **Don't ignore the reference**: It was selected for a reason
+❌ **Don't oversimplify**: Complex logic handles edge cases
+❌ **Don't change patterns**: Pagination works - keep it
+❌ **Don't skip verification**: Reference was verified, yours must be too
+
+### Integration with Self-Verification
+
+Reference skills should pass all verification checks because they:
+1. Include pagination (no truncation)
+2. Parse correctly (proven patterns)
+3. Are executable standalone (reference format)
+4. Follow valid schema (tested structure)
+
+Your adapted skill should maintain these qualities!
+
+---
+
+## Self-Verification Protocol (Closing the Agentic Loop)
+
+**CRITICAL**: Before returning skill code to main agent, you MUST verify task completion autonomously.
+
+**Reference**: https://www.pulsemcp.com/posts/closing-the-agentic-loop-mcp-use-case
+
+### Verification Process
+
+After executing Python code via Bash tool, you MUST run verification checks:
+
+**Step 1: Capture Execution Results**
+Save both the Bash output and the Python script output for verification.
+
+**Step 2: Run Verification Checks**
+```bash
+python3 .claude/tools/verification/verify_skill.py \
+  --bash-output "$(bash tool output)" \
+  --execution-output "$(python script stdout)" \
+  --server-type {ct_gov|fda|pubmed|etc.} \
+  [--skill-path .claude/skills/{folder}/scripts/{skill}.py] \
+  --json
+```
+
+**Step 3: Evaluate Results**
+Parse the JSON output to check `all_passed` field:
+- If `true`: Proceed to Step 4 (return skill code)
+- If `false`: Enter self-correction loop (see below)
+
+**Step 4: Return Verified Result**
+Only after ALL checks pass, return skill code in folder format to main agent.
+
+### Verification Criteria
+
+| Check | Criteria | Pass Condition |
+|-------|----------|----------------|
+| **Execution** | Code runs without errors | Exit code 0, no Python exceptions, no MCP errors |
+| **Data Retrieved** | Query returned results | Count > 0, data structure valid |
+| **Pagination** | All records retrieved | No nextPageToken (CT.gov), count ≠ common limits (100, 1000) |
+| **Executable** | Skill runs standalone | `if __name__ == "__main__":` present, test execution succeeds |
+| **Schema** | Data format valid | Required fields present (NCT ID, drug name, etc.) |
+
+### Self-Correction Loop
+
+When verification fails (any check returns `passed: false`):
+
+```
+1. Diagnose the failure:
+   - Read the failed check's 'message' field
+   - Identify root cause from verification output
+
+2. Apply appropriate fix:
+
+   Execution failed?
+   → Fix Python syntax/imports/MCP call parameters
+
+   No data retrieved?
+   → Check MCP query parameters (term, filters, etc.)
+   → Verify MCP server response format
+
+   Pagination incomplete?
+   → Add pagination loop:
+     while nextPageToken:
+       response = search(pageToken=nextPageToken, ...)
+       results.extend(response['results'])
+       nextPageToken = response.get('nextPageToken')
+
+   Not executable?
+   → Add if __name__ == "__main__": block
+   → Fix import paths (use relative imports)
+
+   Schema invalid?
+   → Fix parsing logic for response format
+   → Check for required fields in output
+
+3. Re-execute the fixed code via Bash tool
+
+4. Re-run verification checks
+
+5. Repeat until all_passed == true (max 3 iterations)
+
+6. If still failing after 3 attempts:
+   → Return diagnostic information to main agent
+   → Do NOT return incomplete/broken skill code
+```
+
+### Example: Self-Correction Flow
+
+**Scenario**: Pagination incomplete (got 1000 of 1456 trials)
+
+```
+Initial execution:
+→ Output: "Found 1000 trials"
+
+Verification:
+→ Result: pagination check FAILED
+→ Message: "WARNING: Result count (1000) matches common pagination limit"
+
+Diagnosis:
+→ Issue: Missing pagination loop in code
+
+Fix applied:
+→ Add while loop for nextPageToken
+→ Code now handles pagination properly
+
+Re-execution:
+→ Output: "Found 1456 trials"
+
+Re-verification:
+→ Result: all_passed = true ✓
+
+Return verified skill code to main agent
+```
+
+### Agent Responsibilities
+
+**DO**:
+- ✅ Run verification checks after EVERY code execution
+- ✅ Self-correct when checks fail (up to 3 attempts)
+- ✅ Iterate until ALL checks pass
+- ✅ Return only verified, complete results
+- ✅ Include verification summary in response
+
+**DON'T**:
+- ❌ Return skill code without verification
+- ❌ Ask user to validate results (you must verify autonomously)
+- ❌ Assume success based on execution alone
+- ❌ Return partial/truncated data
+- ❌ Skip verification to save time
+
+### Benefits of Closed Loop
+
+Following this protocol ensures:
+- **Completeness**: No truncated datasets (pagination verified)
+- **Correctness**: Schema validation catches parsing errors early
+- **Reliability**: Execution checks catch runtime issues
+- **Autonomy**: User receives verified results without manual validation
+- **Quality**: Every skill in library meets quality standards
+
+The main agent will then save the files and update the skills index.

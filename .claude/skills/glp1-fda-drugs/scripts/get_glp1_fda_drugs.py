@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, "scripts")
+sys.path.insert(0, ".claude")
 from mcp.servers.fda_mcp import lookup_drug
 
 def get_glp1_fda_drugs():

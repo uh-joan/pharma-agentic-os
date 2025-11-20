@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, "scripts")
+sys.path.insert(0, ".claude")
 from mcp.servers.fda_mcp import lookup_drug
 import re
 from datetime import datetime

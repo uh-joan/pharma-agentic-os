@@ -46,14 +46,14 @@ When pharma-search-specialist generates code to answer a query, it:
 #### `get_kras_inhibitor_trials`
 - **Purpose**: Get KRAS inhibitor clinical trials across all phases
 - **Returns**: `{total_count: int, trials_summary: str}`
-- **Execute**: `PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/kras-inhibitor-trials/scripts/get_kras_inhibitor_trials.py`
+- **Execute**: `PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/kras-inhibitor-trials/scripts/get_kras_inhibitor_trials.py`
 
 ### FDA Drugs
 
 #### `get_kras_inhibitor_fda_drugs`
 - **Purpose**: Get FDA approved KRAS inhibitor drugs
 - **Returns**: `{brand_name: {generic: str, count: int}}`
-- **Execute**: `PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/kras-inhibitor-fda-drugs/scripts/get_kras_inhibitor_fda_drugs.py`
+- **Execute**: `PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/kras-inhibitor-fda-drugs/scripts/get_kras_inhibitor_fda_drugs.py`
 
 ## Usage
 
@@ -74,7 +74,7 @@ print(f"Found {len(drugs)} approved drugs")
 ### Execute Standalone
 
 ```bash
-PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/kras-inhibitor-trials/scripts/get_kras_inhibitor_trials.py
+PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/kras-inhibitor-trials/scripts/get_kras_inhibitor_trials.py
 ```
 
 ## Benefits (per Anthropic)
@@ -149,7 +149,7 @@ See `.claude/.context/code-examples/skills_library_pattern.md` for detailed guid
 1. ✅ Define reusable function with docstring
 2. ✅ Add data validation (see `data_validation_pattern.md`)
 3. ✅ Include `if __name__ == "__main__":` block
-4. ✅ Test execution: `PYTHONPATH=scripts:$PYTHONPATH python3 skill.py`
+4. ✅ Test execution: `PYTHONPATH=.claude:$PYTHONPATH python3 skill.py`
 5. ✅ Create documentation file (`.md`)
 6. ✅ Update `index.json` with skill metadata
 

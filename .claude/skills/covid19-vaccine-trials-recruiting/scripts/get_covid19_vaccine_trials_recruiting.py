@@ -13,7 +13,7 @@ import re
 from pathlib import Path
 
 # Import MCP CT.gov server
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts" / "mcp"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / ".claude" / "mcp"))
 from servers.ct_gov_mcp import ct_gov_studies
 
 def get_covid19_vaccine_trials_recruiting():

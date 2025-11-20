@@ -48,34 +48,42 @@
 │   │   └── skills_library_pattern.md   # Skills library pattern
 │   └── templates/                      # Report templates
 │       ├── competitive-landscape-report.md
-│       └── skill-frontmatter-template.yaml  # NEW: Skill YAML template
-├── skills/                             # Reusable functions (Anthropic folder structure)
-│   ├── index.json                      # Skills discovery index (v1.1)
+│       └── skill-frontmatter-template.yaml
+├── skills/                             # Reusable functions
+│   ├── index.json                      # Skills discovery index
 │   │
-│   ├── glp1-trials/                    # NEW: Folder structure (Anthropic format)
+│   ├── glp1-trials/                    # Folder structure (Anthropic format)
 │   │   ├── SKILL.md                    # YAML frontmatter + documentation
 │   │   └── scripts/
 │   │       └── get_glp1_trials.py      # Executable function
 │   │
-│   ├── glp1-fda-drugs/                 # NEW: Folder structure
+│   ├── glp1-fda-drugs/
 │   │   ├── SKILL.md
 │   │   └── scripts/
 │   │       └── get_glp1_fda_drugs.py
 │   │
-│   └── get_old_skill.py                # OLD: Flat structure (being phased out)
-│       get_old_skill.md                # OLD: Kept for backward compatibility
+│   └── [Some legacy flat-structure skills for backward compatibility]
 │
-└── scripts/                            # Utilities
-    ├── init_skill.py                   # NEW: Initialize new skill
-    ├── package_skill.py                # NEW: Migrate flat to folder
-    ├── discover_skills.py              # NEW: Find skills (both formats)
-    ├── parse_skill_metadata.py         # NEW: Parse YAML frontmatter
-    └── mcp/                            # MCP infrastructure
-        ├── client.py                   # MCP client (spawns servers, manages JSON-RPC)
-        └── servers/                    # Python function stubs
-            ├── fda_mcp/
-            ├── ct_gov_mcp/
-            └── [12 MCP servers...]
+├── tools/                              # Platform utilities
+│   ├── skill_discovery/                # Index-based skill discovery
+│   │   ├── index_query.py              # Level 1: Fast index queries
+│   │   ├── health_check.py             # Level 2: Health verification
+│   │   ├── semantic_matcher.py         # Level 3: Semantic matching
+│   │   ├── strategy.py                 # Level 4: Strategy decisions
+│   │   └── index_updater.py            # Index maintenance
+│   ├── verification/                   # Closed-loop verification
+│   │   └── verify_skill.py             # Autonomous skill verification
+│   ├── init_skill.py                   # Initialize new skill
+│   ├── package_skill.py                # Migrate flat to folder
+│   ├── discover_skills.py              # Find skills (both formats)
+│   └── parse_skill_metadata.py         # Parse YAML frontmatter
+│
+└── mcp/                                # MCP infrastructure
+    ├── client.py                       # MCP client (spawns servers, manages JSON-RPC)
+    └── servers/                        # Python function stubs
+        ├── fda_mcp/
+        ├── ct_gov_mcp/
+        └── [12 MCP servers...]
 
 reports/                                # Strategic analysis reports (version controlled)
 ├── competitive-landscape/
@@ -86,15 +94,12 @@ reports/                                # Strategic analysis reports (version co
 
 ---
 
-## Skills Library Format (v2.0)
+## Skills Architecture
 
-### Migration to Anthropic Folder Structure
+### Folder Structure
 
-**Current State**: Hybrid (both formats supported)
-- **v2.0 (Folder structure)**: New skills use Anthropic format
-- **v1.0 (Flat structure)**: Legacy skills kept for compatibility
+Skills use Anthropic's folder format for modularity and discoverability:
 
-**Folder Structure (v2.0 - Current Standard)**:
 ```
 skill-name/
 ├── SKILL.md              # YAML frontmatter + documentation
@@ -102,42 +107,109 @@ skill-name/
     └── skill_function.py # Executable Python function
 ```
 
-**Flat Structure (v1.0 - Deprecated)**:
+**Benefits**:
+- ✅ **Standardized metadata**: YAML frontmatter enables intelligent discovery
+- ✅ **Self-contained packages**: Easy to share and distribute
+- ✅ **Code execution**: Maintains 98.7% token efficiency (not instruction-based)
+- ✅ **Both importable and executable**: Skills can be imported or run standalone
+
+**Note**: Some legacy flat-structure skills (`.py` + `.md` pairs) exist for backward compatibility.
+
+### Discovery & Strategy
+
+Skills are discovered through a four-level intelligent system:
+
+**Level 1: Index Query** (`.claude/tools/skill_discovery/index_query.py`)
+- Fast lookup in `index.json` without filesystem scanning
+- Filter by server, category, pattern, complexity
+- < 100ms query time
+
+**Level 2: Health Check** (`.claude/tools/skill_discovery/health_check.py`)
+- Verify files exist and are executable
+- Syntax validation (Python compiles)
+- Structure validation (folder format, frontmatter)
+- Import testing (dependencies available)
+
+**Level 3: Semantic Matching** (`.claude/tools/skill_discovery/semantic_matcher.py`)
+- Find skills matching intent, not just exact names
+- Score by therapeutic area, data type, patterns
+- Identify reuse/adaptation opportunities
+
+**Level 4: Strategy Decision** (`.claude/tools/skill_discovery/strategy.py`)
+- **REUSE**: Healthy skill exists, use as-is
+- **ADAPT**: Similar skill exists, fork and modify
+- **CREATE**: No match, create from reference pattern
+- Automatic fallback on execution failure
+
+**Index Maintenance** (`.claude/tools/skill_discovery/index_updater.py`)
+- Automatic updates when skills created/modified
+- Health status tracking
+- Filesystem consistency validation
+
+**Benefits**:
+- ✅ **Fast**: Index query vs directory scanning
+- ✅ **Reliable**: Health checks detect broken skills before execution
+- ✅ **Intelligent**: Semantic matching finds non-obvious reuse opportunities
+- ✅ **Self-healing**: Automatic strategy fallback on failure
+
+### Two-Phase Persistence Pattern
+
+Following Anthropic's pattern for reliable skill creation:
+
+**Phase 1: Agent Execution**
+1. pharma-search-specialist generates Python code
+2. Executes code via Bash tool
+3. Verifies results with closed-loop validation
+4. Returns skill code (folder name, SKILL.md, Python script)
+
+**Phase 2: Main Agent Persistence**
+5. Main agent extracts components from response
+6. Creates folder structure in `.claude/skills/`
+7. Saves SKILL.md with YAML frontmatter (Write tool)
+8. Creates `scripts/` subdirectory
+9. Saves Python function (Write tool)
+10. Updates `index.json` (via index_updater.py)
+
+**Why two-phase?**
+- Sub-agents cannot directly persist files to filesystem
+- Main agent has reliable Write tool access
+- Clean separation: Sub-agent executes, main agent persists
+
+### Skill File Standards
+
+**Every skill must be both importable AND executable**:
+
+```python
+import sys
+sys.path.insert(0, ".claude")
+from mcp.servers.ct_gov_mcp import search
+
+def get_kras_inhibitor_trials():
+    """Get KRAS inhibitor clinical trials across all phases.
+
+    Returns:
+        dict: Contains total_count and trials_summary
+    """
+    result = search(term="KRAS inhibitor", pageSize=100)
+    # ... processing logic ...
+    return {'total_count': count, 'trials_summary': result}
+
+# REQUIRED: Make skill executable standalone
+if __name__ == "__main__":
+    result = get_kras_inhibitor_trials()
+    print(f"Total trials found: {result['total_count']}")
+    print(result['trials_summary'])
 ```
-skill_function.py         # Python function
-skill_function.md         # Documentation
-```
 
-**Benefits of v2.0**:
-- ✅ **Standardized metadata**: YAML frontmatter for discovery
-- ✅ **Self-contained packages**: Easy to share/distribute
-- ✅ **Clear boundaries**: Folder per skill
-- ✅ **Anthropic alignment**: Follows industry conventions
-- ✅ **Still code execution**: NOT instruction-based (maintains 98.7% efficiency)
+**Usage**:
+- **Import**: `from .claude.skills.kras_trials.scripts.get_kras_inhibitor_trials import get_kras_inhibitor_trials`
+- **Execute**: `PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/kras-trials/scripts/get_kras_inhibitor_trials.py`
+- **Test**: Run directly to validate data collection
+- **Debug**: Easy to test individual skills in isolation
 
-**Skill Discovery**:
-```bash
-# Find all skills (both formats)
-python3 .claude/scripts/discover_skills.py
+**Discovery**: Agent reads `.claude/skills/index.json` to discover available capabilities.
 
-# Find skills by pattern
-python3 -c "from discover_skills import find_skill_by_pattern; print(find_skill_by_pattern('pagination'))"
-
-# Find skills by MCP server
-python3 -c "from discover_skills import find_skill_by_server; print(find_skill_by_server('ct_gov_mcp'))"
-```
-
-**Creating New Skills**:
-```bash
-# Initialize new skill in folder structure
-python3 .claude/scripts/init_skill.py get_new_data --server ct_gov_mcp
-```
-
-**Migration Status** (Phase 3):
-- Phase 1: YAML frontmatter added to all skills ✓
-- Phase 2: Folder structure created for reference skills ✓
-- Phase 3: Agent generates new folder format ← **Current**
-- Phase 4: Complete migration (remaining skills) ← Next
+**Evolution**: Skills library grows over time, building higher-level abstractions.
 
 ---
 
@@ -222,153 +294,103 @@ Metadata separates WHAT agent can analyze from HOW data is collected.
 
 ---
 
-## Progressive Disclosure System
+## Verification Infrastructure (Closing the Agentic Loop)
 
-### MCP Tool Guides (Always available)
+**Purpose**: Autonomous skill verification to ensure completeness and correctness
+
+**Reference**: https://www.pulsemcp.com/posts/closing-the-agentic-loop-mcp-use-case
+
+### Verification Script
+
+**Location**: `.claude/tools/verification/verify_skill.py`
+
+**Usage** (by pharma-search-specialist agent):
+```bash
+python3 .claude/tools/verification/verify_skill.py \
+  --bash-output "$(execution output)" \
+  --execution-output "$(python stdout)" \
+  --server-type ct_gov \
+  --json
+```
+
+**Verification Checks**:
+1. **Execution**: Code runs without errors (exit code 0, no exceptions)
+2. **Data Retrieved**: Query returned results (count > 0)
+3. **Pagination**: All records retrieved (no truncation)
+4. **Executable**: Skill runs standalone (has `if __name__ == "__main__":`)
+5. **Schema**: Data format valid (required fields present)
+
+**Auto-Approval Required**:
+The verification script must be pre-approved for pharma-search-specialist agent to run autonomously.
+
+Add to Claude Code configuration:
+```bash
+Bash(python3 .claude/tools/verification/verify_skill.py:*)
+```
+
+### Agent Integration
+
+The pharma-search-specialist agent MUST:
+1. Execute Python code via Bash tool
+2. Run verification checks on results
+3. Self-correct if any check fails (max 3 attempts)
+4. Return only verified, complete skill code
+5. Never ask user to validate results
+
+This enables "closing the agentic loop" - the agent autonomously verifies task completion without requiring user validation.
+
+---
+
+## Progressive Disclosure
+
+The agent loads only the documentation and examples needed for the current query, not everything upfront.
+
+### MCP Tool Guides
 Agent reads these to understand API parameters and response formats:
 - `.claude/.context/mcp-tool-guides/clinicaltrials.md`
 - `.claude/.context/mcp-tool-guides/fda.md`
 - `.claude/.context/mcp-tool-guides/pubmed.md`
-- [10 more...]
+- [10 more servers...]
 
-### Code Examples (Read on-demand)
-Agent reads these ONLY when needed for current query:
-- `.claude/.context/code-examples/ctgov_markdown_parsing.md` - CT.gov markdown parsing
-- `.claude/.context/code-examples/fda_json_parsing.md` - FDA JSON parsing
-- `.claude/.context/code-examples/multi_server_query.md` - Combining multiple servers
-- `.claude/.context/code-examples/skills_library_pattern.md` - Skills library best practices
-- `.claude/.context/code-examples/data_validation_pattern.md` - Data validation and error handling
+### Code Examples (On-Demand)
+Agent reads these ONLY when needed:
+- `ctgov_markdown_parsing.md` - CT.gov markdown parsing
+- `fda_json_parsing.md` - FDA JSON parsing
+- `multi_server_query.md` - Combining multiple servers
+- `skills_library_pattern.md` - Skills library best practices
+- `data_validation_pattern.md` - Data validation and error handling
 
-**Benefit**: Agent loads 0-2 examples per query instead of all examples always.
+### Reference Skills (Pattern Reuse)
+Agent discovers and reuses patterns from existing skills:
 
-### Pattern Discovery (Skills Evolution)
-**NEW**: Agent discovers and reuses patterns from existing skills before creating new ones.
-
-**How it works**:
-1. User asks for new query (e.g., "Get ADC trials")
-2. Agent checks `.claude/skills/` for similar implementations
-3. Agent reads reference skill (e.g., `get_glp1_trials.py`)
+1. User asks for new data (e.g., "Get ADC trials")
+2. Strategy system determines best approach (REUSE/ADAPT/CREATE)
+3. If ADAPT or CREATE: Agent reads reference skill for patterns
 4. Agent applies proven patterns (pagination, parsing, etc.)
-5. Agent generates new skill following same structure
+5. New skill follows same structure as reference
 
-**Discovery methods**:
-- **Index-based**: Read `.claude/skills/index.json` → Filter by server/pattern → Select best match
-- **Directory-based**: List `.claude/skills/get_*_trials.py` → Identify similar → Read implementation
-
-**Benefits**:
-- ✅ **Quality**: Learn from battle-tested implementations (not theoretical examples)
-- ✅ **Consistency**: All skills follow same patterns and conventions
-- ✅ **Completeness**: Example: `get_glp1_trials.py` has pagination → new trials skills get it automatically
-- ✅ **Efficiency**: Don't re-solve problems (pagination, parsing already working)
-
-**Example pattern reuse**:
+**Example**:
 ```
 Query: "Get ADC trials"
 ↓
-Agent checks: .claude/skills/get_*_trials.py
+Strategy: CREATE (no ADC skill exists)
 ↓
-Agent finds: get_glp1_trials.py (has pagination!)
+Reference: get_glp1_trials (has pagination, markdown parsing)
 ↓
-Agent reads: Pagination logic (lines 15-64)
+Agent reads: Pagination logic from reference
 ↓
 Agent applies: Same pattern to ADC query
 ↓
-Result: All ADC trials (not just first 1000)
-```
-
-**Skills Index**: `.claude/skills/index.json` contains:
-- Patterns demonstrated by each skill
-- Best reference skills for each pattern category
-- Technical details (pagination method, regex patterns)
-- Quick discovery without reading all files
-
-**Pattern Documentation**: `.claude/.context/code-examples/` includes:
-- `ctgov_pagination_pattern.md` - Extracted from `get_glp1_trials.py`
-- `fda_json_parsing.md` - FDA response handling
-- `multi_server_query.md` - Combining multiple servers
-
----
-
-## Skills Library Pattern (Two-Phase + Folder Structure)
-
-Following Anthropic's pattern with two-phase persistence and folder structure:
-
-**Phase 1: Agent Execution**
-1. **Define reusable function** that encapsulates logic
-2. **Execute and display** summary
-3. **Return skill code in folder format** to main agent:
-   - Skill folder name
-   - SKILL.md (with YAML frontmatter)
-   - Python script
-
-**Phase 2: Main Agent Persistence**
-4. **Extract components from response** (parse folder name and code blocks)
-5. **Create folder structure** `.claude/skills/[skill-folder-name]/`
-6. **Save SKILL.md** with frontmatter (Write tool)
-7. **Create scripts/** subdirectory
-8. **Save Python function** to `scripts/[function_name].py` (Write tool)
-9. **Update index.json** with folder structure entry
-
-**Why two-phase?**
-- Sub-agents cannot directly persist files to filesystem
-- Main agent has reliable Write tool access
-- Clean separation: Agent executes, main agent persists
-
-**Code extraction pattern**:
-Sub-agent returns response with code blocks:
-```
-Found 363 ADC trials.
-
-Python skill:
-\```python
-import sys
-...
-\```
-
-Documentation:
-\```markdown
-# get_adc_trials
-...
-\```
-```
-
-Main agent extracts code blocks and saves files. If extraction fails, main agent can reconstruct from execution results.
-
-### Skill File Standards
-
-**Every skill must be both importable AND executable**:
-
-```python
-import sys
-sys.path.insert(0, "scripts")
-from mcp.servers.ct_gov_mcp import search
-
-def get_kras_inhibitor_trials():
-    """Get KRAS inhibitor clinical trials across all phases.
-
-    Returns:
-        dict: Contains total_count and trials_summary
-    """
-    result = search(term="KRAS inhibitor", pageSize=100)
-    # ... processing logic ...
-    return {'total_count': count, 'trials_summary': result}
-
-# REQUIRED: Make skill executable standalone
-if __name__ == "__main__":
-    result = get_kras_inhibitor_trials()
-    print(f"Total trials found: {result['total_count']}")
-    print(result['trials_summary'])
+Result: Complete ADC trials skill with pagination
 ```
 
 **Benefits**:
-- ✅ Importable: `from .claude.skills.kras_inhibitor_trials.scripts.get_kras_inhibitor_trials import get_kras_inhibitor_trials`
-- ✅ Executable: `PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/kras-inhibitor-trials/scripts/get_kras_inhibitor_trials.py`
-- ✅ Testable: Can run directly to validate data collection
-- ✅ Debuggable: Easy to test individual skills in isolation
+- ✅ Load 0-2 examples per query (not all examples always)
+- ✅ Learn from battle-tested implementations (not just theory)
+- ✅ Consistency across all skills (same patterns, conventions)
+- ✅ Completeness inherited (reference has pagination → new skill gets it)
 
-**Agent discovery**: Agent can read `.claude/skills/index.json` or skill .md files to discover available capabilities.
-
-**Evolutionary**: Skills library grows over time, building higher-level abstractions.
+**Reference**: Implementation details in `.claude/.context/implementation-plans/index-based-skill-discovery.md`
 
 ---
 
@@ -491,12 +513,125 @@ Transform patterns with inferred parameters:
 - `get_{therapeutic_area}_fda_drugs` → `get_kras_inhibitor_fda_drugs`
 - Contextual skills only added if triggers match
 
-### Step 4: Check/Create/Execute Skills
-For each required skill:
-1. Check: Does `.claude/skills/{skill_name}.py` exist?
-2. If missing: Task(pharma-search-specialist) → Create skill → Save with Write tool
-3. Execute: Bash(PYTHONPATH=scripts:$PYTHONPATH python {skill_name}.py) → Collect data
-4. Validate: Ensure data collection succeeded (non-empty results, expected format)
+### Step 4: Check/Create/Execute Skills (Index-Based Strategy)
+
+For each required skill, use intelligent strategy decision:
+
+**Step 4.1: Determine Strategy**
+```python
+from skill_discovery.strategy import determine_skill_strategy, SkillRequirements
+
+strategy = determine_skill_strategy(
+    skill_name='get_kras_inhibitor_trials',
+    requirements=SkillRequirements(
+        therapeutic_area='KRAS inhibitor',
+        data_type='trials',
+        servers=['ct_gov_mcp']
+    )
+)
+```
+
+**Step 4.2: Execute Strategy**
+
+- **REUSE** (`strategy.strategy == SkillStrategy.REUSE`):
+  ```python
+  # Skill exists and is healthy - use as-is
+  Bash(f"PYTHONPATH=.claude:$PYTHONPATH python .claude/skills/{strategy.skill['script']}")
+
+  # Validate execution
+  if exit_code != 0 or result_count == 0:
+      # Mark skill as broken and retry with CREATE strategy
+      update_skill_health(skill_name, HealthStatus.BROKEN, ["Execution failed"])
+      strategy = determine_skill_strategy(skill_name, requirements)
+  ```
+
+- **ADAPT** (`strategy.strategy == SkillStrategy.ADAPT`):
+  ```python
+  if "migrate structure" in strategy.action_plan:
+      # Case A: Skill needs migration (flat → folder)
+      Bash("python3 .claude/tools/package_skill.py {skill_name}")
+      update_skill_health(skill_name, HealthStatus.HEALTHY, [])
+
+  else:
+      # Case B: Fork similar skill for new therapeutic area
+      # Read reference skill
+      Read(f".claude/skills/{strategy.skill['script']}")
+
+      # Task pharma-search-specialist to adapt
+      Task(
+          subagent_type='pharma-search-specialist',
+          prompt=f"""Create {skill_name} by adapting {strategy.skill['name']}.
+
+          Reference skill: .claude/skills/{strategy.skill['script']}
+          New parameters: {requirements.therapeutic_area}
+          Reuse patterns: {strategy.skill['patterns_demonstrated']}
+          """
+      )
+
+  # Execute adapted skill
+  Bash(f"PYTHONPATH=.claude:$PYTHONPATH python .claude/skills/{new_skill_script}")
+
+  # Update index with new skill
+  Bash(f"python3 .claude/tools/skill_discovery/index_updater.py add ...")
+  ```
+
+- **CREATE** (`strategy.strategy == SkillStrategy.CREATE`):
+  ```python
+  # No matching skill - create from reference pattern
+  # Read reference skill for pattern reuse
+  Read(f".claude/skills/{strategy.reference['script']}")
+
+  # Task pharma-search-specialist with reference
+  Task(
+      subagent_type='pharma-search-specialist',
+      prompt=f"""Create new skill: {skill_name}
+
+      Requirements: {requirements}
+      Reference pattern: {strategy.reference['name']}
+      Patterns to include: {strategy.reference['patterns_demonstrated']}
+
+      Follow reference implementation for:
+      - Pagination approach
+      - Response parsing
+      - Error handling
+      - Return format
+      """
+  )
+
+  # pharma-search-specialist returns skill code (with verification via closed loop)
+  # Main agent saves files
+  Write(f".claude/skills/{folder_name}/SKILL.md", skill_md_content)
+  Write(f".claude/skills/{folder_name}/scripts/{skill_name}.py", script_content)
+
+  # Update index (CRITICAL!)
+  Bash(f"""python3 .claude/tools/skill_discovery/index_updater.py add \
+      --name {skill_name} \
+      --folder {folder_name} \
+      --servers {','.join(servers)} \
+      --patterns {','.join(patterns)} \
+      --category {category} \
+      --complexity {complexity}
+  """)
+
+  # Execute newly created skill
+  Bash(f"PYTHONPATH=.claude:$PYTHONPATH python .claude/skills/{folder_name}/scripts/{skill_name}.py")
+  ```
+
+**Step 4.3: Validate Data Collection**
+```python
+# Parse execution output
+result = parse_execution_output(bash_output)
+
+if result['success'] and result['count'] > 0:
+    print(f"✓ {skill_name}: {result['count']} records collected")
+else:
+    # Execution failed - mark skill health and retry
+    update_skill_health(skill_name, HealthStatus.BROKEN, [result['error']])
+
+    # Retry with CREATE strategy (start fresh)
+    strategy = determine_skill_strategy(skill_name, requirements)
+    # ... execute CREATE strategy ...
+```
 
 ### Step 4.5: Show Data Collection Summary
 Display summary to user for transparency:

@@ -37,7 +37,7 @@ print(result['trials_summary'])
 ### As executable script
 ```bash
 cd /path/to/agentic-os
-PYTHONPATH=scripts:$PYTHONPATH python3 .claude/skills/get_braf_inhibitor_trials.py
+PYTHONPATH=.claude:$PYTHONPATH python3 .claude/skills/get_braf_inhibitor_trials.py
 ```
 
 ## Returns
