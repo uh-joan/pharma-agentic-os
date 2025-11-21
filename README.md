@@ -441,6 +441,76 @@ python3 .claude/tools/init_skill.py get_new_data --server ct_gov_mcp
 
 ---
 
+## Agent Roadmap
+
+**Current Status:** 2 agents active (pharma-search-specialist, competitive-landscape-analyst)
+
+**Planned Expansion:** 80+ specialized pharmaceutical agents organized across the drug development lifecycle:
+
+### Discovery & Target Identification
+Target identification, validation, druggability assessment, hypothesis generation, MOA analysis
+
+### Drug Discovery & Design
+Medicinal chemistry, screening (HTS, fragment-based, phenotypic), assay development, DMPK/ADME profiling, formulation science
+
+### Preclinical Development
+Study design, timeline optimization, toxicology (general, genetic, safety pharmacology), regulatory strategy
+
+### Clinical Development
+Protocol design, clinical operations, biomarker strategy, indication expansion, clinical synthesis
+
+### Regulatory Affairs
+Pathway analysis, precedent analysis, risk assessment, label strategy, AdComm preparation, IND package assembly
+
+### Manufacturing & CMC
+CMC strategy, formulation development, manufacturing assessment, quality systems
+
+### Medical Affairs
+KOL strategy, publication planning, medical communications
+
+### Market Access & Pricing
+HTA/cost-effectiveness analysis, market access strategy, pricing strategy, reimbursement optimization
+
+### Commercial Analytics
+Market sizing, epidemiology analysis, patient flow modeling, uptake dynamics, revenue forecasting, product lifecycle management
+
+### Business Development & Licensing
+Target screening, gap analysis, deal evaluation, fit scoring, timing analysis, competitive dynamics
+
+### Due Diligence
+Commercial, scientific, regulatory, legal, manufacturing, and risk profiling for M&A and partnerships
+
+### Portfolio & Pipeline Management
+Pipeline tracking, portfolio optimization, risk assessment, value aggregation, decision synthesis
+
+### Competitive Intelligence
+Company profiling (pipeline, financial, competitive), landscape analysis, opportunity identification
+
+### Real World Evidence
+RWE study design, outcomes analysis, analytics strategy, pharmacovigilance signal detection
+
+### Valuation & Deal Structuring
+NPV modeling, comparable analysis, deal structure optimization
+
+### Therapeutic Area Specialists
+Oncology, CNS, immunology, rare disease, antibody-drug conjugates (ADC)
+
+---
+
+### Request a New Agent
+
+Have a specific pharmaceutical workflow or analysis need? **[Open an issue](https://github.com/uh-joan/pharma-agentic-os/issues/new)** with:
+- **Use case**: What problem does this agent solve?
+- **Inputs**: What data sources does it need?
+- **Outputs**: What analysis or deliverables should it produce?
+
+We prioritize agents based on:
+- Frequency of use across pharmaceutical workflows
+- Availability of required MCP data sources
+- Community interest and contributions
+
+---
+
 ## Links
 
 - **Anthropic Code Execution Pattern**: https://www.anthropic.com/engineering/code-execution-with-mcp
