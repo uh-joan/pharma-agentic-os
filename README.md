@@ -138,31 +138,31 @@ The skills library is a **growing collection of reusable data collection functio
 
 ## MCP Servers
 
-The platform integrates **12 specialized MCP servers**:
+The platform integrates **12 specialized data sources** via Model Context Protocol:
 
 ### Core Pharmaceutical Data
-- **ct-gov-mcp**: ClinicalTrials.gov trial data (returns **markdown**)
-- **fda-mcp**: FDA drug labels, adverse events, recalls, device data
-- **pubmed-mcp**: PubMed biomedical literature
+- **ClinicalTrials.gov**: Clinical trial data and study protocols
+- **FDA**: Drug labels, adverse events, recalls, device registrations
+- **PubMed**: Biomedical literature and research publications
 
 ### Medical Coding & Standards
-- **nlm-codes-mcp**: ICD-10/11, HCPCS, NPI, HPO medical codes
-- **who-mcp-server**: WHO Global Health Observatory data
+- **NLM Medical Codes**: ICD-10/11, HCPCS, NPI, HPO standardized codes
+- **WHO Global Health Observatory**: International health statistics
 
 ### Chemistry & Biology
-- **pubchem-mcp-server**: Compound properties, ADME data
-- **opentargets-mcp-server**: Target validation, gene-drug-disease associations
+- **PubChem**: Chemical compound properties and ADME data
+- **Open Targets**: Target validation and gene-drug-disease associations
 
 ### Financial & Legal
-- **sec-mcp-server**: SEC EDGAR financial filings
-- **patents-mcp-server**: USPTO patent search
-- **financials-mcp-server**: Yahoo Finance + FRED economic indicators
+- **SEC EDGAR**: Public company financial filings
+- **USPTO**: Patent search and intellectual property data
+- **Financial Markets**: Stock data and economic indicators (Yahoo Finance, FRED)
 
 ### Healthcare Systems
-- **healthcare-mcp**: CMS Medicare provider data
-- **datacommons-mcp**: Population statistics, disease demographics
+- **CMS Medicare**: Healthcare provider and procedure data
+- **Data Commons**: Population statistics and disease demographics
 
-**Documentation**: Each server has detailed API guide in `.claude/.context/mcp-tool-guides/`
+**Documentation**: Each data source has a detailed API guide in `.claude/.context/mcp-tool-guides/`
 
 ---
 
