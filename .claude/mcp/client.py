@@ -147,10 +147,25 @@ def load_config():
     """Load MCP configuration from .mcp.json"""
     global _config
     if _config is None:
-        config_path = Path.home() / 'code' / 'pharma-agentic-os' / '.mcp.json'
-        with open(config_path) as f:
-            data = json.load(f)
-            _config = data.get('mcpServers', {})
+        # Find project root by looking for .mcp.json
+        current = Path(__file__).resolve()
+        while current != current.parent:
+            config_path = current / '.mcp.json'
+            if config_path.exists():
+                with open(config_path) as f:
+                    data = json.load(f)
+                    _config = data.get('mcpServers', {})
+                return _config
+            current = current.parent
+
+        # Fallback: check current working directory
+        config_path = Path.cwd() / '.mcp.json'
+        if config_path.exists():
+            with open(config_path) as f:
+                data = json.load(f)
+                _config = data.get('mcpServers', {})
+        else:
+            raise FileNotFoundError(f"Could not find .mcp.json in project tree")
     return _config
 
 

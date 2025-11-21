@@ -35,12 +35,13 @@
 7. [Method 4: get_disease_targets_summary](#method-4-get_disease_targets_summary)
 8. [Method 5: get_target_details](#method-5-get_target_details)
 9. [Method 6: get_disease_details](#method-6-get_disease_details)
-10. [Response Format & Parsing](#response-format--parsing)
-11. [Evidence Score Interpretation](#evidence-score-interpretation)
-12. [Common Use Cases](#common-use-cases)
-13. [Known Quirks & Limitations](#known-quirks--limitations)
-14. [Best Practices](#best-practices)
-15. [FAQ](#faq)
+10. [Pagination Support](#pagination-support)
+11. [Response Format & Parsing](#response-format--parsing)
+12. [Evidence Score Interpretation](#evidence-score-interpretation)
+13. [Common Use Cases](#common-use-cases)
+14. [Known Quirks & Limitations](#known-quirks--limitations)
+15. [Best Practices](#best-practices)
+16. [FAQ](#faq)
 
 ---
 
@@ -67,10 +68,10 @@
 
 | Method | Purpose | Key Parameters | ID Format | Returns |
 |--------|---------|----------------|-----------|---------|
-| `search_targets` | Find genes/targets | `query`, `size` | Symbol → Ensembl ID | Target list |
-| `search_diseases` | Find diseases | `query`, `size` | Name → MONDO/EFO ID | Disease list |
-| `get_target_disease_associations` | Get associations | `targetId`, `diseaseId`, `minScore` | Ensembl + MONDO/EFO | Associations |
-| `get_disease_targets_summary` | Disease targets | `diseaseId`, `minScore`, `size` | MONDO/EFO | Target summary |
+| `search_targets` | Find genes/targets | `query`, `size` (max: 50K) | Symbol → Ensembl ID | Target list |
+| `search_diseases` | Find diseases | `query`, `size` (max: 50K) | Name → MONDO/EFO ID | Disease list |
+| `get_target_disease_associations` | Get associations | `targetId`, `diseaseId`, `minScore`, `size` (max: 50K) | Ensembl + MONDO/EFO | Associations |
+| `get_disease_targets_summary` | Disease targets | `diseaseId`, `minScore`, `size` (max: 50K) | MONDO/EFO | Target summary |
 | `get_target_details` | Target info | `id` | Ensembl ID | Full details |
 | `get_disease_details` | Disease info | `id` | MONDO/EFO | Full details |
 
@@ -109,7 +110,7 @@
 |-----------|------|----------|---------|------------|-------------|
 | `method` | string | ✅ Yes | - | Must be `"search_targets"` | Operation type |
 | `query` | string | ✅ Yes | - | Any text | Gene symbol, name, or description |
-| `size` | integer | ❌ No | 25 | 1-500 | Maximum results to return |
+| `size` | integer | ❌ No | 25 | 1-50,000 | Maximum results to return (supports pagination) |
 
 ### Search Query Examples
 
@@ -208,7 +209,7 @@ print(f"Found {result.get('total', 0)} protein kinases")
 |-----------|------|----------|---------|------------|-------------|
 | `method` | string | ✅ Yes | - | Must be `"search_diseases"` | Operation type |
 | `query` | string | ✅ Yes | - | Any text | Disease name, synonym, or description |
-| `size` | integer | ❌ No | 25 | 1-500 | Maximum results to return |
+| `size` | integer | ❌ No | 25 | 1-50,000 | Maximum results to return (supports pagination) |
 
 ### Search Query Examples
 
@@ -297,8 +298,8 @@ print(f"Found {result.get('total', 0)} breast cancer types")
 | `method` | string | ✅ Yes | - | Must be `"get_target_disease_associations"` | Operation type |
 | `targetId` | string | ❌ No | - | Ensembl gene ID | Target Ensembl ID (e.g., "ENSG00000012048") |
 | `diseaseId` | string | ❌ No | - | MONDO/EFO ID | Disease ID (e.g., "MONDO_0005148", "EFO_0000305") |
-| `minScore` | number | ❌ No | 0.0 | 0.0-1.0 | Minimum association score threshold |
-| `size` | integer | ❌ No | 50 | 1-500 | Maximum associations to return |
+| `minScore` | number | ❌ No | 0.0 | 0.0-1.0 | Minimum association score threshold (client-side filter after pagination) |
+| `size` | integer | ❌ No | 100 | 1-50,000 | Maximum associations to return (supports automatic pagination in batches of 100) |
 | `format` | string | ❌ No | "json" | "json" or "tsv" | Output format |
 
 **Note**: At least one of `targetId` or `diseaseId` should be provided.
@@ -431,8 +432,8 @@ result = get_target_disease_associations(
 |-----------|------|----------|---------|------------|-------------|
 | `method` | string | ✅ Yes | - | Must be `"get_disease_targets_summary"` | Operation type |
 | `diseaseId` | string | ✅ Yes | - | MONDO/EFO ID | Disease ID (e.g., "MONDO_0005148", "EFO_0000305") |
-| `minScore` | number | ❌ No | 0.0 | 0.0-1.0 | Minimum association score threshold |
-| `size` | integer | ❌ No | 50 | 1-500 | Maximum targets to return |
+| `minScore` | number | ❌ No | 0.0 | 0.0-1.0 | Minimum association score threshold (client-side filter after pagination) |
+| `size` | integer | ❌ No | 50 | 1-50,000 | Maximum targets to return (supports automatic pagination in batches of 100) |
 | `format` | string | ❌ No | "json" | "json" or "tsv" | Output format |
 
 ### Query Example
@@ -673,6 +674,117 @@ if synonyms:
     for synonym in synonyms:
         print(f"  - {synonym}")
 ```
+
+---
+
+## Pagination Support
+
+**Automatic Pagination**: The MCP server automatically handles pagination for large datasets.
+
+### How Pagination Works
+
+When you request a large dataset, the server:
+1. Fetches data in **batches of 100 records** from the Open Targets GraphQL API
+2. Continues fetching until reaching the requested `size` or total available records
+3. Applies `minScore` filtering **after** fetching all pages (client-side)
+4. Returns aggregated results with pagination metadata
+
+### Pagination Metadata
+
+All association methods return pagination metadata:
+
+```json
+{
+  "data": { ... },
+  "pagination": {
+    "requested": 500,      // Size you requested
+    "returned": 500,       // Actual records returned
+    "total": 12874,        // Total records available
+    "filtered": 500        // Records after minScore filter
+  }
+}
+```
+
+**Key fields**:
+- `requested` - The `size` parameter you provided
+- `returned` - Actual number of records in response (≤ requested)
+- `total` - Total records available in Open Targets (before filtering)
+- `filtered` - Records that passed `minScore` threshold (≤ total)
+
+### Large Dataset Examples
+
+#### Example 1: Fetch 1,000 Alzheimer's Targets
+
+```python
+from mcp.servers.opentargets_mcp import get_target_disease_associations
+
+# Fetch 1,000 targets (10 pages automatically)
+result = get_target_disease_associations(
+    diseaseId='MONDO_0004975',  # Alzheimer's disease
+    minScore=0.0,
+    size=1000
+)
+
+pagination = result.get('pagination', {})
+rows = result.get('data', {}).get('disease', {}).get('associatedTargets', {}).get('rows', [])
+
+print(f"Requested: {pagination['requested']}")  # 1000
+print(f"Returned: {len(rows)}")                 # 1000
+print(f"Total available: {pagination['total']}") # 12,874
+print(f"Pages fetched: {len(rows) // 100}")     # 10 pages
+```
+
+#### Example 2: High-Confidence Filtering from Full Dataset
+
+```python
+# Fetch large dataset, then filter by minScore
+result = get_target_disease_associations(
+    diseaseId='MONDO_0004975',
+    minScore=0.5,  # High-confidence only
+    size=1000      # Fetch up to 1000, but only high-confidence will be returned
+)
+
+pagination = result.get('pagination', {})
+rows = result.get('data', {}).get('disease', {}).get('associatedTargets', {}).get('rows', [])
+
+print(f"Total targets in database: {pagination['total']}")  # 12,874
+print(f"High-confidence targets (≥0.5): {len(rows)}")       # 75
+print(f"All returned scores ≥ 0.5: {all(r['score'] >= 0.5 for r in rows)}")  # True
+```
+
+### Performance Considerations
+
+**Pagination Timing**:
+- Each page (100 records): ~1-2 seconds
+- 500 records (5 pages): ~5-10 seconds
+- 1,000 records (10 pages): ~10-20 seconds
+
+**Recommendations**:
+- Use `minScore` to reduce dataset size when possible
+- Start with smaller `size` values (100-500) for initial exploration
+- Request larger datasets (1,000-5,000) only when comprehensive data is needed
+- Maximum practical size: 50,000 records (500 pages, ~10-15 minutes)
+
+### Pagination vs. Filtering
+
+**Important**: `minScore` is applied **after** pagination, not during:
+
+```python
+# This fetches 1000 records, THEN filters by score
+result = get_target_disease_associations(
+    diseaseId='MONDO_0004975',
+    minScore=0.5,  # Applied after fetching
+    size=1000      # Fetches up to 1000 raw records
+)
+
+# If only 75 targets have score ≥ 0.5, you get 75 results
+# But the server still fetched ~1000 records (10 pages)
+```
+
+**Best Practice**: Set `size` based on expected results after filtering:
+- For `minScore=0.5`: 75-200 results typical → `size=500` sufficient
+- For `minScore=0.3`: 200-1000 results typical → `size=1000` recommended
+- For `minScore=0.0`: All records → `size=5000+` may be needed
 
 ---
 
@@ -994,22 +1106,28 @@ diseaseId="diabetes"  # Disease name not accepted for diseaseId!
 
 **Workaround**: Always use search methods first to get IDs.
 
-### 2. Size Parameter Overrides
+### 2. minScore Filtering (Post-Pagination)
 
-**Issue**: `size` parameter may be overridden by score filtering
+**Behavior**: `minScore` filtering is applied **after** pagination, not during
 
-**Evidence**: Requested 10 results with `minScore=0.5`, received 25 results
-
+**Example**:
 ```python
-# Requested
-get_target_disease_associations(targetId="...", size=10, minScore=0.5)
+# Requests 1000 records, filters by score >= 0.5
+result = get_target_disease_associations(
+    diseaseId="MONDO_0004975",
+    size=1000,
+    minScore=0.5
+)
 
-# May receive more than 10 if many meet threshold
+# Server fetches 1000 records (10 pages)
+# But only returns ~75 that have score >= 0.5
 ```
 
-**Impact**: Cannot rely on exact result counts
+**Impact**:
+- Returned count may be much less than requested `size`
+- Server still fetches full `size` amount (affects performance)
 
-**Workaround**: Accept variable counts, filter client-side if needed.
+**Best Practice**: Set `size` based on expected filtered results, not raw data size.
 
 ### 3. Optional Detail Fields
 
@@ -1210,14 +1328,24 @@ if genetic_score >= 0.6:
 
 ### Q7: Can I get all associations for a target?
 
-**A**: Yes:
+**A**: Yes, with automatic pagination support:
 ```python
+# Get up to 5,000 associations (50 pages)
 get_target_disease_associations(
     targetId="ENSG00000012048",
     minScore=0.0,  # All evidence
-    size=500  # Max results
+    size=5000  # Fetches in batches of 100
+)
+
+# Or get all 12,874 Alzheimer's targets (if needed)
+get_target_disease_associations(
+    diseaseId="MONDO_0004975",
+    minScore=0.0,
+    size=15000  # Fetches all available
 )
 ```
+
+**Note**: Large requests (1,000+) take several seconds as the server fetches multiple pages.
 
 ### Q8: What if tractability data is missing?
 
@@ -1264,12 +1392,14 @@ Use `get_target_disease_associations` for flexibility, `get_disease_targets_summ
 - Safety liability prediction
 - Approved drug precedents
 - Evidence breakdown by type
+- **Automatic pagination** (fetch up to 50,000 records)
 
 ⚠️ **Critical Requirements**:
 - **Must use correct ID formats** (Ensembl for targets, MONDO/EFO for diseases)
 - Search first to get IDs, then use for associations
 - Check datatypeScores for evidence breakdown
 - Use `.get()` for optional fields
+- Be mindful of pagination performance for large datasets (1,000+ records)
 
 🎯 **Best Use Cases**:
 - Target validation for drug discovery
@@ -1277,5 +1407,13 @@ Use `get_target_disease_associations` for flexibility, `get_disease_targets_summ
 - Druggability assessment
 - Safety screening
 - Competitive landscape analysis
+- **Comprehensive disease target profiling** (up to 12,874 targets for Alzheimer's)
+
+📊 **Pagination Capabilities**:
+- Automatic batching: 100 records per page
+- Maximum size: 50,000 records (500 pages)
+- Metadata tracking: requested/returned/total/filtered counts
+- Client-side minScore filtering after pagination
+- Performance: ~1-2 seconds per 100 records
 
 **Always**: Search by name/symbol first → Get IDs → Use IDs for associations → Filter by genetic evidence → Check tractability and safety.
