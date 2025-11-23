@@ -52,6 +52,13 @@ class MCPClient:
             bufsize=1
         )
 
+        # Wait for server to initialize (if configured)
+        # Some servers (like patents-mcp-server) need time to load dependencies
+        startup_delay = self.config.get('startup_delay', 0)
+        if startup_delay > 0:
+            import time
+            time.sleep(startup_delay)
+
         # Initialize connection
         self._send_request('initialize', {
             'protocolVersion': '2024-11-05',
@@ -61,6 +68,16 @@ class MCPClient:
                 'version': '1.0.0'
             }
         })
+
+        # Send initialized notification (required by MCP protocol)
+        # This is a notification (no response expected)
+        initialized_notification = {
+            'jsonrpc': '2.0',
+            'method': 'notifications/initialized',
+            'params': {}
+        }
+        self.process.stdin.write(json.dumps(initialized_notification) + '\n')
+        self.process.stdin.flush()
 
     def _send_request(self, method: str, params: dict) -> dict:
         """Send JSON-RPC request to MCP server"""
