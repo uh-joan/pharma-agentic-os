@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.uspto_patents_mcp import search_patents
+from mcp.servers.uspto_patents_mcp import ppubs_search_patents
 
 def get_cart_manufacturing_patents():
     """Get patents related to CAR-T cell manufacturing and production methods.
@@ -14,21 +14,21 @@ def get_cart_manufacturing_patents():
     Returns:
         dict: Contains total_count, patents data, and summary
     """
-    # Search for CAR-T manufacturing patents
-    query = "CAR-T manufacturing OR CAR-T production OR chimeric antigen receptor manufacturing"
+    # Search for CAR-T manufacturing patents with proper boolean syntax
+    query = '(CAR-T OR "chimeric antigen receptor") AND (manufacturing OR production OR process)'
 
     print(f"Searching USPTO for: {query}")
-    result = search_patents(query=query, num_results=100)
+    result = ppubs_search_patents(query=query, limit=100)
 
-    if not result or 'patents' not in result:
+    if not result or 'results' not in result:
         return {
             'total_count': 0,
             'patents': [],
             'summary': 'No CAR-T manufacturing patents found'
         }
 
-    patents = result['patents']
-    total_count = len(patents)
+    patents = result['results']
+    total_count = result.get('totalHits', len(patents))
 
     # Analyze assignees (companies/institutions)
     assignee_counts = {}
@@ -42,11 +42,11 @@ def get_cart_manufacturing_patents():
 
     for patent in patents:
         # Count assignees
-        assignee = patent.get('assignee', 'Unknown')
+        assignee = patent.get('assigneeEntityName', 'Unknown')
         assignee_counts[assignee] = assignee_counts.get(assignee, 0) + 1
 
         # Analyze manufacturing focus areas
-        title = patent.get('title', '').lower()
+        title = patent.get('patentTitle', '').lower()
         abstract = patent.get('abstract', '').lower()
         combined_text = f"{title} {abstract}"
 

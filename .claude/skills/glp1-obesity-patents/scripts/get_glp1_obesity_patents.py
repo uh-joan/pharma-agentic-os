@@ -1,33 +1,33 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.uspto_patents_mcp import search_patents
+from mcp.servers.uspto_patents_mcp import ppubs_search_patents
 from collections import defaultdict
 
 def get_glp1_obesity_patents():
     """Search USPTO patents for GLP-1 receptor agonists in obesity treatment.
-    
+
     Returns:
         dict: Contains total_count, patents data, and summary
     """
-    query = "GLP-1 receptor agonist obesity"
+    query = 'assignee:"Novo Nordisk" OR assignee:"Eli Lilly" AND (GLP-1 OR semaglutide OR tirzepatide) AND obesity'
     print(f"Searching USPTO patents for: {query}")
-    result = search_patents(query=query, limit=100)
-    
-    if not result or 'patents' not in result:
+    result = ppubs_search_patents(query=query, limit=100)
+
+    if not result or 'results' not in result:
         return {'total_count': 0, 'patents': [], 'summary': 'No patents found'}
-    
-    patents = result['patents']
-    total_count = result.get('total', len(patents))
+
+    patents = result['results']
+    total_count = result.get('totalHits', len(patents))
     
     assignees = defaultdict(int)
     filing_years = defaultdict(int)
     patent_details = []
     
     for patent in patents:
-        assignee = patent.get('assignee', 'Unknown')
+        assignee = patent.get('assigneeEntityName', 'Unknown')
         if assignee and assignee != 'Unknown':
             assignees[assignee] += 1
-        
+
         filing_date = patent.get('filingDate', '')
         if filing_date:
             try:
@@ -35,10 +35,10 @@ def get_glp1_obesity_patents():
                 filing_years[year] += 1
             except:
                 pass
-        
+
         patent_details.append({
             'patent_number': patent.get('patentNumber', 'N/A'),
-            'title': patent.get('title', 'N/A'),
+            'title': patent.get('patentTitle', 'N/A'),
             'filing_date': filing_date,
             'assignee': assignee
         })

@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.uspto_patents_mcp import search_patents
+from mcp.servers.uspto_patents_mcp import ppubs_search_patents
 import re
 from collections import defaultdict
 
@@ -48,13 +48,13 @@ def get_crispr_ip_landscape():
     for term in search_terms:
         print(f"  Searching: {term}...")
         try:
-            result = search_patents(
+            result = ppubs_search_patents(
                 query=term,
                 limit=500  # Get comprehensive results
             )
 
-            if result and 'patents' in result:
-                patents = result['patents']
+            if result and 'results' in result:
+                patents = result['results']
                 all_patents.extend(patents)
                 print(f"    Found {len(patents)} patents for '{term}'")
         except Exception as e:
@@ -73,13 +73,13 @@ def get_crispr_ip_landscape():
 
     # Analyze each patent
     for patent in all_patents:
-        # Extract patent details
-        patent_num = patent.get('patentNumber') or patent.get('patent_number') or patent.get('id', '')
-        title = patent.get('title', '')
-        assignee = patent.get('assignee', '') or patent.get('assigneeName', '') or patent.get('owner', '')
+        # Extract patent details using correct field names from ppubs API
+        patent_num = patent.get('patentNumber', '')
+        title = patent.get('patentTitle', '')
+        assignee = patent.get('assigneeEntityName', '')
         abstract = patent.get('abstract', '')
-        filing_date = patent.get('filingDate') or patent.get('filing_date', '')
-        grant_date = patent.get('grantDate') or patent.get('grant_date', '') or patent.get('issueDate', '')
+        filing_date = patent.get('filingDate', '')
+        grant_date = patent.get('patentIssueDate', '')
 
         # Categorize by assignee
         assignee_category = 'Other'

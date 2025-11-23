@@ -1,17 +1,36 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.fda_mcp import search_drugs
+from mcp.servers.fda_mcp import lookup_drug
 
 def get_adc_fda_drugs():
     """Get all FDA approved antibody-drug conjugate (ADC) drugs."""
-    
-    adc_terms = ["antibody-drug conjugate", "antibody drug conjugate", "ADC"]
+
+    # Known ADC drug names (brand and generic)
+    adc_terms = [
+        "trastuzumab emtansine", "Kadcyla",
+        "trastuzumab deruxtecan", "Enhertu",
+        "brentuximab vedotin", "Adcetris",
+        "polatuzumab vedotin", "Polivy",
+        "enfortumab vedotin", "Padcev",
+        "sacituzumab govitecan", "Trodelvy",
+        "inotuzumab ozogamicin", "Besponsa",
+        "gemtuzumab ozogamicin", "Mylotarg",
+        "moxetumomab pasudotox", "Lumoxiti",
+        "belantamab mafodotin", "Blenrep",
+        "tisotumab vedotin", "Tivdak",
+        "loncastuximab tesirine", "Zynlonta",
+        "mirvetuximab soravtansine", "Elahere"
+    ]
     all_results = []
-    
+
     for term in adc_terms:
-        result = search_drugs(search_term=term, limit=100)
-        if result and 'results' in result:
-            all_results.extend(result['results'])
+        try:
+            result = lookup_drug(search_term=term, search_type="general", limit=10, count='openfda.brand_name.exact')
+            if result and 'results' in result:
+                all_results.extend(result['results'])
+        except Exception as e:
+            print(f"Warning: Could not fetch data for {term}: {e}")
+            continue
     
     # Deduplicate by generic name
     unique_drugs = {}
