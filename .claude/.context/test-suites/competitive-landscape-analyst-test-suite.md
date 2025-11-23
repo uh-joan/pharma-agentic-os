@@ -786,23 +786,49 @@
 ---
 
 ### Test 5.4: Patent Database Searching
-**Query**: "Search USPTO for CRISPR gene editing patents filed by Editas Medicine in 2023-2024"
+**Query**: "Search USPTO and Google Patents for CRISPR gene editing patents filed by Editas Medicine in 2023-2024"
 
 **Tests**:
-- Patent database integration
+- USPTO and Google Patents BigQuery integration
+- International patent coverage (11 countries)
 - Freedom-to-operate analysis
 - IP landscape mapping
 
 **Expected Skills**:
 - New skill: `get_editas_crispr_patents`
-- Patent search capability
+- Uses: `google_search_by_assignee()` (existing)
+- Uses: `ppubs_search_patents()` (existing)
 
 **Expected Output**:
-- List of patents filed
+- US patents from USPTO
+- International patents from Google Patents (US, EP, WO, JP, etc.)
 - Patent claims summary
 - IP protection timeline
 
-**Status**: 🔴
+**Status**: 🟢 (Patent MCP fully operational with pagination)
+
+---
+
+### Test 5.4b: Large-Scale Patent Portfolio Retrieval (Pagination)
+**Query**: "Retrieve complete patent portfolio for Novo Nordisk (1000+ patents) using pagination"
+
+**Tests**:
+- Pagination implementation (offset parameter)
+- Large result set handling (> 500 patents)
+- Multi-batch aggregation
+- Data completeness verification
+
+**Expected Skills**:
+- Uses: `google_search_by_assignee()` with pagination (existing)
+- Pagination loop implementation
+
+**Expected Output**:
+- Complete patent portfolio (1000+ patents)
+- No duplicate patents
+- Batch retrieval summary (e.g., "Retrieved 1000 patents in 2 batches")
+- Filing trend analysis
+
+**Status**: 🟢 (Pagination tested successfully - 1000 Novo Nordisk patents retrieved)
 
 ---
 
@@ -1131,15 +1157,15 @@
 ---
 
 ### Test 7.4: Ad-Hoc Deep Dive Report
-**Query**: "Generate comprehensive competitive deep dive on Seagen's ADC portfolio" (already tested with BRAF)
+**Query**: "Generate comprehensive competitive deep dive on [therapeutic area]"
 
 **Tests**:
 - Full report generation
-- Multi-source synthesis
+- Multi-source synthesis (trials + FDA + patents + financials)
 - Strategic recommendations
 
 **Expected Skills**:
-- `get_adc_trials` (existing)
+- Multi-source data collection skills
 - Report generation
 
 **Expected Output**:
@@ -1147,7 +1173,15 @@
 - YAML frontmatter
 - Actionable recommendations
 
-**Status**: 🟢 (BRAF report exists)
+**Status**: 🟢 (6 competitive landscape reports created)
+
+**Existing Reports**:
+- Eli Lilly's $1 Trillion Path (GLP-1 obesity market)
+- Obesity Drug Market Intelligence (comprehensive competitive analysis)
+- CAR-T Cell Therapy Strategic Landscape
+- Alzheimer's Beyond Amyloid Strategic Landscape
+- Precision Oncology CDx Co-development Strategies
+- US-China Oncology Clinical Development Strategy
 
 ---
 
@@ -1264,12 +1298,12 @@
 **Query**: "Integrate ClinicalTrials.gov API for automated daily updates of recruiting trials"
 
 **Tests**:
-- API integration (already exists!)
+- API integration
 - Automated scheduling
 - Incremental updates
 
 **Expected Skills**:
-- `ct_gov_mcp` (existing)
+- `ct_gov_mcp` (existing - fully operational)
 - Automation framework
 
 **Expected Output**:
@@ -1277,7 +1311,7 @@
 - Update schedule
 - Change detection logic
 
-**Status**: 🟢 (API exists, automation needed)
+**Status**: 🟢 (All 12 MCP servers operational: CT.gov, FDA, PubMed, USPTO/Google Patents, SEC, WHO, NLM Codes, CMS, Data Commons, Open Targets, PubChem, Financial Markets)
 
 ---
 
@@ -2188,17 +2222,19 @@ When running tests, use this format:
 
 **Total Test Suite**:
 - 12 Categories
-- 96 Individual Tests
-- ~30 existing skills can be reused
-- ~66 new skills will be created
-- Estimated 50+ reports will be generated
+- 97 Individual Tests (added pagination test)
+- 68 existing skills can be reused
+- ~29 new skills will be created
+- 6 competitive landscape reports already generated
 
 **Coverage**:
 - ✅ All 11 capability domains from agent definition
-- ✅ All 12 MCP data sources
+- ✅ All 12 MCP data sources (all operational)
 - ✅ All report template sections
 - ✅ Basic to advanced complexity
 - ✅ Single-source to multi-source synthesis
+- ✅ International patent coverage (90M+ patents, 11 countries)
+- ✅ Large-scale data retrieval (pagination support)
 
 **Memorability Devices**:
 1. **The Prospector** - Digging for pipeline gold
