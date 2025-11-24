@@ -1,21 +1,19 @@
 ---
-name: get_company_segment_geographic_financials
-description: Extract business segment and geographic revenue breakdowns from SEC EDGAR filings using XBRL parsing
-category: financial_analysis
-mcp_servers:
-  - sec_edgar_mcp
-patterns:
-  - xbrl_parsing
-  - dimensional_analysis
-  - reconciliation
-data_scope:
-  filings_analyzed: 4-8 quarters
-  total_facts: 500-5000+ XBRL facts per company
-created: 2025-11-22
-updated: 2025-11-24
-complexity: complex
-execution_time: ~5-10s per company
-validation: comprehensive_testing_47_companies
+name: Company Segment & Geographic Financials
+description: Extract detailed business segment and geographic revenue breakdowns from SEC EDGAR 10-Q/10-K/20-F filings using advanced XBRL parsing. Supports 47+ companies with 85% success rate.
+metadata:
+  category: financial_analysis
+  mcp_servers:
+    - sec_edgar_mcp
+  patterns:
+    - xbrl_parsing
+    - dimensional_analysis
+    - reconciliation
+  complexity: complex
+  execution_time: 5-10s per company
+  validation: comprehensive_testing_47_companies
+  created: 2025-11-22
+  updated: 2025-11-24
 ---
 
 # Company Segment & Geographic Financials Extractor
