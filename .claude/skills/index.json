@@ -8,7 +8,7 @@
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 61,
+    "folder_skills_count": 62,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -1227,6 +1227,30 @@
         "druggability_assessment"
       ],
       "category": "target-validation",
+      "complexity": "complex"
+    },
+    {
+      "name": "get_indication_drug_pipeline_breakdown",
+      "structure": "folder",
+      "folder": "indication-drug-pipeline-breakdown",
+      "skill_md": "indication-drug-pipeline-breakdown/SKILL.md",
+      "script": "indication-drug-pipeline-breakdown/scripts/get_indication_drug_pipeline_breakdown.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_indication_drug_pipeline_breakdown() -> dict",
+      "servers_used": [
+        "ct_gov_mcp",
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "intervention_extraction",
+        "data_aggregation",
+        "ascii_visualization",
+        "multi_server_query"
+      ],
+      "category": "drug-discovery",
       "complexity": "complex"
     }
   ],
