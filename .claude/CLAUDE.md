@@ -496,21 +496,40 @@ When user asks for data (not strategic analysis):
 
 **MANDATORY workflow**:
 
-1. **Infer skill name from query**:
+1. **Infer parameters from query**:
 ```python
-# Generic patterns (parameterized):
-"Get {company} financials" → skill_name = "company_segment_geographic_financials"
-"Get {drug} trials" → skill_name = "{drug_slug}_trials"
+# Extract from user query:
+# - skill_name: Descriptive name for the skill
+# - therapeutic_area: Disease/drug class/topic
+# - data_type: trials | fda_drugs | patents | publications
+# - servers: comma-separated MCP servers needed
 
-# Specific patterns:
-"Get GLP-1 trials" → skill_name = "glp1_trials"
+# Examples:
+"Get GLP-1 trials" →
+  skill_name = "glp1_trials"
+  therapeutic_area = "GLP-1"
+  data_type = "trials"
+  servers = "ct_gov_mcp"
+
+"Find orphan drugs expected to be approved" →
+  skill_name = "orphan_drug_upcoming_approvals"
+  therapeutic_area = "orphan drugs"
+  data_type = "fda_drugs"
+  servers = "fda_mcp"
+
+"Get EGFR inhibitor trials" →
+  skill_name = "egfr_inhibitor_trials"
+  therapeutic_area = "EGFR inhibitor"
+  data_type = "trials"
+  servers = "ct_gov_mcp"
 ```
 
 2. **Run strategy check**:
 ```bash
 python3 .claude/tools/skill_discovery/strategy.py \
-  --skill-name '{inferred_skill_name}' \
-  --query '{user_query}' \
+  --skill '{inferred_skill_name}' \
+  --therapeutic-area '{therapeutic_area}' \
+  --data-type {trials|fda_drugs|patents|publications} \
   --servers {comma_separated_servers} \
   --json
 ```
@@ -554,9 +573,21 @@ Task(
 ```
 User: "Get Abbott segment and geographic financials"
 ↓
-Step 0: Infer skill name = "company_segment_geographic_financials"
+Step 0: Infer parameters:
+  skill_name = "company_segment_geographic_financials"
+  therapeutic_area = "Abbott"
+  data_type = "fda_drugs" (or appropriate type)
+  servers = "sec_mcp"
 ↓
-Run strategy.py: Returns REUSE + existing skill path
+Run strategy.py:
+  python3 .claude/tools/skill_discovery/strategy.py \
+    --skill "company_segment_geographic_financials" \
+    --therapeutic-area "Abbott" \
+    --data-type "fda_drugs" \
+    --servers "sec_mcp" \
+    --json
+↓
+Returns: REUSE strategy + existing skill path
 ↓
 Execute: python3 .claude/skills/company-segment-geographic-financials/scripts/get_company_segment_geographic_financials.py
 ↓
@@ -599,9 +630,15 @@ Transform patterns with inferred parameters:
 
 ### Step 4: Check/Create/Execute Skills (Index-Based Strategy)
 
-For each required skill, use intelligent strategy decision:
+For each required skill, use intelligent strategy decision.
+
+**Two Interfaces Available**:
+- **CLI** (Bash tool): Use for standalone strategy checks before agent invocation
+- **Python API** (Import): Use for programmatic integration in strategic agents
 
 **Step 4.1: Determine Strategy**
+
+*Using Python API (recommended for strategic agents):*
 ```python
 from skill_discovery.strategy import determine_skill_strategy, SkillRequirements
 
@@ -613,6 +650,16 @@ strategy = determine_skill_strategy(
         servers=['ct_gov_mcp']
     )
 )
+```
+
+*Using CLI (for Bash tool calls):*
+```bash
+python3 .claude/tools/skill_discovery/strategy.py \
+  --skill "get_kras_inhibitor_trials" \
+  --therapeutic-area "KRAS inhibitor" \
+  --data-type "trials" \
+  --servers "ct_gov_mcp" \
+  --json
 ```
 
 **Step 4.2: Execute Strategy**

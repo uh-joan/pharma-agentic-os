@@ -233,7 +233,7 @@
 - Result parsing
 
 **Expected Behavior**:
-1. Read: `mcp-tool-guides/uspto-patents.md`
+1. Read: `mcp-tool-guides/patents.md`
 2. Generate code using `uspto_patents_mcp.uspto_patents()`
 3. Search query construction
 4. Return folder structure skill
