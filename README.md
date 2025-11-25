@@ -143,10 +143,10 @@ Returns summary + Saves skill → Skill reusable forever
 │   └── index.json                # Discovery index
 ├── tools/
 │   └── skill_discovery/          # 4-level discovery system
-└── mcp/
+├── mcp/
 │   ├── client.py                 # MCP client (JSON-RPC)
 │   └── servers/                  # Python wrappers (12 servers)
-reports/                          # Strategic analysis (version controlled)
+└── reports/                      # Strategic analysis (version controlled)
 ```
 
 ---
