@@ -1,14 +1,14 @@
 {
   "version": "2.0",
   "format": "folder-structure",
-  "last_updated": "2025-11-24",
+  "last_updated": "2025-11-25",
   "description": "Skills library index for pattern discovery and reuse - Anthropic folder structure format",
   "usage": "Agent reads this to discover similar skills before creating new ones. Enables evolutionary skill development where new skills build on proven patterns from existing implementations.",
   "migration_status": {
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 62,
+    "folder_skills_count": 63,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -1236,8 +1236,8 @@
       "skill_md": "indication-drug-pipeline-breakdown/SKILL.md",
       "script": "indication-drug-pipeline-breakdown/scripts/get_indication_drug_pipeline_breakdown.py",
       "has_frontmatter": true,
-      "description": "",
-      "function_signature": "get_indication_drug_pipeline_breakdown() -> dict",
+      "description": "Active drug pipeline analysis for any indication showing phase breakdown, unique drug counts, FDA approval status, company/sponsor attribution with M&A tracking, and elegant ASCII visualization. Tracks lead sponsors with automatic M&A attribution (e.g., Celgene trials \u2192 Bristol Myers Squibb) and provides competitive analysis showing trials/phases/drugs/approvals per company.",
+      "function_signature": "get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = None) -> dict",
       "servers_used": [
         "ct_gov_mcp",
         "fda_mcp"
@@ -1248,10 +1248,80 @@
         "intervention_extraction",
         "data_aggregation",
         "ascii_visualization",
-        "multi_server_query"
+        "multi_server_query",
+        "company_extraction",
+        "moa_attribution",
+        "multi_dimensional_tracking"
       ],
       "category": "drug-discovery",
-      "complexity": "complex"
+      "complexity": "complex",
+      "trigger_keywords": [
+        "active pipeline",
+        "pipeline breakdown",
+        "drugs per phase",
+        "competitive landscape",
+        "development pipeline",
+        "recruiting trials",
+        "phase distribution",
+        "company pipeline",
+        "sponsor analysis",
+        "competitive positioning"
+      ],
+      "last_updated": "2025-11-25"
+    },
+    {
+      "name": "get_indication_pipeline_attrition",
+      "structure": "folder",
+      "folder": "indication-pipeline-attrition",
+      "skill_md": "indication-pipeline-attrition/SKILL.md",
+      "script": "indication-pipeline-attrition/scripts/get_indication_pipeline_attrition.py",
+      "has_frontmatter": true,
+      "description": "Track terminated and withdrawn clinical trials for any therapeutic area to identify failure patterns and competitive intelligence",
+      "function_signature": "get_indication_pipeline_attrition(indication: str, sample_size: int = None) -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "status_filtering",
+        "sponsor_aggregation",
+        "phase_breakdown"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_companies_by_moa",
+      "structure": "folder",
+      "folder": "companies-by-moa",
+      "skill_md": "companies-by-moa/SKILL.md",
+      "script": "companies-by-moa/scripts/get_companies_by_moa.py",
+      "has_frontmatter": true,
+      "description": "Comprehensive competitive query tool to identify companies working on specific mechanisms of action with full trial analysis. Provides company breakdown with trial counts, development phases, drug names, and FDA approval status. Includes competitive assessment (leaders, late-stage, early-stage).",
+      "function_signature": "get_companies_by_moa(moa: str, disease: str = None, phase_filter: str = 'Phase 1', include_academic: bool = False, sample_size: int = None) -> dict",
+      "servers_used": [
+        "ct_gov_mcp",
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "focused_query",
+        "company_attribution",
+        "competitive_assessment",
+        "moa_attribution",
+        "academic_filtering"
+      ],
+      "category": "competitive-intelligence",
+      "complexity": "moderate",
+      "trigger_keywords": [
+        "companies working on",
+        "who's developing",
+        "competitive landscape",
+        "mechanism of action",
+        "MoA analysis",
+        "company by mechanism"
+      ],
+      "last_updated": "2025-11-25"
     }
   ],
   "pattern_categories": {

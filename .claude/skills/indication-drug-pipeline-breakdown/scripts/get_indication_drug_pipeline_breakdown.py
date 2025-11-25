@@ -1,27 +1,95 @@
 import sys
 import re
 import random
+from collections import defaultdict
 sys.path.insert(0, ".claude")
 from mcp.servers.ct_gov_mcp import search as ct_search, get_study
 from mcp.servers.fda_mcp import lookup_drug
 
+# Company M&A hierarchy (acquired → parent company)
+# Updated: 2025-11-25
+COMPANY_HIERARCHY = {
+    # Major pharma M&A
+    'Celgene': 'Bristol Myers Squibb',
+    'Celgene Corporation': 'Bristol Myers Squibb',
+    'Array BioPharma': 'Pfizer',
+    'Array BioPharma Inc.': 'Pfizer',
+    'Five Prime Therapeutics': 'Amgen',
+    'Mirati Therapeutics': 'Bristol Myers Squibb',  # Acquired Jan 2024
+    'ChemoCentryx': 'Amgen',  # Acquired 2022
+    'Immunomedics': 'Gilead Sciences',  # Acquired 2020
+    'Kite Pharma': 'Gilead Sciences',  # Acquired 2017
+    'Tesaro': 'GlaxoSmithKline',  # Acquired 2019
+    'Loxo Oncology': 'Eli Lilly',  # Acquired 2019
+    'Spark Therapeutics': 'Roche',  # Acquired 2019
+    'Genmab': 'Johnson & Johnson',  # Partnership, not acquisition
+    'Pharmacyclics': 'AbbVie',  # Acquired 2015
+
+    # Normalize company name variations
+    'Pfizer Inc': 'Pfizer',
+    'Pfizer Inc.': 'Pfizer',
+    'Amgen Inc': 'Amgen',
+    'Amgen Inc.': 'Amgen',
+    'Bristol-Myers Squibb': 'Bristol Myers Squibb',
+    'Bristol-Myers Squibb Company': 'Bristol Myers Squibb',
+    'Eli Lilly and Company': 'Eli Lilly',
+    'Merck & Co.': 'Merck',
+    'Merck & Co., Inc.': 'Merck',
+    'Novartis Pharmaceuticals': 'Novartis',
+    'Roche Holding AG': 'Roche',
+    'F. Hoffmann-La Roche': 'Roche',
+    'Hoffmann-La Roche': 'Roche',
+}
+
+
+def extract_sponsor_from_trial(trial_markdown: str) -> str:
+    """Extract lead sponsor from trial markdown."""
+    # Pattern: **Lead Sponsor:** Company Name (Industry)
+    sponsor_match = re.search(r'\*\*Lead Sponsor:\*\*\s+(.+?)(?:\n|$)', trial_markdown)
+
+    if sponsor_match:
+        sponsor = sponsor_match.group(1).strip()
+        # Clean up common patterns
+        sponsor = re.sub(r'\s+\(.*?\)', '', sponsor)  # Remove parentheticals like (Industry)
+        return sponsor
+
+    return "Unknown"
+
+
+def attribute_company(sponsor_name: str) -> str:
+    """
+    Map sponsor to parent company (handles M&A and name variations).
+
+    Args:
+        sponsor_name: Sponsor name from trial (e.g., "Celgene")
+
+    Returns:
+        Parent company name (e.g., "Bristol Myers Squibb")
+    """
+    # Direct match in hierarchy
+    if sponsor_name in COMPANY_HIERARCHY:
+        return COMPANY_HIERARCHY[sponsor_name]
+
+    # Check for partial matches (handle "Inc", "Inc.", "Corporation", etc.)
+    for acquired, parent in COMPANY_HIERARCHY.items():
+        if acquired.lower() in sponsor_name.lower():
+            return parent
+
+    return sponsor_name
+
 def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = None) -> dict:
     """Analyze drug pipeline for a given indication with phase breakdown and visualization.
 
-    Intelligently decides whether to analyze ALL trials or sample based on dataset size:
-    - If <= 1,000 trials: Analyzes ALL trials automatically (100% accuracy)
-    - If > 1,000 trials: Prompts user to choose between quick sample or full analysis
-      * Quick sample: ~500 trials, 3-5 min execution, statistically robust (±4% confidence)
-      * Full analysis: ALL trials, 10-15+ min execution, 100% coverage
+    Performs full analysis by default, analyzing ALL active trials for complete accuracy.
+    User can optionally specify sample_size for faster results on very large datasets.
 
     Args:
         indication (str): Disease/condition (e.g., "obesity", "Alzheimer's disease", "heart failure")
-        sample_size (int, optional): Number of trials to analyze. If None, uses intelligent auto-selection.
-                                     If specified, overrides auto-selection and prompts.
+        sample_size (int, optional): Number of trials to analyze (default: None = analyze all)
 
     Returns:
-        dict: Contains indication, total_trials, total_unique_drugs, approved_drugs,
-              phase_breakdown, and visualization
+        dict: Contains indication, total_trials, sample_size, total_unique_drugs, approved_drugs,
+              phase_breakdown, companies, and visualization
     """
     print(f"\n🔍 Analyzing drug pipeline for: {indication}")
     print("=" * 80)
@@ -65,44 +133,20 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
 
     print(f"✓ Found {total_trials:,} active drug trials")
 
-    # Step 2: Intelligent sampling decision
+    # Step 2: Apply sampling if specified
     if sample_size is None:
-        # Auto-determine: analyze ALL if <= 1000, otherwise ask user
-        # With smart filtering (drug + active), most indications have <1000 trials
-        if total_trials <= 1000:
-            sample_size = total_trials
-            print(f"✓ Analyzing ALL {sample_size} trials (100% coverage)")
-        else:
-            # For very large datasets (>1000), ask user for preference
-            default_sample = min(500, total_trials // 2)
-
-            print(f"\n⚠️  Large dataset detected: {total_trials:,} active drug trials")
-            print(f"\nAnalysis options:")
-            print(f"  1. Quick sample ({default_sample} trials, ~{100*default_sample//total_trials}% coverage) - Est. 3-5 minutes")
-            print(f"  2. Full analysis (ALL {total_trials:,} trials, 100% coverage) - Est. {total_trials//150}-{total_trials//120} minutes")
-            print(f"\nNote: {default_sample} trials provides statistically robust insights (±4% confidence)")
-
-            while True:
-                choice = input(f"\nChoose option [1/2] (default: 1): ").strip() or "1"
-                if choice == "1":
-                    sample_size = default_sample
-                    print(f"\n✓ Using quick sample: {sample_size} trials (~{100*sample_size//total_trials}% coverage)")
-                    break
-                elif choice == "2":
-                    sample_size = total_trials
-                    print(f"\n✓ Running full analysis: {sample_size:,} trials (100% coverage)")
-                    print(f"  This will take approximately {total_trials//150}-{total_trials//120} minutes...")
-                    break
-                else:
-                    print("Invalid choice. Please enter 1 or 2.")
-    else:
-        print(f"✓ Analyzing {min(sample_size, len(all_nct_ids))} trials (user-specified)")
-
-    # Sample or use all trials
-    if sample_size >= len(all_nct_ids):
+        # Default: analyze ALL trials (full analysis)
         sample_nct_ids = all_nct_ids
+        print(f"✓ Analyzing ALL {len(sample_nct_ids):,} trials (100% coverage)")
     else:
-        sample_nct_ids = random.sample(all_nct_ids, sample_size)
+        # User specified sample size
+        if sample_size >= len(all_nct_ids):
+            sample_nct_ids = all_nct_ids
+            print(f"✓ Analyzing ALL {len(sample_nct_ids):,} trials (sample_size >= total)")
+        else:
+            sample_nct_ids = random.sample(all_nct_ids, sample_size)
+            coverage_pct = int(100 * sample_size / len(all_nct_ids))
+            print(f"✓ Analyzing {len(sample_nct_ids):,} trials ({coverage_pct}% sample)")
 
     # Step 3: Fetch detailed information for sampled trials
     print(f"\n💊 Step 2: Fetching detailed trial information...")
@@ -115,6 +159,14 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
         'Phase 4': {'trials': 0, 'drugs': set()},
         'Not Applicable': {'trials': 0, 'drugs': set()}
     }
+
+    # Company tracking data structure (NEW)
+    company_data = defaultdict(lambda: {
+        'trials': 0,
+        'phases': set(),
+        'drugs': set(),
+        'approved': 0
+    })
 
     all_drugs = set()
     processed = 0
@@ -145,17 +197,28 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
             else:
                 phase_key = 'Not Applicable'
 
+            # Extract sponsor (NEW)
+            sponsor = extract_sponsor_from_trial(trial_detail)
+            sponsor = attribute_company(sponsor)
+
             # Extract Drug interventions (filter out Behavioral, Procedure, etc.)
             drug_interventions = re.findall(r'###\s+Drug:\s*(.+?)(?:\n|$)', trial_detail)
 
             if drug_interventions:
                 phase_breakdown[phase_key]['trials'] += 1
+
+                # Track by company (NEW)
+                company_data[sponsor]['trials'] += 1
+                company_data[sponsor]['phases'].add(phase_key)
+
                 for drug in drug_interventions:
                     drug_clean = drug.strip()
                     # Filter out placebo and generic terms
                     if drug_clean and drug_clean.lower() not in ['placebo', 'other', 'not applicable']:
                         phase_breakdown[phase_key]['drugs'].add(drug_clean)
                         all_drugs.add(drug_clean)
+                        # Track drug by company (NEW)
+                        company_data[sponsor]['drugs'].add(drug_clean)
 
         except Exception as e:
             # Skip trials that fail to fetch
@@ -169,8 +232,8 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
     print(f"\n🏛️  Step 3: Cross-checking FDA for approved drugs...")
 
     approved_drugs = []
-    # Sample up to 30 drugs for FDA check (balance thoroughness vs speed)
-    drugs_to_check = list(all_drugs)[:30] if len(all_drugs) > 30 else list(all_drugs)
+    # Check all drugs for FDA approval (full analysis)
+    drugs_to_check = list(all_drugs)
 
     checked = 0
     for drug in drugs_to_check:
@@ -188,6 +251,14 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
             pass
 
     print(f"✓ FDA check complete: {len(approved_drugs)} approved drugs identified")
+
+    # Attribute approved drugs to companies
+    for company in company_data:
+        company_approved_count = sum(
+            1 for drug in company_data[company]['drugs']
+            if drug in approved_drugs
+        )
+        company_data[company]['approved'] = company_approved_count
 
     # Step 4: Create visualization
     print(f"\n📈 Step 4: Creating pipeline visualization...")
@@ -247,10 +318,42 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
         if drugs_list:
             viz_lines.append(f"{phase}: {', '.join(drugs_list)}")
 
+    # Add company breakdown (NEW)
+    viz_lines.append(f"\n{'='*80}")
+    viz_lines.append("TOP COMPANIES BY TRIAL COUNT")
+    viz_lines.append("=" * 80)
+
+    # Sort companies by trial count
+    sorted_companies = sorted(
+        company_data.items(),
+        key=lambda x: x[1]['trials'],
+        reverse=True
+    )[:10]  # Top 10 companies
+
+    viz_lines.append(f"{'Company':<35} Trials  Phases  Drugs  Approved")
+    viz_lines.append("-" * 80)
+
+    for company, data in sorted_companies:
+        phases_str = ', '.join(sorted(data['phases']))
+        viz_lines.append(
+            f"{company:<35} {data['trials']:>6}  {len(data['phases']):>6}  {len(data['drugs']):>5}  {data['approved']:>8}"
+        )
+
     visualization = '\n'.join(viz_lines)
 
     # Print visualization
     print(visualization)
+
+    # Format company data for return
+    formatted_companies = []
+    for company, data in sorted_companies:
+        formatted_companies.append({
+            'company': company,
+            'trials': data['trials'],
+            'phases': sorted(list(data['phases'])),
+            'drugs': sorted(list(data['drugs'])),
+            'approved_count': data['approved']
+        })
 
     return {
         'indication': indication,
@@ -259,6 +362,8 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
         'total_unique_drugs': total_unique_drugs,
         'approved_drugs': approved_drugs,
         'phase_breakdown': phase_summary,
+        'companies': formatted_companies,
+        'total_companies': len(company_data),
         'visualization': visualization
     }
 
@@ -288,4 +393,6 @@ if __name__ == "__main__":
     print(f"Coverage: {result['sample_size']} of {result['total_trials']:,} trials ({coverage}%)")
     print(f"Identified {result['total_unique_drugs']} unique drug interventions")
     print(f"Found {len(result['approved_drugs'])} FDA approved drugs")
+    print(f"Tracked {result['total_companies']} unique companies/sponsors")
+    print(f"Top 10 companies displayed in visualization above")
     print("=" * 80)

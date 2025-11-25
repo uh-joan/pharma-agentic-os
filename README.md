@@ -52,6 +52,9 @@ Returns summary + Saves skill → Skill reusable forever
 "How many Phase 3 obesity trials are recruiting?"
 "FDA adverse events for SGLT2 inhibitors"
 "GLP-1 drug competitive landscape"
+"Active pipeline breakdown for Alzheimer's disease"
+"Who's developing KRAS inhibitors?"
+"Failed trials analysis for BTK inhibitors"
 ```
 
 ### Financial
