@@ -237,4 +237,81 @@ def lookup_drug(
     return client.call_tool('fda_info', params)
 
 
-__all__ = ['lookup_drug']
+def lookup_device(
+    search: str,
+    search_type: str = "device_registration",
+    limit: int = 100,
+    **kwargs
+) -> Dict[str, Any]:
+    """
+    Search FDA device database
+
+    Args:
+        search: Device name, company name, or search query
+        search_type: Type of search - 'device_registration', 'device_510k', 'device_pma',
+                     'device_udi', 'device_recalls', 'device_adverse_events', 'device_classification'
+        limit: Maximum results to return (default: 100)
+
+    Returns:
+        dict: FDA API response with device records
+    """
+    client = get_client('fda-mcp')
+
+    params = {
+        'method': 'lookup_device',
+        'search_term': search,
+        'search_type': search_type,
+        'limit': limit
+    }
+
+    params.update(kwargs)
+
+    return client.call_tool('fda_info', params)
+
+
+def device_510k(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA 510(k) clearances (Class II devices)"""
+    return lookup_device(search=search, search_type='device_510k', limit=limit, **kwargs)
+
+
+def device_pma(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA PMA approvals (Class III devices)"""
+    return lookup_device(search=search, search_type='device_pma', limit=limit, **kwargs)
+
+
+def device_registration(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA device registrations"""
+    return lookup_device(search=search, search_type='device_registration', limit=limit, **kwargs)
+
+
+def device_udi(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA Unique Device Identifiers"""
+    return lookup_device(search=search, search_type='device_udi', limit=limit, **kwargs)
+
+
+def device_recalls(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA device recalls"""
+    return lookup_device(search=search, search_type='device_recalls', limit=limit, **kwargs)
+
+
+def device_adverse_events(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA MAUDE adverse events for devices"""
+    return lookup_device(search=search, search_type='device_adverse_events', limit=limit, **kwargs)
+
+
+def device_classification(search: str, limit: int = 100, **kwargs) -> Dict[str, Any]:
+    """Search FDA device classifications"""
+    return lookup_device(search=search, search_type='device_classification', limit=limit, **kwargs)
+
+
+__all__ = [
+    'lookup_drug',
+    'lookup_device',
+    'device_510k',
+    'device_pma',
+    'device_registration',
+    'device_udi',
+    'device_recalls',
+    'device_adverse_events',
+    'device_classification'
+]

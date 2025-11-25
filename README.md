@@ -55,6 +55,7 @@ Returns summary + Saves skill → Skill reusable forever
 "Active pipeline breakdown for Alzheimer's disease"
 "Who's developing KRAS inhibitors?"
 "Failed trials analysis for BTK inhibitors"
+"Medtronic clinical trials portfolio by therapeutic area"
 ```
 
 ### Financial
@@ -83,6 +84,7 @@ Returns summary + Saves skill → Skill reusable forever
 ```
 "Alzheimer's intelligence: burden + trials + drugs + genetics + market"
 "Company X due diligence: financials + pipeline + patents + publications"
+"Boston Scientific cardiovascular product launch timeline (FDA approvals + trials)"
 ```
 
 ---

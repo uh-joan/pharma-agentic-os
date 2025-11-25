@@ -8,7 +8,7 @@
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 63,
+    "folder_skills_count": 67,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -1322,6 +1322,71 @@
         "company by mechanism"
       ],
       "last_updated": "2025-11-25"
+    },
+    {
+      "name": "get_company_fda_device_approvals",
+      "structure": "folder",
+      "folder": "company-fda-device-approvals",
+      "skill_md": "company-fda-device-approvals/SKILL.md",
+      "script": "company-fda-device-approvals/scripts/get_company_fda_device_approvals.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_company_fda_device_approvals() -> dict",
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "json_parsing",
+        "date_filtering",
+        "deduplication",
+        "multi_endpoint_aggregation"
+      ],
+      "category": "regulatory",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_company_clinical_trials_portfolio",
+      "structure": "folder",
+      "folder": "company-clinical-trials-portfolio",
+      "skill_md": "company-clinical-trials-portfolio/SKILL.md",
+      "script": "company-clinical-trials-portfolio/scripts/get_company_clinical_trials_portfolio.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_company_clinical_trials_portfolio() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "parameter_based",
+        "status_aggregation",
+        "phase_aggregation"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "analyze_company_product_launch_timeline",
+      "structure": "folder",
+      "folder": "company-product-launch-timeline",
+      "skill_md": "company-product-launch-timeline/SKILL.md",
+      "script": "company-product-launch-timeline/scripts/analyze_company_product_launch_timeline.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "analyze_company_product_launch_timeline() -> dict",
+      "servers_used": [
+        "fda_mcp",
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_skill_composition",
+        "data_correlation",
+        "fuzzy_matching",
+        "temporal_analysis"
+      ],
+      "category": "regulatory",
+      "complexity": "complex"
     }
   ],
   "pattern_categories": {
