@@ -8,7 +8,7 @@
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 67,
+    "folder_skills_count": 75,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -1386,6 +1386,203 @@
         "temporal_analysis"
       ],
       "category": "regulatory",
+      "complexity": "complex"
+    },
+    {
+      "name": "get_orphan_drugs_upcoming_approvals",
+      "structure": "folder",
+      "folder": "orphan-drugs-upcoming-approvals",
+      "skill_md": "orphan-drugs-upcoming-approvals/SKILL.md",
+      "script": "orphan-drugs-upcoming-approvals/scripts/get_orphan_drugs_upcoming_approvals.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_orphan_drugs_upcoming_approvals() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "smart_pagination",
+        "set_based_deduplication",
+        "approval_likelihood_scoring",
+        "markdown_parsing"
+      ],
+      "category": "drug-discovery",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_subcutaneous_drugs_pipeline_2026_2027",
+      "structure": "folder",
+      "folder": "subcutaneous-drugs-pipeline-2026-2027",
+      "skill_md": "subcutaneous-drugs-pipeline-2026-2027/SKILL.md",
+      "script": "subcutaneous-drugs-pipeline-2026-2027/scripts/get_subcutaneous_drugs_pipeline_2026_2027.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_subcutaneous_drugs_pipeline_2026_2027() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "temporal_filtering",
+        "therapeutic_area_analysis"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_diabetes_drugs_stopped_safety",
+      "structure": "folder",
+      "folder": "diabetes-drugs-stopped-safety",
+      "skill_md": "diabetes-drugs-stopped-safety/SKILL.md",
+      "script": "diabetes-drugs-stopped-safety/scripts/get_diabetes_drugs_stopped_safety.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_diabetes_drugs_stopped_safety() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "status_filtering",
+        "keyword_matching",
+        "multi_category_aggregation"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "forecast_drug_pipeline",
+      "structure": "folder",
+      "folder": "forecast-drug-pipeline",
+      "skill_md": "forecast-drug-pipeline/SKILL.md",
+      "script": "forecast-drug-pipeline/scripts/forecast_drug_pipeline.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "forecast_drug_pipeline() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "temporal_filtering",
+        "therapeutic_area_analysis",
+        "parameterized_search"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_novo_nordisk_pipeline_indications",
+      "structure": "folder",
+      "folder": "novo-nordisk-pipeline-indications",
+      "skill_md": "novo-nordisk-pipeline-indications/SKILL.md",
+      "script": "novo-nordisk-pipeline-indications/scripts/get_novo_nordisk_pipeline_indications.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_novo_nordisk_pipeline_indications() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "status_filtering",
+        "condition_aggregation",
+        "phase_analysis"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium",
+      "deprecated": true,
+      "deprecated_reason": "Replaced by generic get_company_pipeline_indications(company=\"Novo Nordisk\")",
+      "replacement_skill": "get_company_pipeline_indications",
+      "deprecation_date": "2025-11-25",
+      "removal_date": "2025-12-25"
+    },
+    {
+      "name": "get_company_pipeline_indications",
+      "structure": "folder",
+      "folder": "company-pipeline-indications",
+      "skill_md": "company-pipeline-indications/SKILL.md",
+      "script": "company-pipeline-indications/scripts/get_company_pipeline_indications.py",
+      "has_frontmatter": true,
+      "description": "Generic skill to identify therapeutic areas and indications where ANY pharmaceutical company is actively developing drugs by analyzing their clinical trial pipeline",
+      "function_signature": "get_company_pipeline_indications(company: str) -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "status_filtering",
+        "condition_aggregation",
+        "phase_analysis",
+        "parameterized_search"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium",
+      "is_generic": true,
+      "replaces_skills": [
+        "novo-nordisk-pipeline-indications"
+      ],
+      "trigger_keywords": [
+        "company pipeline",
+        "indications by company",
+        "therapeutic areas targeting",
+        "pipeline focus",
+        "strategic focus areas",
+        "company development priorities"
+      ]
+    },
+    {
+      "name": "get_obesity_drugs_early_development",
+      "structure": "folder",
+      "folder": "obesity-drugs-early-development",
+      "skill_md": "obesity-drugs-early-development/SKILL.md",
+      "script": "obesity-drugs-early-development/scripts/get_obesity_drugs_early_development.py",
+      "has_frontmatter": true,
+      "description": "FDA-approved obesity drugs with active Phase 1/2 development programs. Uses known drug names list (FDA best practice) to avoid false positives from broad term searches. Multi-server query correlating FDA approvals with ongoing CT.gov trials. Returns 6 drugs with 502 total early-stage trials. High pageSize=1000 to capture all results without pagination.",
+      "function_signature": "get_obesity_drugs_early_development() -> dict",
+      "servers_used": [
+        "fda_mcp",
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_server_query",
+        "json_parsing",
+        "markdown_parsing",
+        "cross_reference",
+        "known_drug_list_pattern",
+        "count_first_fda",
+        "high_pagesize_ctgov"
+      ],
+      "category": "competitive-intelligence",
+      "complexity": "complex",
+      "data_scope": "6 FDA approved obesity drugs, all 6 with active early development (502 total trials)",
+      "last_updated": "2025-11-25",
+      "fda_best_practice": "Uses specific drug names instead of broad 'obesity' search to avoid false positives (83 drugs -> 6 correct drugs)"
+    },
+    {
+      "name": "novo-nordisk-novel-patents",
+      "structure": "folder",
+      "folder": "novo-nordisk-novel-patents",
+      "skill_md": "novo-nordisk-novel-patents/SKILL.md",
+      "script": "novo-nordisk-novel-patents/scripts/novo-nordisk-novel-patents.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "novo-nordisk-novel-patents() -> dict",
+      "servers_used": [
+        "uspto_patents_mcp",
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_server_query",
+        "comparative_analysis",
+        "therapeutic_area_classification"
+      ],
+      "category": "competitive-intelligence",
       "complexity": "complex"
     }
   ],
