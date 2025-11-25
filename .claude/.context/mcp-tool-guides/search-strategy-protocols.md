@@ -1,7 +1,6 @@
 # Search Strategy Protocols
 
-> **Recovered from LSH commit 3e02457 (Oct 9, 2025)**
-> These strategic protocols were lost during optimization but contain valuable execution guidance for comprehensive pharmaceutical intelligence searches.
+> These strategic protocols contain valuable execution guidance for comprehensive pharmaceutical intelligence searches.
 
 ## COGNITIVE ENHANCEMENT DIRECTIVES
 

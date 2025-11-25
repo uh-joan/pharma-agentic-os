@@ -1,8 +1,6 @@
 # Search Execution Workflows
 
-> **Recovered from LSH commit 3e02457 (Oct 9, 2025)**
-> Comprehensive workflow templates for common pharmaceutical intelligence search patterns.
-> These workflows were lost during optimization but provide valuable patterns for complex multi-database searches.
+> Comprehensive workflow templates for common pharmaceutical intelligence search patterns that provide valuable patterns for complex multi-database searches.
 
 **⚠️ Note**: This file is 833 lines. Reference specific workflows by name:
 - Workflow 1: Comprehensive Drug Profile Search

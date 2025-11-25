@@ -1,6 +1,5 @@
 # Quality Control Checklist
 
-> **Recovered from LSH commit 3e02457 (Oct 9, 2025)**
 > Quality control standards for pharmaceutical intelligence searches.
 
 ## PRE-SEARCH QUALITY CHECKS

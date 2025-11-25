@@ -19,7 +19,7 @@ Individual database documentation with parameter patterns and optimization rules
 | `pubmed.md` | PubMed Literature | Publications, MeSH terms, citations |
 | `sec-edgar.md` | SEC Filings | 10-K/Q, 8-K, pipeline disclosures |
 | `datacommons.md` | Population Data | Demographics, epidemiology, geography |
-| `uspto-patents.md` | Patent Database | Patent search, FTO analysis, assignments |
+| `patents.md` | Patent Database | Patent search, FTO analysis, assignments |
 | `opentargets.md` | Target Validation | Genetic evidence, disease associations |
 | `pubchem.md` | Compound Properties | Chemical structure, ADME, safety alerts |
 

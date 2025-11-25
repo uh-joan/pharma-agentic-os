@@ -1,6 +1,5 @@
 # Cross-Database Integration Patterns
 
-> **Recovered from LSH commit 3e02457 (Oct 9, 2025)**
 > Strategies for linking entities and triangulating data across multiple pharmaceutical databases.
 
 ## ENTITY LINKING STRATEGIES

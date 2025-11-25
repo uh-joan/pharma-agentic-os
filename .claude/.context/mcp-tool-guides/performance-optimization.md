@@ -1,6 +1,5 @@
 # Performance Optimization Strategies
 
-> **Recovered from LSH commit 3e02457 (Oct 9, 2025)**
 > Token optimization and performance strategies for efficient MCP database queries.
 
 ## PERFORMANCE OPTIMIZATION PRINCIPLES
