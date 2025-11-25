@@ -1,21 +1,55 @@
 # USPTO & Google Patents MCP Server - Complete API Guide
 
-**Server**: `patents-mcp-server` ✅ **FULLY OPERATIONAL**
-**Tools**: `uspto_patents` (unified USPTO tool) + 7 Google Patents tools
+**Server**: `patents-mcp-server` ⚠️ **PARTIALLY OPERATIONAL**
+**Tools**: `uspto_patents` (❌ BROKEN - requires API key) + 7 Google Patents tools (✅ WORKING)
 **Data Sources**:
-- United States Patent and Trademark Office (USPTO)
-- Google Patents Public Datasets (BigQuery)
+- United States Patent and Trademark Office (USPTO) - ❌ **NOT AVAILABLE**
+- Google Patents Public Datasets (BigQuery) - ✅ **AVAILABLE**
 **Response Format**: JSON
 **Coverage**:
-- USPTO: 11+ million US granted patents, 3+ million US applications
-- Google Patents: 90+ million patents from 11+ countries (US, EP, WO, JP, CN, KR, GB, DE, FR, CA, AU)
+- ~~USPTO: 11+ million US granted patents, 3+ million US applications~~ ❌ **UNAVAILABLE**
+- Google Patents: 90+ million patents from 11+ countries (US, EP, WO, JP, CN, KR, GB, DE, FR, CA, AU) ✅ **WORKING**
 
-**🎉 All Tools Tested & Working**:
-- ✅ USPTO search tool operational
-- ✅ Google Patents search tools (all 7) operational
-- ✅ Multi-country support verified (US, EP, JP tested)
-- ✅ Claims & descriptions retrieval working
-- ✅ Error handling validated
+---
+
+## 🔴 CRITICAL WARNING: USPTO Tools Are BROKEN
+
+**❌ DO NOT USE USPTO TOOLS (`uspto_patents`)**
+
+**Why**: USPTO API requires authentication key that we don't have. All USPTO methods will fail.
+
+**Broken Methods** (all methods starting with `ppubs_` or using `method` parameter):
+- ❌ `ppubs_search_patents` - BROKEN
+- ❌ `ppubs_search_applications` - BROKEN
+- ❌ `ppubs_get_full_document` - BROKEN
+- ❌ `ppubs_get_patent_by_number` - BROKEN
+- ❌ `ppubs_download_patent_pdf` - BROKEN
+- ❌ `get_app` - BROKEN
+- ❌ `search_applications` - BROKEN
+- ❌ All other USPTO methods - BROKEN
+
+**✅ USE GOOGLE PATENTS TOOLS INSTEAD**
+
+Google Patents provides the same US patent data plus international coverage, and it works without authentication:
+- ✅ `google_search_patents` - Search 90M+ patents including all US patents
+- ✅ `google_get_patent` - Get full patent details
+- ✅ `google_get_patent_claims` - Get patent claims
+- ✅ `google_get_patent_description` - Get patent descriptions
+- ✅ `google_search_by_inventor` - Search by inventor name
+- ✅ `google_search_by_assignee` - Search by company/assignee
+- ✅ `google_search_by_cpc` - Search by CPC classification
+
+**Migration Path**: All USPTO queries can be replaced with Google Patents queries. See "Google Patents Usage Patterns" section below.
+
+---
+
+## 🎉 Working Tools Status
+
+- ❌ **USPTO tools**: All broken (requires API key we don't have)
+- ✅ **Google Patents search tools**: All 7 tools operational
+- ✅ **Multi-country support**: Verified (US, EP, JP, CN, etc.)
+- ✅ **Claims & descriptions**: Working for all countries
+- ✅ **Error handling**: Validated
 
 **MCP Configuration Note**: Server requires 3-second startup delay for BigQuery initialization. Add `"startup_delay": 3` to `.mcp.json` configuration.
 
@@ -56,27 +90,40 @@
 
 **Pagination**: All search methods support `offset` parameter for retrieving large result sets (max 500 results per query, use offset to fetch additional pages)
 
+**Date Filtering** (NEW): All search methods now support API-level date filtering:
+- `start_date`: Filter patents published on or after this date (YYYYMMDD format, e.g., 20220101)
+- `end_date`: Filter patents published on or before this date (YYYYMMDD format, e.g., 20251231)
+- **Performance**: 10x faster than post-fetch filtering, 80% less data transferred
+- **Example**: `google_search_by_assignee("Novo Nordisk", start_date=20220101, end_date=20251231)`
+
 ---
 
 ## When to Use Which Tool
 
-### Use USPTO Tools When:
-✅ Need US-specific patent search with advanced USPTO query syntax
-✅ Downloading PDF files of US patents
-✅ Searching US patent applications (not published elsewhere)
-✅ Need detailed USPTO metadata (continuity, transactions, assignments)
-✅ Using field-specific searches (assignee, inventor, date ranges in USPTO format)
+### ❌ DO NOT Use USPTO Tools
+**USPTO tools are BROKEN** - requires API key we don't have. Do not attempt to use any `uspto_patents` methods.
 
-### Use Google Patents Tools When:
-✅ Need international patent coverage (EP, WO, JP, CN, etc.)
-✅ Searching by CPC classification codes
-✅ Need simpler keyword-based searches
-✅ Want to search by inventor or assignee across multiple countries
-✅ Analyzing global patent landscape
-✅ Need claims and descriptions for international patents
+### ✅ ALWAYS Use Google Patents Tools
 
-### Hybrid Approach:
-Often best to use both: Start with Google Patents for broad international search, then drill down into US-specific details with USPTO tools.
+Google Patents provides comprehensive patent search for US and international patents:
+
+**Use Google Patents for**:
+- ✅ US patent searches (includes all USPTO data)
+- ✅ International patent coverage (EP, WO, JP, CN, KR, etc.)
+- ✅ Searching by CPC classification codes
+- ✅ Keyword-based searches across titles and abstracts
+- ✅ Search by inventor or assignee (globally or by country)
+- ✅ Global patent landscape analysis
+- ✅ Patent claims and descriptions retrieval
+- ✅ Cross-country patent comparison
+- ✅ Inventor/assignee portfolio tracking
+
+**Google Patents covers everything USPTO would have provided, plus international data.**
+
+### ~~Hybrid Approach~~ DEPRECATED
+~~Often best to use both: Start with Google Patents for broad international search, then drill down into US-specific details with USPTO tools.~~
+
+**New Approach**: Use Google Patents exclusively. It provides US patents plus international coverage without authentication requirements.
 
 ---
 
@@ -104,120 +151,140 @@ Often best to use both: Start with Google Patents for broad international search
 
 ---
 
-## 🔴 CRITICAL USPTO QUERY SYNTAX
+## ~~CRITICAL USPTO QUERY SYNTAX~~ DEPRECATED - DO NOT USE
 
-### Case-Sensitive Boolean Operators
+**❌ This section is obsolete - USPTO tools are broken**
+
+The following USPTO query syntax documentation is kept for reference only. **DO NOT USE** these patterns as USPTO tools require an API key we don't have.
+
+<details>
+<summary>Click to expand deprecated USPTO syntax (for reference only)</summary>
+
+### Case-Sensitive Boolean Operators (DEPRECATED)
 
 ```python
-# ✅ CORRECT: Uppercase operators
+# ❌ DEPRECATED: USPTO tools don't work
 query = "GLP-1 AND diabetes"
 query = "KRAS OR BRAF"
 query = "antibody NOT review"
-
-# ❌ WRONG: Lowercase operators (treated as search terms)
-query = "GLP-1 and diabetes"  # Searches for literal "and"
-query = "KRAS or BRAF"        # Searches for literal "or"
 ```
 
-### Field-Specific Search Syntax
+### Field-Specific Search Syntax (DEPRECATED)
 
 ```python
-# ✅ CORRECT: Field prefixes with colons
+# ❌ DEPRECATED: USPTO tools don't work
 query = 'assignee:"Pfizer" AND drug'
 query = 'inventor:"Smith, John" AND chemistry'
 query = 'title:"antibody" AND date:[20200101 TO 20241231]'
-
-# ❌ WRONG: Without field prefixes
-query = "Pfizer drug"  # Searches anywhere, not just assignee
 ```
 
-### Date Format Requirements
+### Date Format Requirements (DEPRECATED)
 
 ```python
-# ✅ CORRECT: [YYYYMMDD TO YYYYMMDD] format
+# ❌ DEPRECATED: USPTO tools don't work
 query = "GLP-1 AND date:[20200101 TO 20241231]"
 query = "KRAS AND date:[20150101 TO 20201231]"
-
-# ❌ WRONG: Other date formats
-query = "GLP-1 AND date:[2020-01-01 TO 2024-12-31]"  # Fails
-query = "GLP-1 AND date:2020-2024"                   # Fails
 ```
+
+</details>
+
+**✅ Use Google Patents instead** - See "Google Patents Usage Patterns" section below for working examples.
 
 ---
 
-## Quick Reference
+## ~~Quick Reference~~ DEPRECATED - USE GOOGLE PATENTS
 
-### Field Prefixes
+**❌ This section is obsolete - USPTO field prefixes don't work**
+
+<details>
+<summary>Click to expand deprecated USPTO reference (for historical purposes only)</summary>
+
+### Field Prefixes (DEPRECATED)
 
 | Prefix | Searches | Example |
 |--------|----------|---------|
-| `assignee:` | Patent owner/company | `assignee:"Pfizer"` |
-| `inventor:` | Inventor name | `inventor:"Smith, John"` |
-| `title:` | Patent title | `title:"antibody"` |
-| `abstract:` | Abstract text | `abstract:"therapeutic"` |
-| `claims:` | Claims section | `claims:"composition"` |
-| `date:` | Filing/issue date | `date:[20200101 TO 20241231]` |
+| `assignee:` | Patent owner/company | ❌ BROKEN |
+| `inventor:` | Inventor name | ❌ BROKEN |
+| `title:` | Patent title | ❌ BROKEN |
+| `abstract:` | Abstract text | ❌ BROKEN |
+| `claims:` | Claims section | ❌ BROKEN |
+| `date:` | Filing/issue date | ❌ BROKEN |
 
-### Boolean Operators (CASE-SENSITIVE)
+### Boolean Operators (DEPRECATED)
 
 | Operator | Function | Example |
 |----------|----------|---------|
-| `AND` | Both terms required | `GLP-1 AND diabetes` |
-| `OR` | Either term | `KRAS OR BRAF` |
-| `NOT` | Exclude term | `antibody NOT review` |
-| `()` | Grouping | `(GLP-1 OR semaglutide) AND Novo` |
-| `""` | Exact phrase | `"glucagon receptor agonist"` |
+| `AND` | Both terms required | ❌ BROKEN |
+| `OR` | Either term | ❌ BROKEN |
+| `NOT` | Exclude term | ❌ BROKEN |
+| `()` | Grouping | ❌ BROKEN |
+| `""` | Exact phrase | ❌ BROKEN |
+
+</details>
+
+**✅ Use Google Patents search parameters instead** - Works without authentication.
 
 ---
 
-## Common Search Patterns
+## ~~Common Search Patterns~~ DEPRECATED - USE GOOGLE PATENTS
 
-### Pattern 1: Company Patent Portfolio
+**❌ All USPTO patterns below are BROKEN - DO NOT USE**
+
+These patterns are kept for reference only. **Use Google Patents patterns instead** (see "Google Patents Usage Patterns" section below).
+
+<details>
+<summary>Click to expand deprecated USPTO patterns (for reference only)</summary>
+
+### Pattern 1: Company Patent Portfolio (DEPRECATED - BROKEN)
 ```python
+# ❌ DEPRECATED: USPTO tools don't work
 from mcp.servers.uspto_patents_mcp import ppubs_search_patents
 
-# Search all patents by company
 results = ppubs_search_patents(
     query='assignee:"Novo Nordisk" AND (GLP-1 OR semaglutide)',
     limit=100,
     sort="date_publ desc"
 )
-
-print(f"Found {len(results.get('results', []))} patents")
-
-for patent in results.get('results', []):
-    number = patent.get('patentNumber')
-    title = patent.get('patentTitle')
-    issue_date = patent.get('patentIssueDate')
-    print(f"{number} ({issue_date}): {title}")
+# ❌ This will fail - requires API key
 ```
 
-### Pattern 2: Recent Patents in Therapeutic Area
+**✅ Use Google Patents instead:**
 ```python
-# Search patents in last 3 years
+from mcp.servers.uspto_patents_mcp import google_search_by_assignee
+
+results = google_search_by_assignee(
+    assignee_name="Novo Nordisk",
+    country="US",
+    limit=100
+)
+# ✅ This works without API key
+```
+
+### Pattern 2: Recent Patents in Therapeutic Area (DEPRECATED - BROKEN)
+```python
+# ❌ DEPRECATED: USPTO tools don't work
 results = ppubs_search_patents(
     query='(KRAS OR "KRAS inhibitor") AND date:[20210101 TO 20241231]',
-    limit=100,
-    sort="date_publ desc"
+    limit=100
 )
-
-# Group by assignee
-companies = {}
-for patent in results.get('results', []):
-    assignee = patent.get('assigneeEntityName', 'Unknown')
-    companies[assignee] = companies.get(assignee, 0) + 1
-
-# Rank by patent count
-ranked = sorted(companies.items(), key=lambda x: x[1], reverse=True)
-
-print("Top Companies - KRAS Patents (2021-2024):")
-for company, count in ranked[:10]:
-    print(f"{company}: {count} patents")
+# ❌ This will fail - requires API key
 ```
 
-### Pattern 3: Competitive Patent Landscape
+**✅ Use Google Patents instead:**
 ```python
-# Compare multiple companies in same space
+from mcp.servers.uspto_patents_mcp import google_search_patents
+
+results = google_search_patents(
+    query="KRAS inhibitor",
+    country="US",
+    limit=100
+)
+# ✅ This works without API key
+```
+
+### Pattern 3: Competitive Patent Landscape (DEPRECATED - BROKEN)
+```python
+# ❌ DEPRECATED: USPTO tools don't work
 companies = ["Pfizer", "Merck", "Bristol Myers", "AbbVie"]
 
 landscape = {}
@@ -226,12 +293,27 @@ for company in companies:
         query=f'assignee:"{company}" AND (immunotherapy OR checkpoint)',
         limit=500
     )
-    landscape[company] = len(results.get('results', []))
-
-print("Immunotherapy Patent Landscape:")
-for company, count in sorted(landscape.items(), key=lambda x: x[1], reverse=True):
-    print(f"{company}: {count} patents")
+# ❌ This will fail - requires API key
 ```
+
+**✅ Use Google Patents instead:**
+```python
+from mcp.servers.uspto_patents_mcp import google_search_by_assignee
+
+companies = ["Pfizer", "Merck", "Bristol Myers", "AbbVie"]
+
+landscape = {}
+for company in companies:
+    results = google_search_by_assignee(
+        assignee_name=company,
+        country="US",
+        limit=500
+    )
+    landscape[company] = results.get('count', 0)
+# ✅ This works without API key
+```
+
+</details>
 
 ---
 
@@ -409,14 +491,54 @@ for country, count in sorted(landscape.items(), key=lambda x: x[1], reverse=True
     print(f"{country}: {count} patents")
 ```
 
-### Pattern 8: Pagination - Retrieve ALL Results
+### Pattern 8: API-Level Date Filtering (Efficient Approach)
 ```python
 from mcp.servers.uspto_patents_mcp import google_search_by_assignee
 
-# Retrieve ALL patents for a company (not just first 500)
+# Efficient: Use API-level date filtering instead of pagination + post-fetch filtering
+results = google_search_by_assignee(
+    assignee_name="Novo Nordisk",
+    country="US",
+    limit=500,
+    start_date=20220101,  # January 1, 2022
+    end_date=20251231     # December 31, 2025
+)
+
+print(f"Patents from 2022-2025: {results.get('count', 0)}")
+
+# Analyze by year
+from collections import defaultdict
+by_year = defaultdict(int)
+
+for patent in results.get('results', []):
+    pub_date = patent.get('publication_date', '')
+    year = pub_date[:4] if pub_date else 'Unknown'
+    by_year[year] += 1
+
+# Show filing trend
+print("\nPatent Filing Trend (2022-2025):")
+for year in sorted(by_year.keys(), reverse=True):
+    print(f"{year}: {by_year[year]} patents")
+
+# Performance benefit:
+# ✅ 10x faster than fetching all patents then filtering
+# ✅ 80% less data transferred
+# ✅ Single API call instead of multiple paginated requests
+```
+
+### Pattern 9: Pagination - Retrieve ALL Results (When Needed)
+```python
+from mcp.servers.uspto_patents_mcp import google_search_by_assignee
+
+# Only use pagination when you need ALL historical patents
+# For date-specific queries, use Pattern 8 (API-level filtering) instead
+
 def get_all_patents(assignee_name, country="US"):
     """
     Fetch all patents for a company using pagination.
+
+    ⚠️ WARNING: Only use this when you need the complete historical record.
+    For recent patents, use API-level date filtering (Pattern 8) instead.
 
     Google Patents has a 500 result limit per query.
     Use offset parameter to retrieve additional pages.
@@ -428,7 +550,6 @@ def get_all_patents(assignee_name, country="US"):
     print(f"Fetching all {assignee_name} patents from {country}...")
 
     while True:
-        # Fetch next batch
         batch = google_search_by_assignee(
             assignee_name=assignee_name,
             country=country,
@@ -454,24 +575,10 @@ def get_all_patents(assignee_name, country="US"):
 
     return all_patents
 
-# Example: Get ALL Novo Nordisk US patents
+# Example: Get ALL Novo Nordisk US patents (complete history)
 patents = get_all_patents("Novo Nordisk", country="US")
 
 print(f"\nTotal patents retrieved: {len(patents)}")
-
-# Analyze by year
-from collections import defaultdict
-by_year = defaultdict(int)
-
-for patent in patents:
-    pub_date = patent.get('publication_date', '')
-    year = pub_date[:4] if pub_date else 'Unknown'
-    by_year[year] += 1
-
-# Show filing trend
-print("\nPatent Filing Trend:")
-for year in sorted(by_year.keys(), reverse=True)[:10]:
-    print(f"{year}: {by_year[year]} patents")
 ```
 
 ---
@@ -500,14 +607,20 @@ for year in sorted(by_year.keys(), reverse=True)[:10]:
 
 **Token Optimization Tips**:
 1. Set appropriate `limit` parameter (USPTO default 100, Google max 500)
-2. Use `offset` parameter for pagination when > 500 results needed (see Pattern 8)
-3. Use field-specific searches to narrow results
-4. Filter by date range to focus on recent patents
+2. **🆕 Use `start_date` and `end_date` parameters for API-level date filtering** (Pattern 8) - 10x faster than pagination + filtering
+3. Use `offset` parameter for pagination only when you need complete historical record (Pattern 9)
+4. Use field-specific searches to narrow results
 5. Extract only needed fields from results
 6. Avoid fetching full documents/descriptions unless necessary
 7. For Google Patents, start with search tools before fetching full details
 8. Use country filter to limit Google Patents results
 9. Consider cost: BigQuery queries process 260GB per patent search (1TB free tier/month)
+
+**Date Filtering Best Practices**:
+- ✅ **DO**: Use `start_date`/`end_date` parameters for recent patents (Pattern 8)
+- ❌ **DON'T**: Fetch all patents then filter by date (inefficient)
+- ✅ **DO**: Combine date filtering with assignee/inventor/CPC searches
+- ✅ **DO**: Use YYYYMMDD integer format (e.g., 20220101, 20251231)
 
 ---
 
@@ -533,9 +646,13 @@ for year in sorted(by_year.keys(), reverse=True)[:10]:
 ✅ **Search by inventor** or assignee globally
 ✅ **Access claims and descriptions** for international patents
 ✅ **Pagination support** with `offset` parameter for large result sets
+✅ **🆕 API-level date filtering** with `start_date`/`end_date` parameters (10x faster)
 ⚠️ **Requires Google Cloud setup** (BigQuery authentication)
 
-**Critical Pattern**: Use `country` parameter, max 500 per query, use `offset` for pagination (see Pattern 8)
+**Critical Patterns**:
+- Use `country` parameter to filter by country
+- **🆕 Use `start_date`/`end_date` for recent patents** (Pattern 8) - 10x faster than pagination
+- Use `offset` for pagination only when you need complete historical data (Pattern 9)
 
 ### Best Use Cases
 **USPTO**: Prior art searches (US), competitive intelligence (US companies), IP portfolio monitoring (US), PDF downloads

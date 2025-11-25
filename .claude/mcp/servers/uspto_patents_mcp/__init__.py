@@ -603,16 +603,20 @@ def google_search_patents(
     query: str,
     country: str = "US",
     limit: int = 100,
-    offset: int = 0
+    offset: int = 0,
+    start_date: Optional[int] = None,
+    end_date: Optional[int] = None
 ) -> Dict[str, Any]:
     """
-    Search patents by keywords using Google Patents Public Datasets
+    Search patents by keywords using Google Patents Public Datasets with optional date filtering
 
     Args:
         query: Search query string (searches titles and abstracts)
         country: Country code - US, EP, WO, JP, CN, KR, GB, DE, FR, CA, AU
         limit: Maximum results (1-500, default: 100)
         offset: Number of results to skip for pagination (default: 0)
+        start_date: Optional start date for publication_date filter (YYYYMMDD format, e.g., 20220101)
+        end_date: Optional end date for publication_date filter (YYYYMMDD format, e.g., 20251231)
 
     Returns:
         dict: Search results with patent metadata
@@ -629,11 +633,13 @@ def google_search_patents(
           - cpc: CPC classification codes
 
     Examples:
-        # Simple search
+        # Search with date filtering
         results = google_search_patents(
             query="GLP-1 agonist",
             country="US",
-            limit=50
+            limit=50,
+            start_date=20220101,
+            end_date=20251231
         )
 
         print(f"Found {results.get('count', 0)} patents")
@@ -651,38 +657,52 @@ def google_search_patents(
     """
     client = get_client('patents-mcp-server')
 
-    return client.call_tool('google_search_patents', {
+    params = {
         'query': query,
         'country': country,
         'limit': limit,
         'offset': offset
-    })
+    }
+
+    # Add date parameters if provided
+    if start_date is not None:
+        params['start_date'] = start_date
+    if end_date is not None:
+        params['end_date'] = end_date
+
+    return client.call_tool('google_search_patents', params)
 
 
 def google_search_by_assignee(
     assignee_name: str,
     country: str = "US",
     limit: int = 100,
-    offset: int = 0
+    offset: int = 0,
+    start_date: Optional[int] = None,
+    end_date: Optional[int] = None
 ) -> Dict[str, Any]:
     """
-    Search patents by assignee/company name
+    Search patents by assignee/company name with optional date filtering
 
     Args:
         assignee_name: Company or organization name
         country: Country code - US, EP, WO, JP, CN, KR, GB, DE, FR, CA, AU
         limit: Maximum results (1-500, default: 100)
         offset: Number of results to skip for pagination (default: 0)
+        start_date: Optional start date for publication_date filter (YYYYMMDD format, e.g., 20220101)
+        end_date: Optional end date for publication_date filter (YYYYMMDD format, e.g., 20251231)
 
     Returns:
         dict: Search results with patent metadata
 
     Examples:
-        # Find Novo Nordisk patents
+        # Find Novo Nordisk patents from 2022-2025
         results = google_search_by_assignee(
             assignee_name="Novo Nordisk",
             country="US",
-            limit=100
+            limit=500,
+            start_date=20220101,
+            end_date=20251231
         )
 
         # Analyze by year
@@ -709,12 +729,20 @@ def google_search_by_assignee(
     """
     client = get_client('patents-mcp-server')
 
-    return client.call_tool('google_search_by_assignee', {
+    params = {
         'assignee_name': assignee_name,
         'country': country,
         'limit': limit,
         'offset': offset
-    })
+    }
+
+    # Add date parameters if provided
+    if start_date is not None:
+        params['start_date'] = start_date
+    if end_date is not None:
+        params['end_date'] = end_date
+
+    return client.call_tool('google_search_by_assignee', params)
 
 
 def google_get_patent(
@@ -759,7 +787,9 @@ def google_search_by_inventor(
     inventor_name: str,
     country: str = "US",
     limit: int = 100,
-    offset: int = 0
+    offset: int = 0,
+    start_date: Optional[int] = None,
+    end_date: Optional[int] = None
 ) -> Dict[str, Any]:
     """
     Search patents by inventor name
@@ -769,25 +799,37 @@ def google_search_by_inventor(
         country: Country code - US, EP, WO, JP, CN, KR, GB, DE, FR, CA, AU
         limit: Maximum results (1-500, default: 100)
         offset: Number of results to skip for pagination (default: 0)
+        start_date: Optional start date for publication_date filter (YYYYMMDD format, e.g., 20220101)
+        end_date: Optional end date for publication_date filter (YYYYMMDD format, e.g., 20251231)
 
     Returns:
         dict: Search results with patent metadata
     """
     client = get_client('patents-mcp-server')
 
-    return client.call_tool('google_search_by_inventor', {
+    params = {
         'inventor_name': inventor_name,
         'country': country,
         'limit': limit,
         'offset': offset
-    })
+    }
+
+    # Add date parameters if provided
+    if start_date is not None:
+        params['start_date'] = start_date
+    if end_date is not None:
+        params['end_date'] = end_date
+
+    return client.call_tool('google_search_by_inventor', params)
 
 
 def google_search_by_cpc(
     cpc_code: str,
     country: str = "US",
     limit: int = 100,
-    offset: int = 0
+    offset: int = 0,
+    start_date: Optional[int] = None,
+    end_date: Optional[int] = None
 ) -> Dict[str, Any]:
     """
     Search patents by CPC classification code
@@ -797,18 +839,28 @@ def google_search_by_cpc(
         country: Country code - US, EP, WO, JP, CN, KR, GB, DE, FR, CA, AU
         limit: Maximum results (1-500, default: 100)
         offset: Number of results to skip for pagination (default: 0)
+        start_date: Optional start date for publication_date filter (YYYYMMDD format, e.g., 20220101)
+        end_date: Optional end date for publication_date filter (YYYYMMDD format, e.g., 20251231)
 
     Returns:
         dict: Search results with patent metadata
     """
     client = get_client('patents-mcp-server')
 
-    return client.call_tool('google_search_by_cpc', {
+    params = {
         'cpc_code': cpc_code,
         'country': country,
         'limit': limit,
         'offset': offset
-    })
+    }
+
+    # Add date parameters if provided
+    if start_date is not None:
+        params['start_date'] = start_date
+    if end_date is not None:
+        params['end_date'] = end_date
+
+    return client.call_tool('google_search_by_cpc', params)
 
 
 def google_get_patent_claims(
