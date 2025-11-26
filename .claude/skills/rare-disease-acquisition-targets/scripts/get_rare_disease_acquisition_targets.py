@@ -1,8 +1,10 @@
 import sys
 sys.path.insert(0, ".claude")
 from mcp.servers.ct_gov_mcp import search
+from mcp.servers.sec_edgar_mcp import search_companies, get_company_facts
 import re
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
+from difflib import SequenceMatcher
 
 # Pattern-based sponsor type detection (NO HARDCODED COMPANY NAMES)
 ACADEMIC_KEYWORDS = [
@@ -52,6 +54,145 @@ def is_cro_sponsor(sponsor: str) -> bool:
         return False
     sponsor_lower = sponsor.lower()
     return any(keyword in sponsor_lower for keyword in CRO_KEYWORDS)
+
+def fuzzy_match_company_name(sponsor_name: str, sec_results: List[Dict], threshold: float = 0.6) -> Optional[str]:
+    """Fuzzy match CT.gov sponsor name to SEC company name.
+
+    Handles variations like:
+    - "Ultragenyx Pharmaceutical Inc." vs "Ultragenyx Pharmaceutical Inc"
+    - "BioMarin Pharmaceutical" vs "BioMarin Pharmaceutical Inc."
+
+    Args:
+        sponsor_name: Sponsor name from clinical trial
+        sec_results: List of SEC search result dicts
+        threshold: Similarity threshold (0.0-1.0), default 0.6
+
+    Returns:
+        Best matching CIK or None
+    """
+    # Normalize sponsor name
+    normalized_sponsor = sponsor_name.lower().strip()
+
+    # Remove common suffixes for better matching
+    suffixes = [' inc.', ' inc', ' corporation', ' corp.', ' corp', ' ltd.', ' ltd',
+                ' llc', ' limited', ' plc', ' therapeutics', ' pharma', ' pharmaceutical',
+                ' biopharmaceuticals', ' biopharmaceutical', ' biotech', ' bio']
+
+    for suffix in suffixes:
+        if normalized_sponsor.endswith(suffix):
+            normalized_sponsor = normalized_sponsor[:-len(suffix)].strip()
+
+    best_match_cik = None
+    best_ratio = 0.0
+
+    for company in sec_results:
+        company_name = company.get('title', '').lower().strip()
+
+        # Also normalize SEC name
+        normalized_sec = company_name
+        for suffix in suffixes:
+            if normalized_sec.endswith(suffix):
+                normalized_sec = normalized_sec[:-len(suffix)].strip()
+
+        # Calculate similarity ratio
+        ratio = SequenceMatcher(None, normalized_sponsor, normalized_sec).ratio()
+
+        if ratio > best_ratio and ratio >= threshold:
+            best_ratio = ratio
+            best_match_cik = company.get('cik')
+
+    return best_match_cik
+
+def get_financial_metrics(company_name: str) -> Optional[Dict]:
+    """Get key financial metrics from SEC EDGAR for a company.
+
+    Args:
+        company_name: Company name to look up
+
+    Returns:
+        Dictionary with financial metrics or None if not found
+    """
+    try:
+        # Search for company
+        search_result = search_companies(company_name)
+
+        if not search_result or 'results' not in search_result or len(search_result['results']) == 0:
+            return None
+
+        results_list = search_result['results']
+
+        # Try fuzzy matching
+        matched_cik = fuzzy_match_company_name(company_name, results_list)
+
+        if not matched_cik:
+            # Fallback to first result
+            matched_cik = results_list[0].get('cik')
+
+        if not matched_cik:
+            return None
+
+        # Get company facts
+        facts_result = get_company_facts(matched_cik)
+
+        if not facts_result or 'facts' not in facts_result:
+            return None
+
+        # Find matching company in results for display name
+        matched_company = next((c for c in results_list if c.get('cik') == matched_cik), results_list[0])
+
+        # Extract financial metrics from company facts
+        metrics = {
+            'company_name': matched_company.get('title', company_name),
+            'cik': matched_cik,
+            'ticker': matched_company.get('ticker'),
+            'cash_millions': None,
+            'rd_expense_millions': None,
+            'cash_runway_months': None,
+            'distress_signals': []
+        }
+
+        # Parse facts for key metrics
+        us_gaap = facts_result.get('facts', {}).get('us-gaap', {})
+
+        # Cash and cash equivalents
+        cash_data = us_gaap.get('CashAndCashEquivalentsAtCarryingValue', {}).get('units', {}).get('USD', [])
+        if cash_data:
+            latest_cash = sorted(cash_data, key=lambda x: x.get('end', ''), reverse=True)[0]
+            metrics['cash_millions'] = round(latest_cash.get('val', 0) / 1_000_000, 2)
+
+        # R&D Expense (annual)
+        rd_data = us_gaap.get('ResearchAndDevelopmentExpense', {}).get('units', {}).get('USD', [])
+        if rd_data:
+            # Get latest annual R&D (form 10-K)
+            annual_rd = [r for r in rd_data if r.get('form') == '10-K']
+            if annual_rd:
+                latest_rd = sorted(annual_rd, key=lambda x: x.get('end', ''), reverse=True)[0]
+                metrics['rd_expense_millions'] = round(latest_rd.get('val', 0) / 1_000_000, 2)
+
+        # Calculate cash runway
+        if metrics['cash_millions'] and metrics['rd_expense_millions'] and metrics['rd_expense_millions'] > 0:
+            monthly_burn = metrics['rd_expense_millions'] / 12
+            metrics['cash_runway_months'] = round(metrics['cash_millions'] / monthly_burn, 1)
+
+            # Distress signal: Low cash runway
+            if metrics['cash_runway_months'] < 12:
+                metrics['distress_signals'].append(f"Low cash runway ({metrics['cash_runway_months']} months)")
+
+        # Negative earnings
+        net_income_data = us_gaap.get('NetIncomeLoss', {}).get('units', {}).get('USD', [])
+        if net_income_data:
+            annual_income = [i for i in net_income_data if i.get('form') == '10-K']
+            if annual_income:
+                latest_income = sorted(annual_income, key=lambda x: x.get('end', ''), reverse=True)[0]
+                income_millions = round(latest_income.get('val', 0) / 1_000_000, 2)
+                if income_millions < 0:
+                    metrics['distress_signals'].append(f"Negative earnings (${abs(income_millions)}M loss)")
+
+        return metrics
+
+    except Exception as e:
+        # Gracefully handle errors (private companies, API failures, etc.)
+        return None
 
 def extract_field(content, field_name):
     """Extract field value from markdown content."""
@@ -179,7 +320,7 @@ def filter_and_aggregate_sponsors(
 
     return filtered_sponsors, filtering_stats
 
-def calculate_acquisition_score(sponsor: str, trials: List[Dict]) -> int:
+def calculate_acquisition_score(sponsor: str, trials: List[Dict], financial_metrics: Optional[Dict] = None) -> int:
     """Calculate acquisition attractiveness score."""
     score = 0
 
@@ -212,11 +353,18 @@ def calculate_acquisition_score(sponsor: str, trials: List[Dict]) -> int:
     if phase2_count > 0 and phase3_count > 0:
         score += 10
 
+    # Financial distress signals increase acquisition likelihood
+    if financial_metrics:
+        distress_count = len(financial_metrics.get('distress_signals', []))
+        score += distress_count * 5  # Each distress signal adds 5 points
+
     return score
 
 def rank_acquisition_targets(
     sponsor_trials: Dict[str, List[Dict]],
-    max_results: int
+    max_results: int,
+    enrich_financials: bool = False,
+    max_cash_runway_months: Optional[float] = None
 ) -> List[Dict]:
     """Rank sponsors by acquisition attractiveness."""
 
@@ -229,6 +377,22 @@ def rank_acquisition_targets(
         phase3_count = sum(1 for t in trials if 'phase3' in str(t.get('phase', '')).lower())
         recruiting_count = sum(1 for t in trials if 'recruiting' in str(t.get('status', '')).lower())
 
+        # Financial enrichment
+        financial_metrics = None
+        if enrich_financials:
+            print(f"  Enriching: {sponsor}...", end=" ")
+            financial_metrics = get_financial_metrics(sponsor)
+            if financial_metrics:
+                print(f"✓ ({len(financial_metrics.get('distress_signals', []))} distress signals)")
+            else:
+                print("✗ (not found)")
+
+        # Apply cash runway filter if specified
+        if max_cash_runway_months and financial_metrics:
+            cash_runway = financial_metrics.get('cash_runway_months')
+            if cash_runway and cash_runway > max_cash_runway_months:
+                continue  # Skip companies with too much runway
+
         # Find lead asset
         lead_asset = None
         for trial in sorted(trials, key=lambda t: (
@@ -240,7 +404,7 @@ def rank_acquisition_targets(
             break
 
         # Calculate score
-        score = calculate_acquisition_score(sponsor, trials)
+        score = calculate_acquisition_score(sponsor, trials, financial_metrics)
 
         ranked_targets.append({
             'sponsor': sponsor,
@@ -256,6 +420,7 @@ def rank_acquisition_targets(
                 'phase': lead_asset.get('phase', 'Unknown'),
                 'status': lead_asset.get('status', 'Unknown')
             } if lead_asset else None,
+            'financial_metrics': financial_metrics,
             'all_programs': trials
         })
 
@@ -276,9 +441,11 @@ def get_rare_disease_acquisition_targets(
     exclude_government: bool = True,
     exclude_cro: bool = True,
     prefer_phase3: bool = True,
-    max_results: int = 50
+    max_results: int = 50,
+    enrich_financials: bool = False,
+    max_cash_runway_months: Optional[float] = None
 ) -> Dict:
-    """Get ranked rare disease acquisition targets with intelligent filtering.
+    """Get ranked rare disease acquisition targets with intelligent filtering and optional financial enrichment.
 
     Args:
         therapeutic_focus: 'ultra_rare_metabolic', 'neuromuscular', 'gene_therapy', 'oncology_rare', 'any'
@@ -289,6 +456,8 @@ def get_rare_disease_acquisition_targets(
         exclude_cro: Exclude CROs (default: True)
         prefer_phase3: Adaptive phase strategy (default: True)
         max_results: Top N targets (default: 50)
+        enrich_financials: Enable SEC EDGAR financial data lookup (default: False, slower but adds financial context)
+        max_cash_runway_months: Filter for distressed companies (default: None, requires enrich_financials=True)
 
     Returns:
         dict: query_strategy, filtering_summary, top_targets, summary
@@ -361,8 +530,18 @@ def get_rare_disease_acquisition_targets(
         phases_included = 'PHASE2+PHASE3'
         phase_expansion_reason = 'Phase 2+3 from start'
 
-    # Rank targets
-    top_targets = rank_acquisition_targets(sponsor_trials, max_results)
+    # Rank targets with optional financial enrichment
+    if enrich_financials:
+        print("\n" + "="*80)
+        print("ENRICHING WITH SEC EDGAR FINANCIAL DATA")
+        print("="*80)
+
+    top_targets = rank_acquisition_targets(
+        sponsor_trials,
+        max_results,
+        enrich_financials=enrich_financials,
+        max_cash_runway_months=max_cash_runway_months
+    )
 
     # Generate summary
     summary = f"""# Rare Disease Acquisition Targets
@@ -371,6 +550,7 @@ def get_rare_disease_acquisition_targets(
 - Therapeutic Focus: {therapeutic_focus}
 - Phases: {phases_included}
 - Strategy: {phase_expansion_reason}
+- Financial Enrichment: {'Enabled' if enrich_financials else 'Disabled'}
 
 ## Filtering
 - Total Trials: {filtering_stats['total_trials']:,}
@@ -396,13 +576,21 @@ def get_rare_disease_acquisition_targets(
             summary += f"""- Lead: {lead['intervention']} - {lead['condition']} ({lead['phase']})
   NCT: {lead['nct_id']}
 """
+        if target.get('financial_metrics'):
+            fm = target['financial_metrics']
+            summary += f"""- Financial: Cash ${fm.get('cash_millions', 'N/A')}M, Runway {fm.get('cash_runway_months', 'N/A')} months
+"""
+            if fm.get('distress_signals'):
+                summary += f"""  Distress: {', '.join(fm['distress_signals'])}
+"""
         summary += "\n"
 
     return {
         'query_strategy': {
             'therapeutic_focus': therapeutic_focus,
             'phases_included': phases_included,
-            'phase_expansion_reason': phase_expansion_reason
+            'phase_expansion_reason': phase_expansion_reason,
+            'financial_enrichment': enrich_financials
         },
         'filtering_summary': filtering_stats,
         'top_targets': top_targets,
@@ -413,9 +601,14 @@ if __name__ == "__main__":
     result = get_rare_disease_acquisition_targets(
         therapeutic_focus='ultra_rare_metabolic',
         prefer_phase3=True,
-        max_results=30
+        max_results=30,
+        enrich_financials=True,  # Enable SEC financial enrichment
+        max_cash_runway_months=24  # Filter for companies with <24 months cash
     )
 
     print(result['summary'])
     print(f"\n✓ Found {len(result['top_targets'])} targets")
     print(f"✓ Strategy: {result['query_strategy']['phase_expansion_reason']}")
+    if result['query_strategy']['financial_enrichment']:
+        enriched_count = sum(1 for t in result['top_targets'] if t.get('financial_metrics'))
+        print(f"✓ Financial data: {enriched_count}/{len(result['top_targets'])} targets enriched")

@@ -1,14 +1,14 @@
 {
   "version": "2.0",
   "format": "folder-structure",
-  "last_updated": "2025-11-25",
+  "last_updated": "2025-11-26",
   "description": "Skills library index for pattern discovery and reuse - Anthropic folder structure format",
   "usage": "Agent reads this to discover similar skills before creating new ones. Enables evolutionary skill development where new skills build on proven patterns from existing implementations.",
   "migration_status": {
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 74,
+    "folder_skills_count": 75,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -1556,6 +1556,33 @@
         "therapeutic_area_classification"
       ],
       "category": "competitive-intelligence",
+      "complexity": "complex"
+    },
+    {
+      "name": "get_rare_disease_acquisition_targets",
+      "structure": "folder",
+      "folder": "rare-disease-acquisition-targets",
+      "skill_md": "rare-disease-acquisition-targets/SKILL.md",
+      "script": "rare-disease-acquisition-targets/scripts/get_rare_disease_acquisition_targets.py",
+      "has_frontmatter": true,
+      "description": "Enhanced with SEC EDGAR financial intelligence - v2.0",
+      "function_signature": "get_rare_disease_acquisition_targets() -> dict",
+      "servers_used": [
+        "ct_gov_mcp",
+        "sec_edgar_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "sponsor_aggregation",
+        "phase_distribution",
+        "fuzzy_matching",
+        "financial_enrichment",
+        "pattern_based_filtering",
+        "adaptive_phase_strategy",
+        "acquisition_scoring"
+      ],
+      "category": "strategic-analysis",
       "complexity": "complex"
     }
   ],
