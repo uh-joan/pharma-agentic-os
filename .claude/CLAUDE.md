@@ -531,8 +531,11 @@ python3 .claude/tools/skill_discovery/strategy.py \
   --therapeutic-area '{therapeutic_area}' \
   --data-type {trials|fda_drugs|patents|publications} \
   --servers {comma_separated_servers} \
+  --query '{original_user_query}' \
   --json
 ```
+
+**CRITICAL**: Always include `--query` with the original user query. This enables trigger keyword matching to identify intent-specific skills like `companies-by-moa` when user asks "which companies are working on..."
 
 3. **Parse strategy result and act**:
 
@@ -571,29 +574,32 @@ Task(
 
 **Example Flow**:
 ```
-User: "Get Abbott segment and geographic financials"
+User: "Which companies are working on GLP-1 receptor agonists in obesity?"
 ↓
 Step 0: Infer parameters:
-  skill_name = "company_segment_geographic_financials"
-  therapeutic_area = "Abbott"
-  data_type = "fda_drugs" (or appropriate type)
-  servers = "sec_mcp"
+  skill_name = "glp1_obesity_companies"
+  therapeutic_area = "GLP-1"
+  data_type = "trials"
+  servers = "ct_gov_mcp"
+  original_query = "Which companies are working on GLP-1 receptor agonists in obesity?"
 ↓
 Run strategy.py:
   python3 .claude/tools/skill_discovery/strategy.py \
-    --skill "company_segment_geographic_financials" \
-    --therapeutic-area "Abbott" \
-    --data-type "fda_drugs" \
-    --servers "sec_mcp" \
+    --skill "glp1_obesity_companies" \
+    --therapeutic-area "GLP-1" \
+    --data-type "trials" \
+    --servers "ct_gov_mcp" \
+    --query "Which companies are working on GLP-1 receptor agonists in obesity?" \
     --json
 ↓
-Returns: REUSE strategy + existing skill path
+Trigger keyword detected: "companies working on" (score: 15)
+Returns: REUSE strategy + companies-by-moa skill
 ↓
-Execute: python3 .claude/skills/company-segment-geographic-financials/scripts/get_company_segment_geographic_financials.py
+Execute: python3 .claude/skills/companies-by-moa/scripts/get_companies_by_moa.py 'GLP-1 receptor agonist' 'obesity'
 ↓
 Return results to user
 ↓
-Result: No pharma-search-specialist invoked, no duplicate created!
+Result: Correct skill identified via trigger keywords, no pharma-search-specialist invoked!
 ```
 
 #### For Strategic Agent Invocations

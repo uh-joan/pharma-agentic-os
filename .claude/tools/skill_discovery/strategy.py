@@ -258,7 +258,8 @@ def find_best_reference(requirements: SkillRequirements) -> dict:
 
 def determine_skill_strategy(
     skill_name: str,
-    requirements: SkillRequirements
+    requirements: SkillRequirements,
+    query: Optional[str] = None
 ) -> StrategyDecision:
     """Determine best strategy for obtaining required skill.
 
@@ -359,7 +360,15 @@ def determine_skill_strategy(
             )
 
     # Step 2: Check for semantic match
-    semantic_match = find_matching_skill(requirements)
+    # Pass query for trigger keyword matching
+    requirements_with_query = SkillRequirements(
+        therapeutic_area=requirements.therapeutic_area,
+        data_type=requirements.data_type,
+        filters=requirements.filters,
+        servers=requirements.servers,
+        query=query
+    )
+    semantic_match = find_matching_skill(requirements_with_query)
     if semantic_match:
         debug_info['semantic_match_found'] = True
         debug_info['semantic_match_name'] = semantic_match.skill.get('name')
@@ -443,12 +452,17 @@ def main():
     args = parser.parse_args()
 
     # Extract parameters from query or use structured params
-    if args.query:
+    # BOTH modes can be used together - structured params take precedence, query preserved for trigger matching
+    original_query = args.query  # Always preserve original query for trigger keyword matching
+
+    if args.query and not (args.skill or args.therapeutic_area or args.data_type):
+        # Query-only mode: extract all parameters from natural language
         extracted = extract_params_from_query(args.query)
         skill_name = extracted['skill_name']
         therapeutic_area = extracted['therapeutic_area']
         data_type = extracted['data_type']
     else:
+        # Structured mode: use explicit parameters (but keep query for trigger matching)
         if not args.skill or not args.therapeutic_area or not args.data_type:
             parser.error('--skill, --therapeutic-area, and --data-type are required when not using --query')
         skill_name = args.skill
@@ -465,7 +479,7 @@ def main():
         servers=servers
     )
 
-    decision = determine_skill_strategy(skill_name, requirements)
+    decision = determine_skill_strategy(skill_name, requirements, query=original_query)
 
     if args.json:
         print(json.dumps(decision.to_dict(), indent=2))

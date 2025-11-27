@@ -18,6 +18,7 @@ class SkillRequirements:
     data_type: str  # 'trials' | 'fda_drugs' | 'patents' | 'publications'
     filters: Optional[dict] = None  # {'phase': 'PHASE3', 'status': 'recruiting', 'location': 'US'}
     servers: Optional[list[str]] = None
+    query: Optional[str] = None  # Original user query for trigger keyword matching
 
 
 @dataclass
@@ -69,6 +70,28 @@ def find_matching_skill(requirements: SkillRequirements) -> Optional[SkillMatch]
     for candidate in candidates:
         score = 0
         reasons = []
+
+        # Trigger keyword match (HIGHEST PRIORITY - checks user intent)
+        if requirements.query and 'trigger_keywords' in candidate:
+            query_lower = requirements.query.lower()
+            for keyword in candidate['trigger_keywords']:
+                keyword_lower = keyword.lower()
+                # Check both exact substring match and fuzzy match (all words present)
+                if keyword_lower in query_lower:
+                    score += 15
+                    reasons.append(f"Trigger keyword match: '{keyword}'")
+                    break
+                else:
+                    # Fuzzy match: check if all significant words in keyword are in query
+                    # Skip common stopwords
+                    stopwords = {'a', 'an', 'the', 'of', 'in', 'on', 'at', 'by', 'for', 'with', 'is', 'are'}
+                    keyword_words = set(w for w in keyword_lower.split() if w not in stopwords)
+                    query_words = set(requirements.query.lower().split())
+
+                    if keyword_words and keyword_words.issubset(query_words):
+                        score += 15
+                        reasons.append(f"Trigger keyword match (fuzzy): '{keyword}'")
+                        break  # Only count one trigger match
 
         # Exact therapeutic area match (case-insensitive)
         if requirements.therapeutic_area.lower() in candidate['name'].lower():
@@ -139,6 +162,7 @@ def main():
     parser.add_argument('--data-type', required=True, choices=['trials', 'fda_drugs', 'patents', 'publications'], help='Data type')
     parser.add_argument('--filters', help='JSON dict of filters')
     parser.add_argument('--servers', help='Comma-separated list of servers')
+    parser.add_argument('--query', help='Original user query for trigger keyword matching')
     parser.add_argument('--json', action='store_true', help='Output JSON')
 
     args = parser.parse_args()
@@ -150,7 +174,8 @@ def main():
         therapeutic_area=args.therapeutic_area,
         data_type=args.data_type,
         filters=filters,
-        servers=servers
+        servers=servers,
+        query=args.query
     )
 
     match = find_matching_skill(requirements)
