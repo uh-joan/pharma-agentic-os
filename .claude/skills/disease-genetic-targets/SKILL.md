@@ -15,6 +15,7 @@ category: target-validation
 mcp_servers:
   - opentargets_mcp
 patterns:
+  - cli_arguments
   - json_parsing
   - api_aggregation
   - score_filtering
@@ -28,10 +29,34 @@ last_updated: 2025-11-21
 complexity: medium
 execution_time: ~5-30 seconds (scales with dataset size)
 token_efficiency: ~99% reduction vs raw Open Targets data
+cli_enabled: true
 ---
 
 # get_disease_genetic_targets
 
+
+## CLI Usage
+
+```bash
+# Default example (Type 2 diabetes, top 10)
+python get_disease_genetic_targets.py "Type 2 diabetes"
+
+# Custom top N
+python get_disease_genetic_targets.py "Alzheimer's disease" --top-n 5
+
+# Limit API fetch size
+python get_disease_genetic_targets.py "breast cancer" --top-n 20 --max-fetch 100
+```
+
+## Parameters
+
+- **disease_name** (str, required): Disease name or EFO term
+- **--top-n** (int, optional): Number of top targets to return (default: 10)
+- **--max-fetch** (int, optional): Maximum records to fetch from API (default: 500)
+
+## Returns
+
+Genetic targets with association scores, tractability, and safety assessments.
 ## Purpose
 
 Identifies and prioritizes therapeutic targets for any disease based on genetic evidence from the Open Targets Platform. The skill integrates GWAS data, rare variant associations, and functional genomics to return targets with the strongest genetic validation, along with tractability assessments and known drug information.

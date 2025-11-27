@@ -13,6 +13,7 @@ category: clinical-trials
 mcp_servers:
   - ct_gov_mcp
 patterns:
+  - cli_arguments
   - pagination
   - markdown_parsing
   - temporal_filtering
@@ -28,10 +29,38 @@ last_updated: 2025-11-25
 complexity: medium
 execution_time: ~5-15 minutes (depends on result set size)
 token_efficiency: ~99% reduction vs raw data
+cli_enabled: true
 ---
 
 # forecast_drug_pipeline
 
+
+## CLI Usage
+
+```bash
+# Subcutaneous drugs for 2026-2027 approval
+python forecast_drug_pipeline.py --route subcutaneous --completion-years 2024 2025
+
+# Oral diabetes drugs
+python forecast_drug_pipeline.py --route oral --therapeutic-area diabetes --completion-years 2025 2026
+
+# Company-specific pipeline
+python forecast_drug_pipeline.py --sponsor "Pfizer" --intervention-type biological --completion-years 2024 2025
+```
+
+## Parameters
+
+- **--route** (str, optional): Administration route (subcutaneous, oral, intravenous, inhalation)
+- **--therapeutic-area** (str, optional): Disease/condition (diabetes, cancer, Alzheimer)
+- **--sponsor** (str, optional): Company name (Pfizer, Moderna, Eli Lilly)
+- **--intervention-type** (str, optional): Type (drug, biological, device)
+- **--completion-years** (int list, optional): Trial completion years (default: 2024 2025)
+- **--phase** (str, optional): Clinical trial phase (default: PHASE3)
+- **--approval-offset** (int, optional): Years after completion to forecast approval (default: 2)
+
+## Returns
+
+Pipeline forecast with approval timeline projections and therapeutic area breakdown.
 ## Purpose
 
 A flexible, parameterized drug pipeline forecasting tool that predicts approval timelines based on clinical trial completion dates. Unlike single-purpose skills, this tool accepts configurable search criteria to support diverse use cases:

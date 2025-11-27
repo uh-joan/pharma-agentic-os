@@ -10,6 +10,7 @@ category: target-validation
 mcp_servers:
   - opentargets_mcp
 patterns:
+  - cli_arguments
   - multi_query_aggregation
   - json_parsing
   - data_aggregation
@@ -24,10 +25,32 @@ last_updated: 2025-11-22
 complexity: complex
 execution_time: ~15 seconds
 token_efficiency: ~99% reduction vs raw data
+cli_enabled: true
 ---
 
 # get_ultra_rare_metabolic_targets
 
+
+## CLI Usage
+
+```bash
+# Default example (max population 500)
+python get_ultra_rare_metabolic_targets.py
+
+# Custom max population
+python get_ultra_rare_metabolic_targets.py 1000
+
+# Very rare (population < 100)
+python get_ultra_rare_metabolic_targets.py 100
+```
+
+## Parameters
+
+- **max_population** (int, optional): Maximum affected population threshold (default: 500)
+
+## Returns
+
+Ultra-rare metabolic targets with genetic evidence, druggability scores, and patient population.
 ## Purpose
 Identifies and prioritizes genetic targets for ultra-rare metabolic diseases with very small patient populations (default <500 patients). Combines disease search, genetic association data, and tractability assessments to guide orphan drug discovery.
 

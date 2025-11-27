@@ -321,19 +321,49 @@ def forecast_drug_pipeline(
 
 
 if __name__ == "__main__":
+    import argparse
     import json
 
-    # Example 1: Subcutaneous drugs for 2026-2027 approval
-    print("="*80)
-    print("EXAMPLE 1: Subcutaneous Drugs Pipeline (2026-2027 Approval)")
-    print("="*80)
-    print()
+    parser = argparse.ArgumentParser(
+        description='Forecast drug pipeline approval timeline based on Phase 3 trial completion dates',
+        epilog='Example: python forecast_drug_pipeline.py --route subcutaneous --completion-years 2024 2025'
+    )
+
+    # Search criteria flags
+    parser.add_argument('--route', help='Administration route (e.g., subcutaneous, oral, intravenous, inhalation)')
+    parser.add_argument('--therapeutic-area', help='Disease/condition (e.g., diabetes, cancer, Alzheimer)')
+    parser.add_argument('--sponsor', help='Company name (e.g., Pfizer, Moderna, Eli Lilly)')
+    parser.add_argument('--intervention-type', help='Type (e.g., drug, biological, device)')
+
+    # Timeline parameters
+    parser.add_argument('--completion-years', type=int, nargs='+', default=[2024, 2025],
+                       help='Trial completion years (default: 2024 2025)')
+    parser.add_argument('--phase', default='PHASE3', help='Clinical trial phase (default: PHASE3)')
+    parser.add_argument('--approval-offset', type=int, default=2,
+                       help='Years after completion to forecast approval (default: 2)')
+
+    args = parser.parse_args()
+
+    # Build search_criteria dict from flags
+    search_criteria = {}
+    if args.route:
+        search_criteria['route'] = args.route
+    if args.therapeutic_area:
+        search_criteria['therapeutic_area'] = args.therapeutic_area
+    if args.sponsor:
+        search_criteria['sponsor'] = args.sponsor
+    if args.intervention_type:
+        search_criteria['intervention_type'] = args.intervention_type
+
+    # Require at least one search criterion
+    if not search_criteria:
+        parser.error('At least one search criterion required (--route, --therapeutic-area, --sponsor, or --intervention-type)')
 
     result = forecast_drug_pipeline(
-        search_criteria={"route": "subcutaneous"},
-        completion_years=[2024, 2025],
-        phase="PHASE3",
-        approval_offset_years=2
+        search_criteria=search_criteria,
+        completion_years=args.completion_years,
+        phase=args.phase,
+        approval_offset_years=args.approval_offset
     )
 
     print("\n" + "="*80)

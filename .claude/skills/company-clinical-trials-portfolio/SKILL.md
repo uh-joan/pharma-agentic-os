@@ -10,6 +10,7 @@ category: clinical-trials
 mcp_servers:
   - ct_gov_mcp
 patterns:
+  - cli_arguments
   - pagination
   - markdown_parsing
   - parameter_based
@@ -46,10 +47,36 @@ parameters:
     required: false
     default: 2020
     description: Filter trials posted after this year
+cli_enabled: true
 ---
 
 # get_company_clinical_trials_portfolio
 
+
+## CLI Usage
+
+```bash
+# Default example (Boston Scientific)
+python get_company_clinical_trials_portfolio.py "Boston Scientific"
+
+# With condition filter
+python get_company_clinical_trials_portfolio.py "Novartis" --condition "heart failure"
+
+# With all filters
+python get_company_clinical_trials_portfolio.py "Pfizer" --status "recruiting" --phase "PHASE3" --start-year 2022
+```
+
+## Parameters
+
+- **sponsor_name** (str, required): Company/sponsor name
+- **--status** (str, optional): Trial status filter
+- **--condition** (str, optional): Disease/condition filter
+- **--phase** (str, optional): Trial phase (PHASE1, PHASE2, PHASE3, PHASE4)
+- **--start-year** (int, optional): Filter trials posted after this year (default: 2020)
+
+## Returns
+
+Clinical trials portfolio with phase distribution, status breakdown, and trial details.
 ## Purpose
 Extract and analyze clinical trial portfolios for any company sponsor from ClinicalTrials.gov with flexible filtering options for competitive intelligence and strategic planning.
 

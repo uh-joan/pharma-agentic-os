@@ -133,13 +133,25 @@ def get_disease_genetic_targets(disease_query, min_genetic_score=0.3, min_overal
     }
 
 if __name__ == "__main__":
-    # Get Alzheimer's disease genetic targets (fetch up to 5000 for comprehensive analysis)
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Get therapeutic targets for a disease with strong genetic evidence'
+    )
+    parser.add_argument('disease', help='Disease name to search for (e.g., "Alzheimer\'s disease", "Type 2 diabetes")')
+    parser.add_argument('--min-genetic-score', type=float, default=0.3, help='Minimum genetic association score (0.0-1.0, default: 0.3)')
+    parser.add_argument('--min-overall-score', type=float, default=0.2, help='Minimum overall association score (0.0-1.0, default: 0.2)')
+    parser.add_argument('--top-n', type=int, default=20, help='Maximum number of top targets to return (default: 20)')
+    parser.add_argument('--max-fetch', type=int, default=5000, help='Maximum associations to fetch (default: 5000, max: 50000)')
+
+    args = parser.parse_args()
+
     result = get_disease_genetic_targets(
-        disease_query="Alzheimer's disease",
-        min_genetic_score=0.3,
-        min_overall_score=0.2,
-        top_n=20,
-        max_fetch=5000  # Leverage pagination to fetch comprehensive dataset
+        disease_query=args.disease,
+        min_genetic_score=args.min_genetic_score,
+        min_overall_score=args.min_overall_score,
+        top_n=args.top_n,
+        max_fetch=args.max_fetch
     )
 
     if 'error' in result:

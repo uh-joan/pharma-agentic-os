@@ -181,7 +181,16 @@ def get_ultra_rare_metabolic_targets(max_population=500):
     }
 
 if __name__ == "__main__":
-    result = get_ultra_rare_metabolic_targets(max_population=500)
+    # Accept command-line argument or use default
+    if len(sys.argv) >= 2:
+        max_population = int(sys.argv[1])
+    else:
+        # Default example
+        max_population = 500
+        print("Usage: python get_ultra_rare_metabolic_targets.py <max_population>")
+        print(f"Running default example with max_population={max_population}\n")
+
+    result = get_ultra_rare_metabolic_targets(max_population=max_population)
     print(f"\n{'='*80}")
     print(f"Analysis complete. Found {result['summary']['total_unique_targets']} genetic targets.")
     print(f"{'='*80}")

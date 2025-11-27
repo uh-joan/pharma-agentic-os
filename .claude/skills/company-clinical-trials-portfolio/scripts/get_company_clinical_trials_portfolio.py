@@ -192,10 +192,25 @@ def generate_summary(sponsor, total, by_status, by_phase, filters):
     return "\n".join(lines)
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Get comprehensive clinical trial portfolio for any company sponsor'
+    )
+    parser.add_argument('sponsor', help='Company/sponsor name (e.g., "Boston Scientific", "Pfizer")')
+    parser.add_argument('--status', help='Trial status filter (e.g., "recruiting", "completed")')
+    parser.add_argument('--condition', help='Condition/disease filter (e.g., "atrial fibrillation")')
+    parser.add_argument('--phase', help='Trial phase (e.g., "PHASE1", "PHASE2", "PHASE3")')
+    parser.add_argument('--start-year', type=int, default=2020, help='Filter trials posted after this year (default: 2020)')
+
+    args = parser.parse_args()
+
     result = get_company_clinical_trials_portfolio(
-        sponsor_name="Boston Scientific",
-        condition="atrial fibrillation",
-        start_year=2020
+        sponsor_name=args.sponsor,
+        status=args.status,
+        condition=args.condition,
+        phase=args.phase,
+        start_year=args.start_year
     )
 
     print(result['summary'])

@@ -7,6 +7,7 @@ mcp_servers:
   - fda_mcp
   - ct_gov_mcp
 patterns:
+  - cli_arguments
   - multi_skill_composition
   - data_correlation
   - fuzzy_matching
@@ -42,10 +43,35 @@ parameters:
     required: false
     default: current_year
     description: Analysis end year
+cli_enabled: true
 ---
 
 # analyze_company_product_launch_timeline
 
+
+## CLI Usage
+
+```bash
+# Default example (Boston Scientific, all areas, since 2020)
+python analyze_company_product_launch_timeline.py "Boston Scientific"
+
+# With therapeutic focus
+python analyze_company_product_launch_timeline.py "Medtronic" --focus-area neurology
+
+# Custom date range
+python analyze_company_product_launch_timeline.py "Abbott" --start-year 2022 --end-year 2024
+```
+
+## Parameters
+
+- **company_name** (str, required): Company name
+- **--focus-area** (str, optional): Therapeutic area filter
+- **--start-year** (int, optional): Analysis start year (default: 2020)
+- **--end-year** (int, optional): Analysis end year (default: current year)
+
+## Returns
+
+Correlated FDA approvals and clinical trials with timeline analysis.
 ## Purpose
 Correlate FDA device approvals with supporting clinical trials to understand product development timelines, approval paths, and commercialization strategy for medical device companies.
 

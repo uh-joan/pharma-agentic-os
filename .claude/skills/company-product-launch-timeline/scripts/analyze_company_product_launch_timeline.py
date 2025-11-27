@@ -223,11 +223,23 @@ def analyze_company_product_launch_timeline(
     }
 
 if __name__ == "__main__":
-    # Example usage
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Analyze company product launch timeline by correlating FDA approvals with clinical trials'
+    )
+    parser.add_argument('company', help='Company name (e.g., "Boston Scientific", "Medtronic")')
+    parser.add_argument('--focus-area', help='Therapeutic area filter (e.g., "cardiovascular", "neurology")')
+    parser.add_argument('--start-year', type=int, default=2020, help='Filter approvals/trials after this year (default: 2020)')
+    parser.add_argument('--end-year', type=int, help='Filter approvals/trials before this year')
+
+    args = parser.parse_args()
+
     result = analyze_company_product_launch_timeline(
-        company_name="Boston Scientific",
-        focus_area="cardiovascular",
-        start_year=2020
+        company_name=args.company,
+        focus_area=args.focus_area,
+        start_year=args.start_year,
+        end_year=args.end_year
     )
 
     print(result['summary'])
