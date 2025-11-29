@@ -26,11 +26,13 @@ migration_status: "Migrated to Data Commons v2 API (search_indicators + get_obse
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What's the disease burden for california population?`
-2. `@agent-pharma-search-specialist Show me prevalence data for california population`
-3. `@agent-pharma-search-specialist Get epidemiology statistics for california population`
+1. `@agent-pharma-search-specialist What is California's population over time?`
+2. `@agent-pharma-search-specialist Show me California population growth trends and historical data`
+3. `@agent-pharma-search-specialist Get year-over-year population growth rates for California`
+4. `@agent-pharma-search-specialist Analyze California population time series from Data Commons`
+5. `@agent-pharma-search-specialist What's the historical population trend for California?`
 
 
 California population time series with growth trend analysis from Data Commons.

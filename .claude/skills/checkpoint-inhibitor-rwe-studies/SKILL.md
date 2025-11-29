@@ -25,11 +25,13 @@ execution_time: ~3 seconds
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What are the recent publications on PD-1 checkpoint inhibitor?`
-2. `@agent-pharma-search-specialist Find scientific literature about PD-1 checkpoint inhibitor`
-3. `@agent-pharma-search-specialist Show me research papers on PD-1 checkpoint inhibitor`
+1. `@agent-pharma-search-specialist What real-world evidence exists for checkpoint inhibitor effectiveness in clinical practice?`
+2. `@agent-pharma-search-specialist Find retrospective studies comparing checkpoint inhibitor real-world outcomes vs clinical trial results`
+3. `@agent-pharma-search-specialist Show me observational studies on pembrolizumab, nivolumab, and atezolizumab real-world response rates`
+4. `@agent-pharma-search-specialist Analyze real-world survival data (OS/PFS) for PD-1 and PD-L1 inhibitors from PubMed`
+5. `@agent-pharma-search-specialist What do RWE studies show about patient selection patterns for checkpoint inhibitor therapy?`
 
 
 Search PubMed for real-world evidence studies evaluating checkpoint inhibitor effectiveness in clinical practice settings.

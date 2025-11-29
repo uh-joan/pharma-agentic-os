@@ -46,11 +46,13 @@ version: 1.1
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What generate company swot analysis drugs are FDA approved?`
-2. `@agent-pharma-search-specialist Show me all approved generate company swot analysis medications`
-3. `@agent-pharma-search-specialist Get the list of FDA-approved drugs for generate company swot analysis`
+1. `@agent-pharma-search-specialist Generate a comprehensive SWOT analysis for Moderna`
+2. `@agent-pharma-search-specialist What are Exelixis's competitive strengths and weaknesses based on clinical pipeline and financials?`
+3. `@agent-pharma-search-specialist Analyze Pfizer's strategic position with clinical trials, FDA products, patents, and market data`
+4. `@agent-pharma-search-specialist Create a strategic company profile for BioNTech using multi-source competitive intelligence`
+5. `@agent-pharma-search-specialist Evaluate Novavax as an acquisition target with comprehensive SWOT framework`
 
 
 ## Purpose

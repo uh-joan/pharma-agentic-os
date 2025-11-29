@@ -44,11 +44,13 @@ test_config:
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What KRAS inhibitor drugs are FDA approved?`
-2. `@agent-pharma-search-specialist Show me all approved KRAS inhibitor medications`
-3. `@agent-pharma-search-specialist Get the list of FDA-approved drugs for KRAS inhibitor`
+1. `@agent-pharma-search-specialist Which companies are working on KRAS inhibitors?`
+2. `@agent-pharma-search-specialist Who's developing GLP-1 receptor agonists for obesity?`
+3. `@agent-pharma-search-specialist Show me the competitive landscape for BTK inhibitor development`
+4. `@agent-pharma-search-specialist What companies have PD-1 antibody programs in clinical development?`
+5. `@agent-pharma-search-specialist Identify companies working on ADC mechanisms for oncology`
 
 
 ## Purpose

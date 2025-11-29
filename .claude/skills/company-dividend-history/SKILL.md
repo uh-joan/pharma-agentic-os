@@ -10,11 +10,13 @@ description: >
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Which companies are working on company dividend history?`
-2. `@agent-pharma-search-specialist Show me the competitive landscape for company dividend history`
-3. `@agent-pharma-search-specialist Who's developing company dividend history therapies?`
+1. `@agent-pharma-search-specialist Analyze Medtronic's dividend payment history and payout ratios from SEC filings`
+2. `@agent-pharma-search-specialist Is Johnson & Johnson's dividend sustainable based on operating cash flow?`
+3. `@agent-pharma-search-specialist Track Pfizer's dividend growth trends over the last 3 years from EDGAR data`
+4. `@agent-pharma-search-specialist What is Abbott's dividend payout ratio and shareholder return policy?`
+5. `@agent-pharma-search-specialist Extract Bristol Myers Squibb's quarterly dividend payments and sustainability metrics`
 
 
 ## Purpose

@@ -23,11 +23,13 @@ token_efficiency: 99%
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What are the recent publications on CRISPR gene editing?`
-2. `@agent-pharma-search-specialist Find scientific literature about CRISPR gene editing`
-3. `@agent-pharma-search-specialist Show me research papers on CRISPR gene editing`
+1. `@agent-pharma-search-specialist What CRISPR research papers were published in 2024?`
+2. `@agent-pharma-search-specialist Show me the latest 2024 CRISPR gene editing literature with journal distribution`
+3. `@agent-pharma-search-specialist Get all CRISPR publications from 2024 with comprehensive metadata`
+4. `@agent-pharma-search-specialist Which journals published the most CRISPR research in 2024?`
+5. `@agent-pharma-search-specialist Find recent CRISPR papers published this year with DOIs and abstracts`
 
 
 CRISPR research papers from 2024 with journal distribution analysis.

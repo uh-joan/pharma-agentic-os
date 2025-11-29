@@ -430,6 +430,35 @@ python3 .claude/tools/testing/test_orchestrator.py \
 
 ---
 
+## Stub Skills Policy
+
+**Definition**: Stub skills return hardcoded placeholder data for infrastructure validation testing only.
+
+**Identified Stubs (4)**:
+1. `get_braf_inhibitor_fda_drugs` - Returns `{'total_count': 10, 'data': [], 'summary': 'Test skill'}`
+2. `get_cart_therapy_landscape` - Returns `{'total_count': 10, 'data': [], 'summary': 'Test skill'}`
+3. `get_glp1_diabetes_drugs` - Returns `{'total_count': 10, 'data': [], 'summary': 'Test skill'}`
+4. `get_kras_comprehensive_analysis` - Returns `{'total_count': 10, 'data': [], 'summary': 'Test skill'}`
+
+**Metadata Markers**:
+- `status: stub` in SKILL.md frontmatter
+- `[STUB - NOT IMPLEMENTED]` prefix in description
+- `health.status: broken` in index.json
+- `health.issues: ["stub_not_implemented", "returns_hardcoded_data"]`
+
+**Purpose**:
+- Infrastructure validation during testing framework development
+- NOT for production use or data collection
+- Should be replaced with real implementations or archived
+
+**Recommended Actions**:
+1. Use real implementations instead (e.g., use `glp1-fda-drugs` not `glp1-diabetes-drugs` stub)
+2. If needed, implement proper MCP query logic
+3. If obsolete, move to `skills/archive/` directory
+4. Update index with replacement skill recommendations
+
+---
+
 ## Files Modified
 
 1. `.claude/tools/testing/batch_test_skills.py`

@@ -10,11 +10,13 @@ description: >
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Which companies are working on company capex allocation?`
-2. `@agent-pharma-search-specialist Show me the competitive landscape for company capex allocation`
-3. `@agent-pharma-search-specialist Who's developing company capex allocation therapies?`
+1. `@agent-pharma-search-specialist Analyze Medtronic's capital allocation: CapEx, dividends, and buybacks from SEC filings`
+2. `@agent-pharma-search-specialist How does Abbott allocate cash between growth investments and shareholder returns?`
+3. `@agent-pharma-search-specialist Track Pfizer's free cash flow generation and capital intensity over the last 8 quarters`
+4. `@agent-pharma-search-specialist Is Johnson & Johnson prioritizing CapEx growth or shareholder distributions?`
+5. `@agent-pharma-search-specialist Extract Eli Lilly's operating cash flow and capital allocation patterns from EDGAR`
 
 
 ## Purpose

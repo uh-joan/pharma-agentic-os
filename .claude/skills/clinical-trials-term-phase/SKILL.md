@@ -50,11 +50,13 @@ created: 2025-11-24
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What clinical trials are running for clinical?`
-2. `@agent-pharma-search-specialist Find active clinical trials`
-3. `@agent-pharma-search-specialist Show me the clinical development landscape for clinical`
+1. `@agent-pharma-search-specialist What clinical trials are running for GLP-1 receptor agonists?`
+2. `@agent-pharma-search-specialist Find Phase 3 heart failure trials`
+3. `@agent-pharma-search-specialist Show me all KRAS inhibitor trials across all development phases`
+4. `@agent-pharma-search-specialist Get Phase 2 Alzheimer's disease trials`
+5. `@agent-pharma-search-specialist Analyze the clinical trial landscape for obesity treatments in Phase 3`
 
 
 Get clinical trials data for ANY therapeutic area, drug class, or medical condition with optional phase filtering.

@@ -7,11 +7,13 @@ description: Extract business segment and geographic revenue from SEC EDGAR fili
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Which companies are working on company segment geographic financials?`
-2. `@agent-pharma-search-specialist Show me the competitive landscape for company segment geographic financials`
-3. `@agent-pharma-search-specialist Who's developing company segment geographic financials therapies?`
+1. `@agent-pharma-search-specialist Extract Johnson & Johnson's business segment revenue and operating margins from SEC filings`
+2. `@agent-pharma-search-specialist What is Abbott's geographic revenue breakdown by country and region?`
+3. `@agent-pharma-search-specialist Show me Medtronic's quarterly segment financials with operating income trends`
+4. `@agent-pharma-search-specialist Analyze Novo Nordisk's Diabetes vs Rare Disease segment performance from EDGAR data`
+5. `@agent-pharma-search-specialist Get Pfizer's product-level revenue breakdown and segment margins over 8 quarters`
 
 
 ## Overview

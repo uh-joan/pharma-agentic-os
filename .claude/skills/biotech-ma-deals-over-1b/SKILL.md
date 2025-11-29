@@ -40,11 +40,13 @@ token_efficiency: ~99% reduction vs raw SEC filings
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Get biotech ma deals over 1b data`
-2. `@agent-pharma-search-specialist Show me biotech ma deals over 1b information`
-3. `@agent-pharma-search-specialist Find biotech ma deals over 1b details`
+1. `@agent-pharma-search-specialist What were the largest biotech M&A deals in 2023-2024?`
+2. `@agent-pharma-search-specialist Analyze major biotech acquisitions over $1 billion - which platforms are most valued?`
+3. `@agent-pharma-search-specialist Show me ADC platform acquisition trends and deal valuations`
+4. `@agent-pharma-search-specialist What therapeutic areas drove biotech M&A activity in recent years?`
+5. `@agent-pharma-search-specialist Compare deal values for Pfizer-Seagen, AbbVie-ImmunoGen, and other billion-dollar biotech deals`
 
 
 ## Purpose

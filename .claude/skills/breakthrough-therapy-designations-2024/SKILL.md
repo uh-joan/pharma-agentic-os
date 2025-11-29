@@ -41,11 +41,13 @@ token_efficiency: ~99% reduction vs raw FDA JSON
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What breakthrough therapy designations 2024 drugs are FDA approved?`
-2. `@agent-pharma-search-specialist Show me all approved breakthrough therapy designations 2024 medications`
-3. `@agent-pharma-search-specialist Get the list of FDA-approved drugs for breakthrough therapy designations 2024`
+1. `@agent-pharma-search-specialist What drugs received breakthrough therapy designation and FDA approval in 2024?`
+2. `@agent-pharma-search-specialist Show me 2024 FDA approvals with fast-track regulatory pathways`
+3. `@agent-pharma-search-specialist Which therapeutic areas received breakthrough therapy designations in 2024?`
+4. `@agent-pharma-search-specialist Analyze novel mechanisms of action in 2024 breakthrough therapy approvals`
+5. `@agent-pharma-search-specialist Get competitive intelligence on 2024 FDA breakthrough-designated drugs`
 
 
 ## Purpose

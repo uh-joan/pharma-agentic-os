@@ -23,11 +23,13 @@ execution_time: ~5 seconds
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What are the financials for companies in biotech ma deals sec edgar?`
-2. `@agent-pharma-search-specialist Show me R&D spending on biotech ma deals sec edgar`
-3. `@agent-pharma-search-specialist Get revenue data for biotech ma deals sec edgar companies`
+1. `@agent-pharma-search-specialist What biotech M&A deals were announced via SEC 8-K filings in 2023-2024?`
+2. `@agent-pharma-search-specialist Analyze biotech merger and acquisition activity from SEC EDGAR filings`
+3. `@agent-pharma-search-specialist Which biotech companies filed 8-Ks announcing acquisitions or mergers?`
+4. `@agent-pharma-search-specialist Show me trends in biotech M&A announcements from SEC current reports`
+5. `@agent-pharma-search-specialist Track biotech acquisition activity by company using SEC filings`
 
 
 Biotech merger and acquisition SEC filings analysis.

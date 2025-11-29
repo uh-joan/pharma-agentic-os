@@ -10,11 +10,13 @@ description: >
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Which companies are working on company rd spending?`
-2. `@agent-pharma-search-specialist Show me the competitive landscape for company rd spending`
-3. `@agent-pharma-search-specialist Who's developing company rd spending therapies?`
+1. `@agent-pharma-search-specialist What is Medtronic's R&D spending trend over the last 8 quarters?`
+2. `@agent-pharma-search-specialist Analyze Pfizer's R&D intensity and innovation investment patterns from SEC filings`
+3. `@agent-pharma-search-specialist Track Abbott's year-over-year R&D spending growth from EDGAR data`
+4. `@agent-pharma-search-specialist Compare Eli Lilly's R&D expenditure as a percentage of revenue`
+5. `@agent-pharma-search-specialist Extract Bristol Myers Squibb's quarterly R&D spending and calculate R&D intensity`
 
 
 ## Purpose

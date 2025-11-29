@@ -368,7 +368,15 @@
         "json_parsing"
       ],
       "category": "testing",
-      "complexity": "simple"
+      "complexity": "simple",
+      "health": {
+        "status": "broken",
+        "last_checked": "2025-11-29T11:02:24.214392",
+        "issues": [
+          "stub_not_implemented",
+          "returns_hardcoded_data"
+        ]
+      }
     },
     {
       "name": "get_breakthrough_therapy_designations_2024",
@@ -527,7 +535,15 @@
         "multi_server_query"
       ],
       "category": "testing",
-      "complexity": "simple"
+      "complexity": "simple",
+      "health": {
+        "status": "broken",
+        "last_checked": "2025-11-29T11:02:33.216603",
+        "issues": [
+          "stub_not_implemented",
+          "returns_hardcoded_data"
+        ]
+      }
     },
     {
       "name": "get_checkpoint_inhibitor_prescribers",
@@ -871,7 +887,15 @@
         "json_parsing"
       ],
       "category": "testing",
-      "complexity": "simple"
+      "complexity": "simple",
+      "health": {
+        "status": "broken",
+        "last_checked": "2025-11-29T11:02:33.261331",
+        "issues": [
+          "stub_not_implemented",
+          "returns_hardcoded_data"
+        ]
+      }
     },
     {
       "name": "get_glp1_fda_drugs",
@@ -975,7 +999,15 @@
         "multi_server_query"
       ],
       "category": "testing",
-      "complexity": "simple"
+      "complexity": "simple",
+      "health": {
+        "status": "broken",
+        "last_checked": "2025-11-29T11:02:33.304675",
+        "issues": [
+          "stub_not_implemented",
+          "returns_hardcoded_data"
+        ]
+      }
     },
     {
       "name": "get_kras_inhibitor_fda_drugs",

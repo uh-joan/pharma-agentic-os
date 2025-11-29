@@ -26,11 +26,13 @@ execution_time: ~3 seconds
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What are the recent publications on CRISPR gene editing?`
-2. `@agent-pharma-search-specialist Find scientific literature about CRISPR gene editing`
-3. `@agent-pharma-search-specialist Show me research papers on CRISPR gene editing`
+1. `@agent-pharma-search-specialist What are the latest publications on CRISPR gene editing for sickle cell disease?`
+2. `@agent-pharma-search-specialist Show me publication trends and clinical outcomes for CRISPR sickle cell therapy research`
+3. `@agent-pharma-search-specialist Find research papers on Casgevy and CRISPR treatment for sickle cell disease`
+4. `@agent-pharma-search-specialist Analyze the scientific literature on safety and off-target effects of CRISPR in sickle cell patients`
+5. `@agent-pharma-search-specialist Track publication growth in CRISPR sickle cell research following Casgevy FDA approval`
 
 
 Search and analyze PubMed publications on CRISPR gene editing for sickle cell disease.

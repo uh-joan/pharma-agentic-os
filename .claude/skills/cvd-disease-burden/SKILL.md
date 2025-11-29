@@ -28,11 +28,13 @@ token_efficiency: ~99% reduction vs raw data
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What's the disease burden for cardiovascular disease?`
-2. `@agent-pharma-search-specialist Show me prevalence data for cardiovascular disease`
-3. `@agent-pharma-search-specialist Get epidemiology statistics for cardiovascular disease`
+1. `@agent-pharma-search-specialist Get comprehensive WHO cardiovascular disease burden data globally`
+2. `@agent-pharma-search-specialist Show me age-standardized CVD mortality rates across countries from WHO`
+3. `@agent-pharma-search-specialist What are the heart disease, stroke, and ischemic heart disease statistics by region?`
+4. `@agent-pharma-search-specialist Analyze temporal trends in cardiovascular disease mortality using WHO data`
+5. `@agent-pharma-search-specialist Retrieve country-level CVD morbidity and mortality indicators from WHO health statistics`
 
 
 Retrieves comprehensive cardiovascular disease burden data from WHO health statistics.

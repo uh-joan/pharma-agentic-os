@@ -14,43 +14,74 @@ def get_anti_amyloid_publications():
         dict: Contains total_count, publications_by_drug, top_institutions, aria_mentions, and summary
     """
 
-    # Search for anti-amyloid antibody publications (last 5 years for recent focus)
-    search_query = '(lecanemab OR donanemab OR aducanumab OR gantenerumab OR "anti-amyloid antibody" OR "anti-amyloid antibodies") AND (Alzheimer OR "Alzheimer\'s disease") AND ("2019"[Date - Publication] : "2024"[Date - Publication])'
+    # Search for anti-amyloid antibody publications using temporal chunking
+    # Workaround for PubMed MCP pagination limitation
+    base_query = '(lecanemab OR donanemab OR aducanumab OR gantenerumab OR "anti-amyloid antibody" OR "anti-amyloid antibodies") AND (Alzheimer OR "Alzheimer\'s disease")'
 
-    print(f"Searching PubMed for: {search_query}")
+    # Define time periods to query (avoids MCP result count limitation)
+    # Chunk by year to get comprehensive results
+    time_periods = [
+        ("2019", "2019"),
+        ("2020", "2020"),
+        ("2021", "2021"),
+        ("2022", "2022"),
+        ("2023", "2023"),
+        ("2024", "2024"),
+        ("2025", "2025")  # Include current year
+    ]
 
-    # Get results with pagination
     all_results = []
-    page_token = None
-    page_count = 0
-    max_pages = 50  # Limit to prevent excessive API calls
+    seen_pmids = set()  # Deduplicate by PMID
 
-    while page_count < max_pages:
-        # Note: PubMed MCP has known limitation - may return fewer results than requested
-        result = search_keywords(keywords=search_query, num_results=100)
+    print(f"Searching PubMed with temporal chunking to maximize results...")
+    print(f"Base query: {base_query}\n")
 
-        if not result:
-            break
+    for start_year, end_year in time_periods:
+        # Build date-specific query
+        date_query = f'{base_query} AND ("{start_year}"[Date - Publication] : "{end_year}"[Date - Publication])'
 
-        # Handle both response formats: list directly or dict with 'articles' key
-        if isinstance(result, list):
-            articles = result
-        else:
-            articles = result.get('articles', [])
+        print(f"Fetching {start_year} publications...")
 
-        if not articles:
-            break
+        try:
+            # Request moderate batch size (PubMed MCP may return fewer)
+            result = search_keywords(keywords=date_query, num_results=100)
 
-        all_results.extend(articles)
-        page_count += 1
-        print(f"  Retrieved batch {page_count}, total articles so far: {len(all_results)}")
+            if not result:
+                print(f"  No results for {start_year}")
+                continue
 
-        # PubMed MCP doesn't support pagination in the same way - break after first batch
-        # This is a known limitation per the MCP documentation
-        break
+            # Handle both response formats
+            if isinstance(result, list):
+                articles = result
+            else:
+                articles = result.get('articles', [])
+
+            if not articles:
+                print(f"  No articles returned for {start_year}")
+                continue
+
+            # Deduplicate by PMID
+            new_articles = 0
+            for article in articles:
+                pmid = article.get('pmid', '')
+                if pmid and pmid not in seen_pmids:
+                    seen_pmids.add(pmid)
+                    all_results.append(article)
+                    new_articles += 1
+
+            print(f"  Added {new_articles} new articles ({len(articles)} total in batch)")
+
+            # Brief delay to avoid rate limiting (100ms)
+            import time
+            time.sleep(0.1)
+
+        except Exception as e:
+            print(f"  Error fetching {start_year}: {e}")
+            continue
 
     total_count = len(all_results)
-    print(f"\nTotal publications found: {total_count}")
+    print(f"\nTotal unique publications found: {total_count} (across {len(time_periods)} time periods)")
+    print(f"De-duplicated {len(seen_pmids)} unique PMIDs\n")
 
     # Analyze publications by drug
     drug_mentions = {
@@ -95,9 +126,22 @@ def get_anti_amyloid_publications():
 
         # Extract institutions from authors
         authors = article.get('authors', [])
-        for author in authors:
-            if isinstance(author, dict) and 'affiliation' in author:
-                institutions.append(author['affiliation'])
+        if isinstance(authors, list):
+            for author in authors:
+                # Authors might be strings or dicts
+                if isinstance(author, dict):
+                    affiliation = author.get('affiliation', '')
+                    if affiliation:
+                        institutions.append(affiliation)
+                elif isinstance(author, str) and ',' in author:
+                    # Sometimes author format is "Name, Institution"
+                    parts = author.split(',', 1)
+                    if len(parts) > 1:
+                        institutions.append(parts[1].strip())
+
+        # Also check for affiliation field at article level
+        if 'affiliation' in article:
+            institutions.append(article['affiliation'])
 
         # Count by publication year
         pub_date = article.get('publication_date', '')
@@ -145,7 +189,8 @@ def get_anti_amyloid_publications():
     print("ANTI-AMYLOID ANTIBODY PUBLICATIONS ANALYSIS (2019-2024)")
     print("="*80)
     print(f"\nTotal Publications: {total_count}")
-    print(f"Search Query: {search_query}")
+    print(f"Search Strategy: Temporal chunking (2019-2025, year-by-year queries)")
+    print(f"Base Query: {base_query}")
 
     print("\n--- Publications by Drug ---")
     for drug, count in sorted(drug_mentions.items(), key=lambda x: x[1], reverse=True):

@@ -53,11 +53,13 @@ parameters:
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What company fda device approvals drugs are FDA approved?`
-2. `@agent-pharma-search-specialist Show me all approved company fda device approvals medications`
-3. `@agent-pharma-search-specialist Get the list of FDA-approved drugs for company fda device approvals`
+1. `@agent-pharma-search-specialist What FDA device approvals does Boston Scientific have since 2020?`
+2. `@agent-pharma-search-specialist Show me Medtronic's PMA approvals and 510(k) clearances over the last 5 years`
+3. `@agent-pharma-search-specialist Analyze Abbott's medical device regulatory approval portfolio`
+4. `@agent-pharma-search-specialist Which devices has Stryker gotten FDA approval for in 2023-2024?`
+5. `@agent-pharma-search-specialist Compare Boston Scientific vs Medtronic device approval trends since 2020`
 
 
 ## Purpose

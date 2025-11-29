@@ -23,11 +23,13 @@ execution_time: ~4 seconds
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What patents exist for CAR-T cell therapy?`
-2. `@agent-pharma-search-specialist Show me the IP landscape for CAR-T cell therapy`
-3. `@agent-pharma-search-specialist Find CAR-T cell therapy patents`
+1. `@agent-pharma-search-specialist What patents exist for CAR-T manufacturing technologies and automation?`
+2. `@agent-pharma-search-specialist Show me the IP landscape for CAR-T bioreactor and scale-up innovations`
+3. `@agent-pharma-search-specialist Find CAR-T manufacturing patents focused on cost reduction and process optimization`
+4. `@agent-pharma-search-specialist Which companies have CAR-T manufacturing process patents?`
+5. `@agent-pharma-search-specialist Analyze USPTO patents for CAR-T production automation and bioreactor technologies`
 
 
 Identifies CAR-T manufacturing IP landscape for technology licensing and COGS optimization.

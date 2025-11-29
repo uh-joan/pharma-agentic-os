@@ -38,11 +38,13 @@ token_efficiency: ~99% reduction vs raw data
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What are the genetic targets for PD-1 checkpoint inhibitor?`
-2. `@agent-pharma-search-specialist Show me therapeutic targets for PD-1 checkpoint inhibitor`
-3. `@agent-pharma-search-specialist Find validated targets in PD-1 checkpoint inhibitor`
+1. `@agent-pharma-search-specialist What are next-generation checkpoint inhibitor targets beyond PD-1/PD-L1?`
+2. `@agent-pharma-search-specialist Show me novel cancer immunotherapy targets with antibody tractability`
+3. `@agent-pharma-search-specialist Find validated immune checkpoint targets like CTLA-4, LAG-3, and TIM-3`
+4. `@agent-pharma-search-specialist Which cancer immunotherapy targets have clinical precedence outside of PD-1?`
+5. `@agent-pharma-search-specialist Identify emerging T-cell modulation targets for oncology drug development`
 
 
 ## Purpose

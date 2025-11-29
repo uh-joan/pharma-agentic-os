@@ -23,11 +23,13 @@ token_efficiency: ~99% reduction vs raw data
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What clinical trials are running for covid19 vaccine  recruiting?`
-2. `@agent-pharma-search-specialist Find active covid19 vaccine  recruiting trials`
-3. `@agent-pharma-search-specialist Show me the clinical development landscape for covid19 vaccine  recruiting`
+1. `@agent-pharma-search-specialist Which COVID-19 vaccine trials are currently recruiting participants?`
+2. `@agent-pharma-search-specialist Show me active enrollment opportunities for COVID-19 vaccine studies`
+3. `@agent-pharma-search-specialist What's the geographic distribution of recruiting COVID-19 vaccine trials?`
+4. `@agent-pharma-search-specialist Find Phase 3 COVID-19 vaccine trials that are actively recruiting`
+5. `@agent-pharma-search-specialist Which companies and institutions are recruiting for COVID-19 vaccine research?`
 
 
 **Category**: Clinical Trials Research

@@ -33,11 +33,13 @@ token_efficiency: ~99% reduction vs raw data
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What clinical trials are running for cardiovascular disease?`
-2. `@agent-pharma-search-specialist Find active cardiovascular disease trials`
-3. `@agent-pharma-search-specialist Show me the clinical development landscape for cardiovascular disease`
+1. `@agent-pharma-search-specialist What is Bristol Myers Squibb's cardiovascular clinical trial portfolio?`
+2. `@agent-pharma-search-specialist Analyze BMS cardiovascular pipeline across all development phases`
+3. `@agent-pharma-search-specialist Show me Bristol Myers Squibb's cardiology trial status distribution`
+4. `@agent-pharma-search-specialist How many cardiovascular trials does BMS have in active development?`
+5. `@agent-pharma-search-specialist What's the competitive landscape for Bristol Myers Squibb in cardiovascular disease?`
 
 
 ## Purpose

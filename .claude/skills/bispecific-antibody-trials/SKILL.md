@@ -48,11 +48,13 @@ token_efficiency: ~99% reduction vs raw trial data
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What clinical trials are running for PD-1 checkpoint inhibitor?`
-2. `@agent-pharma-search-specialist Find active PD-1 checkpoint inhibitor trials`
-3. `@agent-pharma-search-specialist Show me the clinical development landscape for PD-1 checkpoint inhibitor`
+1. `@agent-pharma-search-specialist Compare bispecific antibody trials by mechanism type - T-cell engagers vs checkpoint modulators`
+2. `@agent-pharma-search-specialist Do Chinese companies focus on simpler bispecific constructs compared to Western companies?`
+3. `@agent-pharma-search-specialist What are the most common target combinations in bispecific antibody development?`
+4. `@agent-pharma-search-specialist Show me the competitive landscape for CD3-based T-cell engager bispecifics`
+5. `@agent-pharma-search-specialist Analyze geographic distribution of bispecific and multispecific antibody trials`
 
 
 ## Purpose

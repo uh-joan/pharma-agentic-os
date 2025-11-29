@@ -10,11 +10,13 @@ description: >
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Which companies are working on company acquisitions?`
-2. `@agent-pharma-search-specialist Show me the competitive landscape for company acquisitions`
-3. `@agent-pharma-search-specialist Who's developing company acquisitions therapies?`
+1. `@agent-pharma-search-specialist Analyze Abbott's M&A activity and acquisition spending from SEC filings`
+2. `@agent-pharma-search-specialist Track Medtronic's goodwill trends and identify major acquisitions over the last 3 years`
+3. `@agent-pharma-search-specialist What acquisitions has Johnson & Johnson made and are there any goodwill impairment risks?`
+4. `@agent-pharma-search-specialist Extract Pfizer's acquisition cash payments and integration success from EDGAR data`
+5. `@agent-pharma-search-specialist Show me Bristol Myers Squibb's M&A history and goodwill changes from SEC filings`
 
 
 ## Purpose

@@ -31,11 +31,13 @@ token_efficiency: ~99% reduction vs raw patent data
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What patents exist for CRISPR gene editing?`
-2. `@agent-pharma-search-specialist Show me the IP landscape for CRISPR gene editing`
-3. `@agent-pharma-search-specialist Find CRISPR gene editing patents`
+1. `@agent-pharma-search-specialist Map the comprehensive CRISPR patent landscape across Broad Institute, UC Berkeley, and commercial entities`
+2. `@agent-pharma-search-specialist What's the patent portfolio distribution between academic and commercial CRISPR patent holders?`
+3. `@agent-pharma-search-specialist Analyze CRISPR IP landscape for FTO assessment and licensing strategy`
+4. `@agent-pharma-search-specialist Show me patent families and geographic coverage for CRISPR gene editing technologies`
+5. `@agent-pharma-search-specialist Which institutions control the most CRISPR patents and what are the litigation indicators?`
 
 
 ## Purpose

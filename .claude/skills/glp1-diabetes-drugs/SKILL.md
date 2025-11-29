@@ -1,16 +1,21 @@
 ---
 name: get_glp1_diabetes_drugs
-description: Infrastructure validation test skill
+description: >
+  [STUB - NOT IMPLEMENTED] Infrastructure validation test skill.
+  Returns hardcoded placeholder data for testing purposes only.
+  Real implementation would query FDA/CT.gov for GLP-1 diabetes drug approvals.
+  NOTE: Use glp1-fda-drugs skill for actual GLP-1 FDA approved drugs.
+status: stub
 category: testing
 mcp_servers:
-  - ct_gov_mcp
+  - fda_mcp
 patterns:
-  - json_parsing
+  - placeholder
 data_scope:
-  total_results: 10
+  total_results: 0 (stub returns fake data)
 created: 2025-11-22
 complexity: simple
-execution_time: ~2s
+execution_time: ~0s (no actual query)
 ---
 # get_glp1_diabetes_drugs
 

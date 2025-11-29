@@ -25,11 +25,13 @@ execution_time: ~15 seconds
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What CAR-T cell therapy drugs are FDA approved?`
-2. `@agent-pharma-search-specialist Show me all approved CAR-T cell therapy medications`
-3. `@agent-pharma-search-specialist Get the list of FDA-approved drugs for CAR-T cell therapy`
+1. `@agent-pharma-search-specialist Compare adverse event profiles for all approved CAR-T cell therapies`
+2. `@agent-pharma-search-specialist What are the CRS and neurotoxicity rates across Kymriah, Yescarta, Tecartus, Breyanzi, Abecma, and Carvykti?`
+3. `@agent-pharma-search-specialist Show me safety differentiation between approved CAR-T products based on FAERS data`
+4. `@agent-pharma-search-specialist Which CAR-T therapy has the lowest cytokine release syndrome rates?`
+5. `@agent-pharma-search-specialist Analyze real-world adverse events for all 6 FDA-approved CAR-T cell therapies`
 
 
 Provides comprehensive comparative analysis of adverse event profiles for all 6 FDA-approved CAR-T cell therapies.

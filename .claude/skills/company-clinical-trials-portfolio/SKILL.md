@@ -55,11 +55,13 @@ cli_enabled: true
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What clinical trials are running for company clinical  portfolio?`
-2. `@agent-pharma-search-specialist Find active company clinical  portfolio trials`
-3. `@agent-pharma-search-specialist Show me the clinical development landscape for company clinical  portfolio`
+1. `@agent-pharma-search-specialist What is Pfizer's clinical trials portfolio across all therapeutic areas?`
+2. `@agent-pharma-search-specialist Show me Boston Scientific's atrial fibrillation trial portfolio`
+3. `@agent-pharma-search-specialist Get Novartis recruiting Phase 3 trials in heart failure`
+4. `@agent-pharma-search-specialist Analyze Eli Lilly's clinical development pipeline since 2022`
+5. `@agent-pharma-search-specialist What trials does AstraZeneca have in oncology by phase and status?`
 
 
 ## CLI Usage

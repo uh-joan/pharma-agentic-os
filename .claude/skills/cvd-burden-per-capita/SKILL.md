@@ -29,11 +29,13 @@ migration_status: "Migrated to Data Commons v2 API (search_indicators + get_obse
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What's the disease burden for cardiovascular disease?`
-2. `@agent-pharma-search-specialist Show me prevalence data for cardiovascular disease`
-3. `@agent-pharma-search-specialist Get epidemiology statistics for cardiovascular disease`
+1. `@agent-pharma-search-specialist Calculate cardiovascular disease burden per capita across countries`
+2. `@agent-pharma-search-specialist What's the CVD mortality rate per 100,000 population by country?`
+3. `@agent-pharma-search-specialist Compare cardiovascular disease burden normalized by population size`
+4. `@agent-pharma-search-specialist Show me deaths per capita for cardiovascular disease using WHO and population data`
+5. `@agent-pharma-search-specialist Which countries have the highest and lowest CVD mortality rates per 100k people?`
 
 
 CVD mortality burden per capita analysis combining WHO and Data Commons data.

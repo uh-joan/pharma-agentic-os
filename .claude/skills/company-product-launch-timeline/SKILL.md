@@ -51,11 +51,13 @@ cli_enabled: true
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist What analyze company product launch timeline drugs are FDA approved?`
-2. `@agent-pharma-search-specialist Show me all approved analyze company product launch timeline medications`
-3. `@agent-pharma-search-specialist Get the list of FDA-approved drugs for analyze company product launch timeline`
+1. `@agent-pharma-search-specialist Analyze Boston Scientific's product launch timeline from clinical trials to FDA approval`
+2. `@agent-pharma-search-specialist What is Medtronic's average trial-to-approval time for cardiovascular devices?`
+3. `@agent-pharma-search-specialist Correlate Abbott's FDA device approvals with supporting clinical trial evidence`
+4. `@agent-pharma-search-specialist Show me Stryker's product commercialization strategy and development timelines since 2020`
+5. `@agent-pharma-search-specialist Which Boston Scientific products have active clinical trials supporting recent FDA approvals?`
 
 
 ## CLI Usage

@@ -23,11 +23,13 @@ execution_time: ~15 seconds
 
 ## Sample Queries
 
-Examples of user queries that would invoke the pharma-search-specialist to create or use this skill:
+Examples of user queries that would trigger reuse of this skill:
 
-1. `@agent-pharma-search-specialist Get checkpoint inhibitor prescribers data`
-2. `@agent-pharma-search-specialist Show me checkpoint inhibitor prescribers information`
-3. `@agent-pharma-search-specialist Find checkpoint inhibitor prescribers details`
+1. `@agent-pharma-search-specialist Who are the top checkpoint inhibitor prescribers from CMS Medicare data?`
+2. `@agent-pharma-search-specialist Identify KOLs and major cancer centers prescribing PD-1/PD-L1 inhibitors`
+3. `@agent-pharma-search-specialist Show me geographic distribution of checkpoint inhibitor prescribers in the US`
+4. `@agent-pharma-search-specialist Which medical oncologists have the highest checkpoint inhibitor prescription volumes?`
+5. `@agent-pharma-search-specialist Analyze institutional prescribing patterns for pembrolizumab, nivolumab, and atezolizumab`
 
 
 Identifies KOLs and major cancer centers for checkpoint inhibitor targeting.
