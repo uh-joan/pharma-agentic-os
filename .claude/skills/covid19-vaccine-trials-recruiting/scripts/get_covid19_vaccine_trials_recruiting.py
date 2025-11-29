@@ -13,8 +13,8 @@ import re
 from pathlib import Path
 
 # Import MCP CT.gov server
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / ".claude" / "mcp"))
-from servers.ct_gov_mcp import ct_gov_studies
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+from mcp.servers.ct_gov_mcp import search
 
 def get_covid19_vaccine_trials_recruiting():
     """
@@ -35,7 +35,7 @@ def get_covid19_vaccine_trials_recruiting():
         >>> print(f"Phase 3 trials: {results['phase_distribution'].get('Phase 3', 0)}")
     """
     # Query CT.gov for COVID-19 vaccine trials that are recruiting
-    response = ct_gov_studies(
+    response = search(
         condition="COVID-19",
         intervention="vaccine",
         status="RECRUITING",

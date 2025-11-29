@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.who_mcp import get_health_stats
+from mcp.servers.who_mcp import get_health_data
 
 def get_cvd_disease_burden():
     """Get WHO cardiovascular disease burden data globally.
@@ -22,7 +22,7 @@ def get_cvd_disease_burden():
     
     for term in search_terms:
         try:
-            result = get_health_stats(indicator=term, country="all")
+            result = get_health_data(indicator=term, country="all")
             
             if isinstance(result, dict):
                 if 'value' in result:

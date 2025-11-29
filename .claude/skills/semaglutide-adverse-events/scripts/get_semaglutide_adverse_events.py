@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.fda_mcp import search_adverse_events
+from mcp.servers.fda_mcp import lookup_drug
 
 def get_semaglutide_adverse_events():
     """Get adverse event reports for semaglutide from FDA FAERS.
@@ -9,8 +9,10 @@ def get_semaglutide_adverse_events():
         dict: Contains total_count, top_reactions, demographics, and severity data
     """
 
-    result = search_adverse_events(
-        search='patient.drug.medicinalproduct:"semaglutide"',
+    result = lookup_drug(
+        search_term='semaglutide',
+        search_type='adverse_events',
+        count='patient.reaction.reactionmeddrapt.exact',
         limit=1000
     )
 

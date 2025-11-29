@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.fda_mcp import search_drugs
+from mcp.servers.fda_mcp import lookup_drug
 from datetime import datetime, timedelta
 
 def get_orphan_neurological_drugs():
@@ -28,7 +28,7 @@ def get_orphan_neurological_drugs():
     
     for query in neuro_queries:
         try:
-            result = search_drugs(search=query, limit=50)
+            result = lookup_drug(search_term=query, search_type="general", limit=50)
             if result and 'results' in result:
                 all_results.extend(result['results'])
         except Exception as e:
