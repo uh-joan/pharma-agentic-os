@@ -30,14 +30,14 @@ def get_indication_pipeline_attrition(indication: str, sample_size: int = None) 
                 result = search(
                     term=indication,
                     status=status_filter,
-                    pageSize=1000,
+                    pageSize=5000,
                     pageToken=page_token
                 )
             else:
                 result = search(
                     term=indication,
                     status=status_filter,
-                    pageSize=1000
+                    pageSize=5000
                 )
 
             # Parse markdown response

@@ -10,7 +10,7 @@ def get_hypertension_fda_drugs():
         search_term='hypertension',
         search_type='general',
         count='openfda.brand_name.exact',
-        limit=100
+        limit=1000
     )
 
     # FDA response is nested: result['data']['results']

@@ -58,7 +58,7 @@ def get_novo_nordisk_novel_patents():
         trials_result = search(
             term="Novo Nordisk",
             filter_overallStatus="RECRUITING,ACTIVE_NOT_RECRUITING,ENROLLING_BY_INVITATION",
-            pageSize=1000
+            pageSize=5000
         )
 
         # Parse markdown response to extract conditions

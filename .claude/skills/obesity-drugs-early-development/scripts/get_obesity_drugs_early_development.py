@@ -77,7 +77,7 @@ def get_obesity_drugs_early_development():
             ct_result = search(
                 intervention=drug_name,
                 phase="PHASE1 OR PHASE2",
-                pageSize=1000  # High limit to get all results without pagination
+                pageSize=5000  # High limit to get all results without pagination
             )
 
             # Parse markdown response to count trials

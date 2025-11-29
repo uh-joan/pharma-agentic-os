@@ -104,7 +104,7 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
         studyType="interventional",
         interventionType="drug",
         status="recruiting OR active_not_recruiting",
-        pageSize=1000
+        pageSize=5000
     )
 
     # Extract total count
@@ -125,7 +125,7 @@ def get_indication_drug_pipeline_breakdown(indication: str, sample_size: int = N
                 studyType="interventional",
                 interventionType="drug",
                 status="recruiting OR active_not_recruiting",
-                pageSize=1000,
+                pageSize=5000,
                 pageToken=page_token
             )
             all_nct_ids.extend(re.findall(r'NCT\d{8}', result))

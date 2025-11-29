@@ -61,7 +61,7 @@ def get_fda_approvals_timeline_by_indication(
                 search_term=drug_name,
                 search_type="general",
                 count="openfda.brand_name.exact",
-                limit=50
+                limit=1000
             )
 
             data = count_result.get('data', {})

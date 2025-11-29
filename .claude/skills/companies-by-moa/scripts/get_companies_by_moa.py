@@ -147,7 +147,7 @@ def query_trials_by_moa(moa: str, disease: str = None) -> list:
         studyType="interventional",
         interventionType="drug",
         status="recruiting OR active_not_recruiting",
-        pageSize=1000
+        pageSize=5000
     )
 
     # Extract NCT IDs

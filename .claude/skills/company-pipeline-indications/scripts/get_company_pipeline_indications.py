@@ -38,7 +38,7 @@ def get_company_pipeline_indications(company: str):
         result = search(
             lead=company,
             status=active_status_filter,
-            pageSize=1000,
+            pageSize=5000,
             pageToken=page_token
         )
 

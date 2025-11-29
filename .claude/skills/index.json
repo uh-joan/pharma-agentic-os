@@ -1,14 +1,14 @@
 {
   "version": "2.0",
   "format": "folder-structure",
-  "last_updated": "2025-11-27",
+  "last_updated": "2025-11-29",
   "description": "Skills library index for pattern discovery and reuse - Anthropic folder structure format",
   "usage": "Agent reads this to discover similar skills before creating new ones. Enables evolutionary skill development where new skills build on proven patterns from existing implementations.",
   "migration_status": {
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 79,
+    "folder_skills_count": 89,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -170,25 +170,6 @@
       "patterns_demonstrated": [],
       "category": "unknown",
       "complexity": "unknown"
-    },
-    {
-      "name": "get_alzheimers_fda_drugs",
-      "folder": "alzheimers-fda-drugs",
-      "script": "alzheimers-fda-drugs/scripts/get_alzheimers_fda_drugs.py",
-      "description": "Get FDA approved Alzheimer's disease drugs with deduplication and detailed information",
-      "servers_used": [
-        "fda_mcp"
-      ],
-      "patterns_demonstrated": [
-        "json_parsing",
-        "deduplication"
-      ],
-      "category": "drug-discovery",
-      "complexity": "simple",
-      "structure": "folder",
-      "skill_md": "alzheimers-fda-drugs/SKILL.md",
-      "has_frontmatter": true,
-      "function_signature": "get_alzheimers_fda_drugs() -> dict"
     },
     {
       "name": "get_alzheimers_genetic_targets",
@@ -1768,6 +1749,391 @@
       "category": "regulatory",
       "complexity": "intermediate",
       "version": "2.0.0"
+    },
+    {
+      "name": "get_enhanced_antibody_trials_by_geography",
+      "structure": "folder",
+      "folder": "enhanced-antibody-trials-by-geography",
+      "skill_md": "enhanced-antibody-trials-by-geography/SKILL.md",
+      "script": "enhanced-antibody-trials-by-geography/scripts/get_enhanced_antibody_trials_by_geography.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_enhanced_antibody_trials_by_geography() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "multi_term_search",
+        "geographic_classification",
+        "temporal_aggregation",
+        "format_classification",
+        "visualization"
+      ],
+      "category": "clinical-trials",
+      "complexity": "complex"
+    },
+    {
+      "name": "get_adc_trials_by_payload",
+      "structure": "folder",
+      "folder": "adc-trials-by-payload",
+      "skill_md": "adc-trials-by-payload/SKILL.md",
+      "script": "adc-trials-by-payload/scripts/get_adc_trials_by_payload.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_adc_trials_by_payload() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "geographic_classification",
+        "target_extraction",
+        "deduplication"
+      ],
+      "category": "clinical-trials",
+      "complexity": "complex"
+    },
+    {
+      "name": "get_safety_stopped_trials",
+      "structure": "folder",
+      "folder": "safety-stopped-trials",
+      "skill_md": "safety-stopped-trials/SKILL.md",
+      "script": "safety-stopped-trials/scripts/get_safety_stopped_trials.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_safety_stopped_trials() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "focused_query",
+        "safety_keyword_scoring",
+        "drug_failure_analysis",
+        "multi_keyword_search"
+      ],
+      "category": "safety-intelligence",
+      "complexity": "moderate"
+    },
+    {
+      "name": "get_bispecific_antibody_trials",
+      "structure": "folder",
+      "folder": "bispecific-antibody-trials",
+      "skill_md": "bispecific-antibody-trials/SKILL.md",
+      "script": "bispecific-antibody-trials/scripts/get_bispecific_antibody_trials.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_bispecific_antibody_trials() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "parameterized_query",
+        "geographic_classification",
+        "complexity_analysis",
+        "target_extraction",
+        "competitive_intelligence"
+      ],
+      "category": "clinical-trials",
+      "complexity": "complex"
+    },
+    {
+      "name": "estimate_therapeutic_area_tam",
+      "structure": "folder",
+      "folder": "therapeutic-area-tam-estimator",
+      "skill_md": "therapeutic-area-tam-estimator/SKILL.md",
+      "script": "therapeutic-area-tam-estimator/scripts/estimate_therapeutic_area_tam.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "estimate_therapeutic_area_tam() -> dict",
+      "servers_used": [
+        "cdc_mcp",
+        "who_mcp",
+        "datacommons_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_source_cascade",
+        "graceful_degradation",
+        "quality_scoring",
+        "data_validation",
+        "hierarchical_fallback",
+        "count_percentage_detection"
+      ],
+      "category": "market-intelligence",
+      "complexity": "complex",
+      "health": {
+        "status": "healthy",
+        "last_checked": "2025-11-28",
+        "issues": []
+      }
+    },
+    {
+      "name": "get_trials_by_phase_and_design",
+      "structure": "folder",
+      "folder": "trials-by-phase-and-design",
+      "skill_md": "trials-by-phase-and-design/SKILL.md",
+      "script": "trials-by-phase-and-design/scripts/get_trials_by_phase_and_design.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_trials_by_phase_and_design() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "multi_parameter_filtering",
+        "design_aggregation"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_products_by_approval_pathway",
+      "structure": "folder",
+      "folder": "products-by-approval-pathway",
+      "skill_md": "products-by-approval-pathway/SKILL.md",
+      "script": "products-by-approval-pathway/scripts/get_products_by_approval_pathway.py",
+      "has_frontmatter": true,
+      "description": "Find FDA-approved drugs by regulatory approval pathway using hybrid adverse events discovery. Queries patient.drug.drugindication field for comprehensive therapeutic area coverage, then cross-references with submission metadata for pathway filtering (priority review, orphan designation, standard review). Solves FDA sparse submission metadata problem with 100% therapeutic area coverage.",
+      "function_signature": "get_products_by_approval_pathway(pathway: str, therapeutic_area: str, count_type: str = 'submissions', show_progress: bool = False) -> dict",
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "adverse_events_discovery",
+        "hybrid_filtering",
+        "pathway_cross_reference",
+        "count_aggregations",
+        "nested_field_filtering",
+        "fda_submission_metadata",
+        "deduplication"
+      ],
+      "category": "regulatory",
+      "complexity": "medium",
+      "version": "4.0",
+      "breakthrough": true,
+      "method": "hybrid_adverse_events_discovery",
+      "trigger_keywords": [
+        "approval pathway",
+        "priority review",
+        "orphan drug",
+        "orphan designation",
+        "standard review",
+        "regulatory pathway",
+        "FDA pathway",
+        "drugs with priority",
+        "drugs with orphan",
+        "pathway designation"
+      ],
+      "health_status": "broken",
+      "is_generic": false,
+      "health_issues": [
+        "Therapeutic area filtering returns wrong drugs (finds drugs taken BY patients with condition, not drugs approved FOR condition)",
+        "Returns comorbid condition drugs (e.g., arthritis drugs for Alzheimer patients)",
+        "Uses patient.drug.drugindication (patient diagnosis) instead of drug label indication"
+      ]
+    },
+    {
+      "name": "get_trials_by_enrollment_criteria",
+      "structure": "folder",
+      "folder": "trials-by-enrollment-criteria",
+      "skill_md": "trials-by-enrollment-criteria/SKILL.md",
+      "script": "trials-by-enrollment-criteria/scripts/get_trials_by_enrollment_criteria.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_trials_by_enrollment_criteria() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "pagination",
+        "markdown_parsing",
+        "text_extraction",
+        "keyword_matching",
+        "regex_parsing"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_obesity_fda_drugs",
+      "structure": "folder",
+      "folder": "obesity-fda-drugs",
+      "skill_md": "obesity-fda-drugs/SKILL.md",
+      "script": "obesity-fda-drugs/scripts/get_obesity_fda_drugs.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_obesity_fda_drugs() -> dict",
+      "servers_used": [
+        "fda_mcp"
+      ],
+      "patterns_demonstrated": [
+        "adverse_events_discovery",
+        "count_pattern",
+        "indication_filtering"
+      ],
+      "category": "regulatory",
+      "complexity": "medium"
+    },
+    {
+      "name": "catalyst-tracker",
+      "structure": "folder",
+      "folder": "catalyst-tracker",
+      "skill_md": "catalyst-tracker/SKILL.md",
+      "script": "catalyst-tracker/scripts/track_catalysts.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "track_catalysts(quarter=\"Q1\", year=2026, companies=None, max_companies=100, include_predicted=True, min_prediction_probability=0.6, deduplicate=True, verbose=True) -> dict",
+      "servers_used": [
+        "sec_edgar_mcp",
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [],
+      "category": "tracking",
+      "complexity": "intermediate"
+    },
+    {
+      "name": "integrated-catalyst-discovery",
+      "structure": "folder",
+      "folder": "integrated-catalyst-discovery",
+      "skill_md": "integrated-catalyst-discovery/SKILL.md",
+      "script": "integrated-catalyst-discovery/scripts/discover_catalysts.py",
+      "has_frontmatter": true,
+      "description": "End-to-end catalyst discovery combining bottom-up trial discovery with multi-source catalyst tracking",
+      "function_signature": "discover_catalysts(quarter=\"Q4\", year=2025, phases=None, min_market_cap=0, max_discovery_trials=5000, max_tracking_companies=100, include_predicted=True, min_prediction_probability=0.6, verbose=True) -> dict",
+      "servers_used": [
+        "ct_gov_mcp",
+        "sec_edgar_mcp",
+        "financials_mcp"
+      ],
+      "patterns_demonstrated": [
+        "integrated_workflow",
+        "enrichment_pattern",
+        "confidence_scoring",
+        "parameterized_by_time"
+      ],
+      "category": "discovery",
+      "complexity": "advanced",
+      "therapeutic_area": "generic",
+      "data_type": "catalysts"
+    },
+    {
+      "name": "trial-completion-predictor",
+      "structure": "folder",
+      "folder": "trial-completion-predictor",
+      "skill_md": "trial-completion-predictor/SKILL.md",
+      "script": "trial-completion-predictor/scripts/predict_trial_presentations.py",
+      "has_frontmatter": false,
+      "description": "Predicts conference presentations based on trial completion dates and therapeutic area matching",
+      "function_signature": "predict_trial_presentations(companies=None, quarter='Q1', year=2026, min_probability=0.6, verbose=True) -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "prediction_algorithm",
+        "therapeutic_area_matching",
+        "timing_windows"
+      ],
+      "category": "tracking",
+      "complexity": "intermediate",
+      "therapeutic_area": "generic",
+      "data_type": "catalyst_predictions"
+    },
+    {
+      "name": "abstract-acceptance-tracker",
+      "structure": "folder",
+      "folder": "abstract-acceptance-tracker",
+      "skill_md": "abstract-acceptance-tracker/SKILL.md",
+      "script": "abstract-acceptance-tracker/scripts/track_abstract_acceptances.py",
+      "has_frontmatter": false,
+      "description": "Tracks conference abstract acceptance announcements from SEC 8-K filings",
+      "function_signature": "track_abstract_acceptances(quarter='Q4', year=2025, companies=None, verbose=True) -> dict",
+      "servers_used": [
+        "sec_edgar_mcp"
+      ],
+      "patterns_demonstrated": [
+        "sec_filing_parsing",
+        "date_filtering",
+        "conference_tracking"
+      ],
+      "category": "tracking",
+      "complexity": "intermediate",
+      "therapeutic_area": "generic",
+      "data_type": "catalyst_events"
+    },
+    {
+      "name": "bottom-up-catalyst-discovery",
+      "structure": "folder",
+      "folder": "bottom-up-catalyst-discovery",
+      "skill_md": "bottom-up-catalyst-discovery/SKILL.md",
+      "script": "bottom-up-catalyst-discovery/scripts/discover_catalyst_candidates.py",
+      "has_frontmatter": false,
+      "description": "Automated bottom-up pipeline discovering investable biotech companies with upcoming catalysts from ClinicalTrials.gov",
+      "function_signature": "discover_catalyst_candidates(quarter='Q4', year=2025, phases=None, min_market_cap=0, max_trials=5000, verbose=True) -> dict",
+      "servers_used": [
+        "ct_gov_mcp",
+        "sec_edgar_mcp",
+        "financials_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_step_pipeline",
+        "academic_filtering",
+        "ticker_lookup",
+        "market_cap_enrichment",
+        "confidence_scoring"
+      ],
+      "category": "discovery",
+      "complexity": "advanced",
+      "therapeutic_area": "generic",
+      "data_type": "company_catalysts"
+    },
+    {
+      "name": "alk-rearrangement-trials",
+      "structure": "folder",
+      "folder": "alk-rearrangement-trials",
+      "skill_md": "alk-rearrangement-trials/SKILL.md",
+      "script": "alk-rearrangement-trials/scripts/get_alk_rearrangement_trials.py",
+      "has_frontmatter": true,
+      "description": "Retrieves clinical trials for ALK rearrangement positive cancers with status distribution analysis",
+      "function_signature": "get_alk_rearrangement_trials() -> dict",
+      "servers_used": [
+        "ct_gov_mcp"
+      ],
+      "patterns_demonstrated": [
+        "markdown_parsing",
+        "status_aggregation"
+      ],
+      "category": "clinical-trials",
+      "complexity": "medium",
+      "therapeutic_area": "ALK-positive cancers",
+      "data_type": "trials"
+    },
+    {
+      "name": "pdufa-tracker",
+      "structure": "folder",
+      "folder": "pdufa-tracker",
+      "skill_md": "pdufa-tracker/SKILL.md",
+      "script": "pdufa-tracker/scripts/track_pdufa_dates.py",
+      "has_frontmatter": false,
+      "description": "Tracks FDA PDUFA action dates from SEC 8-K filings",
+      "function_signature": "track_pdufa_dates(quarter='Q4', year=2025, companies=None, verbose=True) -> dict",
+      "servers_used": [
+        "sec_edgar_mcp"
+      ],
+      "patterns_demonstrated": [
+        "sec_filing_parsing",
+        "date_extraction",
+        "pdufa_tracking"
+      ],
+      "category": "tracking",
+      "complexity": "intermediate",
+      "therapeutic_area": "generic",
+      "data_type": "regulatory_catalysts"
     }
   ],
   "pattern_categories": {

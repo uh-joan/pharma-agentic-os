@@ -27,7 +27,7 @@ def get_company_clinical_trials_portfolio(
     # Build query parameters
     query_params = {
         'leadSponsorName': sponsor_name,
-        'pageSize': 1000
+        'pageSize': 5000
     }
 
     if status:

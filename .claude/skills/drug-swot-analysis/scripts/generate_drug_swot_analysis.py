@@ -128,9 +128,9 @@ def collect_clinical_trials(drug_name: str, indication: str) -> dict:
     while True:
         try:
             if page_token:
-                response = ct_search(term=query, pageSize=1000, pageToken=page_token)
+                response = ct_search(term=query, pageSize=5000, pageToken=page_token)
             else:
-                response = ct_search(term=query, pageSize=1000)
+                response = ct_search(term=query, pageSize=5000)
 
             # Parse markdown response
             trials = parse_ctgov_trials(response)

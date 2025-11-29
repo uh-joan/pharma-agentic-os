@@ -1,6 +1,19 @@
 ---
 name: get_diabetes_drugs_stopped_safety
+deprecated: true
+deprecated_date: 2025-11-28
+replacement: safety-stopped-trials
+replacement_skill: get_safety_stopped_trials
+migration_guide: |
+  Use the generic safety-stopped-trials skill instead:
+  - Old: get_diabetes_drugs_stopped_safety()
+  - New: get_safety_stopped_trials("diabetes", condition_subtypes={...})
+
+  This skill now wraps the generic version for backward compatibility.
+  Please migrate to safety-stopped-trials for all new projects.
 description: >
+  ⚠️ DEPRECATED: Use safety-stopped-trials skill instead (generic, works for any indication).
+
   Identifies diabetes clinical trials that were terminated, withdrawn, or suspended
   due to safety concerns. Uses ClinicalTrials.gov AREA[WhyStopped] field with
   complexQuery to search for safety-related stop reasons (adverse events, toxicity,
@@ -42,6 +55,28 @@ token_efficiency: ~99% reduction vs raw data
 ---
 
 # get_diabetes_drugs_stopped_safety
+
+> **⚠️ DEPRECATED (2025-11-28)**
+>
+> This skill has been superseded by the generic **`safety-stopped-trials`** skill which works for any therapeutic area.
+>
+> **Migration:**
+> ```python
+> # Old (diabetes-specific)
+> from skills.diabetes_drugs_stopped_safety.scripts.get_diabetes_drugs_stopped_safety import get_diabetes_drugs_stopped_safety
+> result = get_diabetes_drugs_stopped_safety()
+>
+> # New (generic, recommended)
+> from skills.safety_stopped_trials.scripts.get_safety_stopped_trials import get_safety_stopped_trials
+> result = get_safety_stopped_trials("diabetes", condition_subtypes={
+>     'Type 1 Diabetes': ['type 1', 'type i', 't1d'],
+>     'Type 2 Diabetes': ['type 2', 'type ii', 't2d'],
+>     'Gestational Diabetes': ['gestational', 'gdm']
+> })
+> ```
+>
+> This legacy skill now wraps the generic version for backward compatibility.
+> Please use `safety-stopped-trials` for all new projects.
 
 ## Purpose
 
