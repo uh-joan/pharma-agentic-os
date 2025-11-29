@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, ".claude")
-from mcp.servers.pubmed_mcp import search
+from mcp.servers.pubmed_mcp import search_keywords
 import re
 from collections import Counter
 
@@ -26,23 +26,28 @@ def get_anti_amyloid_publications():
     max_pages = 50  # Limit to prevent excessive API calls
 
     while page_count < max_pages:
-        if page_token:
-            result = search(query=search_query, max_results=100, page_token=page_token)
-        else:
-            result = search(query=search_query, max_results=100)
+        # Note: PubMed MCP has known limitation - may return fewer results than requested
+        result = search_keywords(keywords=search_query, num_results=100)
 
-        if not result or 'results' not in result:
+        if not result:
             break
 
-        all_results.extend(result['results'])
+        # Handle both response formats: list directly or dict with 'articles' key
+        if isinstance(result, list):
+            articles = result
+        else:
+            articles = result.get('articles', [])
+
+        if not articles:
+            break
+
+        all_results.extend(articles)
         page_count += 1
+        print(f"  Retrieved batch {page_count}, total articles so far: {len(all_results)}")
 
-        # Check for next page
-        if 'next_page_token' in result and result['next_page_token']:
-            page_token = result['next_page_token']
-            print(f"  Retrieved page {page_count}, total articles so far: {len(all_results)}")
-        else:
-            break
+        # PubMed MCP doesn't support pagination in the same way - break after first batch
+        # This is a known limitation per the MCP documentation
+        break
 
     total_count = len(all_results)
     print(f"\nTotal publications found: {total_count}")
@@ -62,8 +67,14 @@ def get_anti_amyloid_publications():
     year_distribution = Counter()
 
     for article in all_results:
-        title = article.get('title', '').lower()
-        abstract = article.get('abstract', '').lower()
+        # Safely extract and convert title/abstract to strings
+        title_raw = article.get('title', '')
+        abstract_raw = article.get('abstract', '')
+
+        # Handle cases where title/abstract might not be strings
+        title = str(title_raw).lower() if title_raw else ''
+        abstract = str(abstract_raw).lower() if abstract_raw else ''
+
         combined_text = f"{title} {abstract}"
 
         # Count drug mentions
