@@ -1,14 +1,14 @@
 {
   "version": "2.0",
   "format": "folder-structure",
-  "last_updated": "2025-11-29",
+  "last_updated": "2025-12-03",
   "description": "Skills library index for pattern discovery and reuse - Anthropic folder structure format",
   "usage": "Agent reads this to discover similar skills before creating new ones. Enables evolutionary skill development where new skills build on proven patterns from existing implementations.",
   "migration_status": {
     "phase": "4-migration-complete",
     "all_skills_have_frontmatter": true,
     "structure": "folder",
-    "folder_skills_count": 89,
+    "folder_skills_count": 98,
     "flat_skills_count": 0,
     "deprecated_flat_count": 11,
     "note": "All skills migrated to folder structure. Flat files kept for 30-day backward compatibility period."
@@ -2169,6 +2169,109 @@
       "complexity": "intermediate",
       "therapeutic_area": "generic",
       "data_type": "regulatory_catalysts"
+    },
+    {
+      "name": "cdc-obesity-prevalence",
+      "structure": "folder",
+      "folder": "cdc-obesity-prevalence",
+      "skill_md": "cdc-obesity-prevalence/SKILL.md",
+      "script": "cdc-obesity-prevalence/scripts/cdc-obesity-prevalence.py",
+      "has_frontmatter": true,
+      "description": "Get CDC obesity prevalence data for the United States from Data Commons",
+      "function_signature": "cdc-obesity-prevalence() -> dict",
+      "servers_used": [
+        "datacommons_mcp"
+      ],
+      "patterns_demonstrated": [
+        "indicator_search",
+        "geographic_aggregation"
+      ],
+      "category": "epidemiology",
+      "complexity": "medium"
+    },
+    {
+      "name": "global-diabetes-prevalence",
+      "structure": "folder",
+      "folder": "global-diabetes-prevalence",
+      "skill_md": "global-diabetes-prevalence/SKILL.md",
+      "script": "global-diabetes-prevalence/scripts/global-diabetes-prevalence.py",
+      "has_frontmatter": true,
+      "description": "Fetches authoritative global diabetes prevalence data from WHO and Data Commons",
+      "function_signature": "global-diabetes-prevalence() -> dict",
+      "servers_used": [
+        "who_mcp",
+        "datacommons_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_server_query",
+        "search_and_retrieve",
+        "latest_data_extraction"
+      ],
+      "category": "epidemiology",
+      "complexity": "medium"
+    },
+    {
+      "name": "us-cardiometabolic-disease-prevalence",
+      "structure": "folder",
+      "folder": "us-cardiometabolic-disease-prevalence",
+      "skill_md": "us-cardiometabolic-disease-prevalence/SKILL.md",
+      "script": "us-cardiometabolic-disease-prevalence/scripts/us-cardiometabolic-disease-prevalence.py",
+      "has_frontmatter": true,
+      "description": "Search US epidemiological data for cardiovascular and metabolic comorbidities",
+      "function_signature": "us-cardiometabolic-disease-prevalence() -> dict",
+      "servers_used": [
+        "datacommons_mcp"
+      ],
+      "patterns_demonstrated": [
+        "search_with_fallback",
+        "data_validation",
+        "availability_checking"
+      ],
+      "category": "population-health",
+      "complexity": "medium"
+    },
+    {
+      "name": "get_pipeline_drug_efficacy",
+      "structure": "folder",
+      "folder": "pipeline-glp1-efficacy",
+      "skill_md": "pipeline-glp1-efficacy/SKILL.md",
+      "script": "pipeline-glp1-efficacy/scripts/get_pipeline_drug_efficacy.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_pipeline_drug_efficacy() -> dict",
+      "servers_used": [
+        "ct_gov_mcp",
+        "pubmed_mcp"
+      ],
+      "patterns_demonstrated": [
+        "multi_server_query",
+        "markdown_parsing",
+        "efficacy_extraction",
+        "regex_parsing"
+      ],
+      "category": "clinical-trials",
+      "complexity": "complex"
+    },
+    {
+      "name": "get_glp1_real_world_data",
+      "structure": "folder",
+      "folder": "glp1-real-world-data",
+      "skill_md": "glp1-real-world-data/SKILL.md",
+      "script": "glp1-real-world-data/scripts/get_glp1_real_world_data.py",
+      "has_frontmatter": true,
+      "description": "",
+      "function_signature": "get_glp1_real_world_data() -> dict",
+      "servers_used": [
+        "pubmed_mcp"
+      ],
+      "patterns_demonstrated": [
+        "json_parsing",
+        "multi_drug_query",
+        "metric_extraction",
+        "deduplication"
+      ],
+      "category": "drug-discovery",
+      "complexity": "medium"
     }
   ],
   "pattern_categories": {
